@@ -12,7 +12,7 @@ assets 项目资源和代码
     |     |     unity 通用资源  
     scenes 场景文件  
     scripts 脚本  
-    |     |     components  
+    |     components  
     |     |     event  
     |     |     music  
     |     |     mvc  
