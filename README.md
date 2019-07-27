@@ -1,0 +1,2 @@
+# YAFrameworkForCocosCreator
+YAFramework一个基于CocosCreator的游戏框架
