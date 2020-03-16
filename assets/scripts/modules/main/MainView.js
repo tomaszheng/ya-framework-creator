@@ -32,21 +32,24 @@ cc.Class({
 
         this.runRelativeAction();
 
-        this.node.runAction(cc.repeatForever(cc.sequence(
-            cc.delayTime(2.0),
-            cc.callFunc(()=>{
-                this.runBounceAction(this.btn_recommend, this.lbl_tag_recommend);
-            }),
-            cc.delayTime(3.0),
-            cc.callFunc(()=>{
-                this.runBounceAction(this.btn_hot, this.lbl_tag_hot);
-            }),
-            cc.delayTime(3.0),
-            cc.callFunc(()=>{
-                this.runBounceAction(this.btn_played, this.lbl_tag_played);
-            }),
-            cc.delayTime(1.0)
-        )));
+        cc.tween(this.node)
+            .repeatForever(
+                cc.tween()
+                    .delay(2.0)
+                    .call(()=>{
+                        this.runBounceAction(this.btn_recommend, this.lbl_tag_recommend);
+                    })
+                    .delay(3.0)
+                    .call(()=>{
+                        this.runBounceAction(this.btn_hot, this.lbl_tag_hot);
+                    })
+                    .delay(3.0)
+                    .call(()=>{
+                        this.runBounceAction(this.btn_played, this.lbl_tag_played);
+                    })
+                    .delay(1.0)
+            )
+            .start();
         
         let enabled = ya.music.music;
         this.btn_sound.getChildByName("Label").getComponent(cc.Label).string = enabled ? ya.txt.str_005 : ya.txt.str_006;
@@ -191,7 +194,7 @@ cc.Class({
     },
 
     setGameClub() {
-        let p = this.btn_game_club.parent.convertToWorldSpace(this.btn_game_club.position);
+        let p = this.btn_game_club.parent.convertToWorldSpaceAR(this.btn_game_club.position);
         let size = this.btn_game_club.getContentSize();
 
         let lx = p.x - size.width * 0.5;
@@ -228,19 +231,20 @@ cc.Class({
     },
 
     runRelativeAction() {
-        this.lbl_title.runAction(cc.repeatForever(cc.sequence(
-            cc.moveBy(2, cc.v2(0, 32)),
-            cc.moveBy(2, cc.v2(0, -32))
-        )));
-        this.img_title_bg.runAction(cc.sequence(
-            cc.delayTime(2),
-            cc.callFunc(()=>{
-                this.img_title_bg.runAction(cc.repeatForever(cc.sequence(
-                    cc.moveBy(2, cc.v2(0, 32)),
-                    cc.moveBy(2, cc.v2(0, -32))
-                )));
-            })
-        ));
+        cc.tween(this.lbl_title)
+            .repeatForever(
+                cc.tween()
+                    .by(2, {position: cc.v2(0, 32)})
+                    .by(2, {position: cc.v2(0, -32)}))
+            .start();
+        
+        cc.tween(this.img_title_bg)
+            .delay(2)
+            .repeatForever(
+                cc.tween()
+                    .by(2, {position: cc.v2(0, 32)})
+                    .by(2, {position: cc.v2(0, -32)}))
+            .start();
     },
 
     // fallingComplete() {
@@ -287,26 +291,29 @@ cc.Class({
 
     runBounceAction(node, sub_node) {
 
-        node.runAction(cc.sequence(
-            cc.spawn(cc.moveBy(0.2, 0, 30).easing(cc.easeOut(3)), cc.rotateTo(0.1, 10)),
-            cc.rotateTo(0.2, -10),
-            cc.rotateTo(0.2, 10),
-            cc.rotateTo(0.2, -10),
-            cc.rotateTo(0.2, 10),
-            cc.rotateTo(0.1, 0),
-            cc.moveBy(0.2, 0, -30).easing(cc.easeIn(3)),
-        ));
-
-        sub_node.runAction(cc.spawn(
-            cc.sequence(
-                cc.moveBy(0.7, 0, 80).easing(cc.easeOut(3)),
-                cc.moveBy(0.7, 0, -80).easing(cc.easeIn(3)),
-            ),
-            cc.sequence(
-                cc.rotateBy(0.7, -10),
-                cc.rotateBy(0.7, 10)
+        cc.tween(node)
+            .parallel(
+                cc.tween().by(0.2, {position: cc.v2(0, 30)}, {easing: "sineOut"}),
+                cc.tween().to(0.1, {angle: 10})
             )
-        ));
+            .to(0.2, {angle: -10})
+            .to(0.2, {angle: 10})
+            .to(0.2, {angle: -10})
+            .to(0.2, {angle: 10})
+            .to(0.1, {angle: 0})
+            .by(0.2, {position: cc.v2(0, -30)}, {easing: "sineIn"})
+            .start();
+
+        cc.tween(sub_node)
+            .parallel(
+                cc.tween()
+                    .by(0.7, {position: cc.v2(0, 80)}, {easing: "sineOut"})
+                    .by(0.7, {position: cc.v2(0, -80)}, {easing: "sineIn"}),
+                cc.tween()
+                    .by(0.7, {angle: -10})
+                    .by(0.7, {angle: 10})
+            )
+            .start();
     },
 
     onDestroy() {

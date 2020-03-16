@@ -415,8 +415,8 @@ cc.Class({
         };
 
         if (award > 0) {
-            let dst_p = this.lbl_cur_score.parent.convertToWorldSpace(this.lbl_cur_score.position);
-            let cur_p = this.lbl_award.parent.convertToWorldSpace(this.lbl_award.position);
+            let dst_p = this.lbl_cur_score.parent.convertToWorldSpaceAR(this.lbl_cur_score.position);
+            let cur_p = this.lbl_award.parent.convertToWorldSpaceAR(this.lbl_award.position);
             let pre_award = Math.ceil(award / 10);
             for(let i = 0; i < 10; i++) {
                 let nd_add = this.poolinstance.getScore("+" + pre_award);
@@ -500,7 +500,7 @@ cc.Class({
         let sp = this.lbl_goal_score.position;
         let sszie = this.lbl_goal_score.getContentSize();
         sp.x += sszie.width * 0.5;
-        sp = this.lbl_goal_score.parent.convertToWorldSpace(sp);
+        sp = this.lbl_goal_score.parent.convertToWorldSpaceAR(sp);
         this.lbl_next_goal.stopAllActions();
         this.lbl_next_goal.runAction(cc.sequence(
             cc.moveBy(0.5, cc.v2(cc.winSize.width, 0)),
@@ -515,7 +515,7 @@ cc.Class({
         let lp = this.lbl_cur_level.position;
         let lszie = this.lbl_next_level.getContentSize();
         lp.x += lszie.width * 0.5;
-        lp = this.lbl_cur_level.parent.convertToWorldSpace(lp);
+        lp = this.lbl_cur_level.parent.convertToWorldSpaceAR(lp);
         this.lbl_next_level.stopAllActions();
         this.lbl_next_level.runAction(cc.sequence(
             cc.moveBy(0.5, cc.v2(-cc.winSize.width, 0)),
@@ -628,7 +628,7 @@ cc.Class({
     },
 
     runViaAction() {
-        let dst_p = this.lbl_goal_score.parent.convertToWorldSpace(this.lbl_goal_score.position);
+        let dst_p = this.lbl_goal_score.parent.convertToWorldSpaceAR(this.lbl_goal_score.position);
         dst_p.x += 80; dst_p.y += 20;
         let node = lpinstance.get({ str: ya.txt.str_014, color: cc.color(255, 0, 255) });
         node.position = cc.v2(cc.winSize.width*0.5, cc.winSize.height*0.5);

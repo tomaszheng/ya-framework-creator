@@ -21,7 +21,10 @@
     "StudioComponent",
     "Geom Utils",
     "3D",
-    "3D Primitive"
+    "3D Primitive",
+    "3D Physics/cannon.js",
+    "3D Physics/Builtin",
+    "3D Particle"
   ],
   "facebook": {
     "appID": "",
@@ -33,7 +36,7 @@
       "enable": false
     }
   },
-  "fit-height": false,
+  "fit-height": true,
   "fit-width": true,
   "group-list": [
     "default"
@@ -45,5 +48,6 @@
     "width": 720
   },
   "use-customize-simulator": true,
-  "use-project-simulator-setting": true
+  "use-project-simulator-setting": true,
+  "start-scene": "current"
 }

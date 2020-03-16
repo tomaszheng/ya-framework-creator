@@ -55,7 +55,7 @@ cc.Class({
     },
 
     initPlatform() {
-        ya.platform = CC_WECHATGAME ? new WeChatPlatform() : new BasicPlatform();
+        ya.platform = cc.sys.platform == cc.sys.WECHAT_GAME ? new WeChatPlatform() : new BasicPlatform();
     },
 
     initManager() {
