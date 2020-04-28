@@ -12,7 +12,7 @@ let C: any = {};
 C.base64_cube_square = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEX///+nxBvIAAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
 
 C.main = [
-    [texture + "Game/game", cc.SpriteAtlas],
+    [texture + "Game/Game", cc.SpriteAtlas],
     prefab + "main",
     [sound + "click", cc.AudioClip],
     [sound + "bgm", cc.AudioClip],
@@ -23,8 +23,8 @@ C.global = [
 ];
 
 C.game_star = [
-    [texture + "Game/game", cc.SpriteAtlas],
-    [texture + "Common/unity", cc.SpriteAtlas],
+    [texture + "Game/Game", cc.SpriteAtlas],
+    [texture + "Common/Common", cc.SpriteAtlas],
     prefab + "game_star",
     prefab + "game_star_item",
     [sound + "star_erase", cc.AudioClip],
@@ -39,20 +39,20 @@ C.game_star = [
 ];
 
 C.game_russia = [
-    [texture + "Game/game", cc.SpriteAtlas],
-    [texture + "Common/unity", cc.SpriteAtlas],
+    [texture + "Game/Game", cc.SpriteAtlas],
+    [texture + "Common/Common", cc.SpriteAtlas],
     prefab + "game_russia",
 ];
 
 C.game_haul = [
-    [texture + "Game/game", cc.SpriteAtlas],
-    [texture + "Common/unity", cc.SpriteAtlas],
+    [texture + "Game/Game", cc.SpriteAtlas],
+    [texture + "Common/Common", cc.SpriteAtlas],
     prefab + "game_haul",
 ];
 
 C.game_union = [
-    [texture + "Game/game", cc.SpriteAtlas],
-    [texture + "Common/unity", cc.SpriteAtlas],
+    [texture + "Game/Game", cc.SpriteAtlas],
+    [texture + "Common/Common", cc.SpriteAtlas],
     prefab + "game_union",
     prefab + "game_star_item",
     prefab + "dialog_item",
