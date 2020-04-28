@@ -4,7 +4,7 @@
 */
 
 import ya from "../../Framework/ya";
-import ResourceConfig from "../../Config/res/ResourceConfig";
+import ResourceConfig from "../../Config/Resource/ResourceConfig";
 
 const {ccclass, property} = cc._decorator;
 

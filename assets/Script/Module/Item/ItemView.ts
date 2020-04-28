@@ -1,7 +1,7 @@
 import ya from "../../Framework/ya";
 import GameConstant from "../../Config/GameConstant";
 import GameText from "../../Config/GameText";
-import Item from "../../Widgets/Item";
+import Item from "../../Widget/Item";
 
 const {ccclass, property} = cc._decorator;
 

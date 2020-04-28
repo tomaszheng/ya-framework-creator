@@ -1,6 +1,6 @@
 import ya from "../../Framework/ya";
 import EventConfig from "../../Config/EventConfig";
-import ResourceConfig from "../../Config/res/ResourceConfig";
+import ResourceConfig from "../../Config/Resource/ResourceConfig";
 
 export default class SettingController extends ya.Controller {
     initGlobalListener () {
@@ -10,7 +10,7 @@ export default class SettingController extends ya.Controller {
     onShowPause (params: any) {
         ya.resourceManager.load(ResourceConfig.pause, () => {
             ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "prefabs/dialog_pause",
+                prefab: "Prefab/dialog_pause",
                 script: "PauseView",
                 dataLoadded: true,
                 showType: ya.DialogProperty.ShowTypes.SCALE,

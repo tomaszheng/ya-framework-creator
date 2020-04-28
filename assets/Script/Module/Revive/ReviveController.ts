@@ -1,6 +1,6 @@
 import ya from "../../Framework/ya";
 import EventConfig from "../../Config/EventConfig";
-import ResourceConfig from "../../Config/res/ResourceConfig";
+import ResourceConfig from "../../Config/Resource/ResourceConfig";
 
 export default class ReviveController extends ya.Controller {
     initGlobalListener () {
@@ -10,7 +10,7 @@ export default class ReviveController extends ya.Controller {
     onShowRevive (params: any) {
         ya.resourceManager.load(ResourceConfig.revive, () => {
             ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "prefabs/dialog_revive",
+                prefab: "Prefab/dialog_revive",
                 script: "ReviveView",
                 dataLoadded: true,
                 showType: ya.DialogProperty.ShowTypes.SCALE

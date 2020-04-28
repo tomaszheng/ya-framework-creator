@@ -3,16 +3,16 @@
 资源模块分类，用于模块资源加载
 */
 
-let prefab = "prefabs/";
-let texture = "textures/";
-let sound = "sounds/";
+let prefab = "Prefab/";
+let texture = "Module/";
+let sound = "Sound/";
 
 let C: any = {};
 
 C.base64_cube_square = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEX///+nxBvIAAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
 
 C.main = [
-    [texture + "game/game", cc.SpriteAtlas],
+    [texture + "Game/game", cc.SpriteAtlas],
     prefab + "main",
     [sound + "click", cc.AudioClip],
     [sound + "bgm", cc.AudioClip],
@@ -23,8 +23,8 @@ C.global = [
 ];
 
 C.game_star = [
-    [texture + "game/game", cc.SpriteAtlas],
-    [texture + "unity/unity", cc.SpriteAtlas],
+    [texture + "Game/game", cc.SpriteAtlas],
+    [texture + "Common/unity", cc.SpriteAtlas],
     prefab + "game_star",
     prefab + "game_star_item",
     [sound + "star_erase", cc.AudioClip],
@@ -39,20 +39,20 @@ C.game_star = [
 ];
 
 C.game_russia = [
-    [texture + "game/game", cc.SpriteAtlas],
-    [texture + "unity/unity", cc.SpriteAtlas],
+    [texture + "Game/game", cc.SpriteAtlas],
+    [texture + "Common/unity", cc.SpriteAtlas],
     prefab + "game_russia",
 ];
 
 C.game_haul = [
-    [texture + "game/game", cc.SpriteAtlas],
-    [texture + "unity/unity", cc.SpriteAtlas],
+    [texture + "Game/game", cc.SpriteAtlas],
+    [texture + "Common/unity", cc.SpriteAtlas],
     prefab + "game_haul",
 ];
 
 C.game_union = [
-    [texture + "game/game", cc.SpriteAtlas],
-    [texture + "unity/unity", cc.SpriteAtlas],
+    [texture + "Game/game", cc.SpriteAtlas],
+    [texture + "Common/unity", cc.SpriteAtlas],
     prefab + "game_union",
     prefab + "game_star_item",
     prefab + "dialog_item",

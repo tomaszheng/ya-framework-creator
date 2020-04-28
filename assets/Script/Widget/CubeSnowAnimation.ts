@@ -3,7 +3,7 @@
 下方块雪动画
 */
 
-import ResourceConfig from "../Config/res/ResourceConfig";
+import ResourceConfig from "../Config/Resource/ResourceConfig";
 
 //每一帧移动的距离
 let FRAME_DISTANCE = 2;

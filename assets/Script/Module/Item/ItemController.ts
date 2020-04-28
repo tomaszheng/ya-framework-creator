@@ -9,7 +9,7 @@ export default class ItemController extends ya.Controller {
 
     onShowItem (data: any) {
         ya.dialogManager.show(new ya.DialogProperty({
-            prefab: "prefabs/dialog_item",
+            prefab: "Prefab/dialog_item",
             script: "ItemView",
             dataLoadded: true,
             showType: ya.DialogProperty.ShowTypes.SCALE,

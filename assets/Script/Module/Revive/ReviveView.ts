@@ -29,7 +29,7 @@ export default class ReviveView extends ya.Dialog {
     }
 
     onInitUI () {
-        ya.soundManager.playEffect("sounds/die");
+        ya.soundManager.playEffect("Sound/die");
 
         let str = cc.js.formatStr(GameText.str_004, this.revive_num, this.total_num);
         this.lbl_tip.string = str;

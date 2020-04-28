@@ -1,5 +1,5 @@
 import ya from "../../../Framework/ya";
-import SpriteFrameConfig from "../../../Config/res/SpriteFrameConfig";
+import SpriteFrameConfig from "../../../Config/Resource/SpriteFrameConfig";
 
 export default class Toast extends cc.Component {
 

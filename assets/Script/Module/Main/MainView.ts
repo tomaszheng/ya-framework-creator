@@ -1,5 +1,5 @@
 import ya from "../../Framework/ya";
-import ResourceConfig from "../../Config/res/ResourceConfig";
+import ResourceConfig from "../../Config/Resource/ResourceConfig";
 import StorageConfig from "../../Config/StorageConfig";
 import EventConfig from "../../Config/EventConfig";
 import GameText from "../../Config/GameText";
@@ -238,7 +238,7 @@ export default class MainView extends ya.View {
     onClickSound () {
         let enabled = !ya.localStorage.bool(ya.StorageConfig.EFFECT_ENABLED, true);
         if (enabled) {
-            ya.soundManager.playMusic('sounds/bmg', true);
+            ya.soundManager.playMusic('Sound/bmg', true);
         }
         else {
             ya.soundManager.stopMusic();

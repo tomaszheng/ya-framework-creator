@@ -1,6 +1,6 @@
 import ya from "../../Framework/ya";
 import EventConfig from "../../Config/EventConfig";
-import ResourceConfig from "../../Config/res/ResourceConfig";
+import ResourceConfig from "../../Config/Resource/ResourceConfig";
 
 export default class SettleController extends ya.Controller {
     initGlobalListener () {
@@ -10,7 +10,7 @@ export default class SettleController extends ya.Controller {
     onShowSettle (params: any) {
         ya.resourceManager.load(ResourceConfig.settle, () => {
             ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "prefabs/dialog_settle",
+                prefab: "Prefab/dialog_settle",
                 script: "SettleView",
                 dataLoadded: true,
                 showType: ya.DialogProperty.ShowTypes.SCALE
