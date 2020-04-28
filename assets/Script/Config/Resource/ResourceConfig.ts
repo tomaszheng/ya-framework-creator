@@ -3,82 +3,74 @@
 资源模块分类，用于模块资源加载
 */
 
-let prefab = "Prefab/";
-let texture = "Module/";
-let sound = "Sound/";
-
 let C: any = {};
 
 C.base64_cube_square = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEX///+nxBvIAAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
 
 C.main = [
-    [texture + "Game/Game", cc.SpriteAtlas],
-    prefab + "main",
-    [sound + "click", cc.AudioClip],
-    [sound + "bgm", cc.AudioClip],
-];
-
-C.global = [
-
+    ["Module/Game/Game", cc.SpriteAtlas],
+    "Prefab/main",
+    ["Sound/click", cc.AudioClip],
+    ["Sound/bgm",   cc.AudioClip],
 ];
 
 C.game_star = [
-    [texture + "Game/Game", cc.SpriteAtlas],
-    [texture + "Common/Common", cc.SpriteAtlas],
-    prefab + "game_star",
-    prefab + "game_star_item",
-    [sound + "star_erase", cc.AudioClip],
-    [sound + "star_multi", cc.AudioClip],
-    [sound + "star_award_erase", cc.AudioClip],
-    [sound + "star_fadein", cc.AudioClip],
-    [sound + "die", cc.AudioClip],
-    [sound + "star_like_1", cc.AudioClip],
-    [sound + "star_like_2", cc.AudioClip],
-    [sound + "star_like_23", cc.AudioClip],
-    prefab + "dialog_item",
+    ["Module/Game/Game",        cc.SpriteAtlas],
+    ["Module/Common/Common",    cc.SpriteAtlas],
+    "Prefab/game_star",
+    "Prefab/game_star_item",
+    ["Sound/star_erase",        cc.AudioClip],
+    ["Sound/star_multi",        cc.AudioClip],
+    ["Sound/star_award_erase",  cc.AudioClip],
+    ["Sound/star_fadein",       cc.AudioClip],
+    ["Sound/die",               cc.AudioClip],
+    ["Sound/star_like_1",       cc.AudioClip],
+    ["Sound/star_like_2",       cc.AudioClip],
+    ["Sound/star_like_23",      cc.AudioClip],
+    "Prefab/dialog_item",
 ];
 
 C.game_russia = [
-    [texture + "Game/Game", cc.SpriteAtlas],
-    [texture + "Common/Common", cc.SpriteAtlas],
-    prefab + "game_russia",
+    ["Module/Game/Game",        cc.SpriteAtlas],
+    ["Module/Common/Common",    cc.SpriteAtlas],
+    "Prefab/game_russia",
 ];
 
 C.game_haul = [
-    [texture + "Game/Game", cc.SpriteAtlas],
-    [texture + "Common/Common", cc.SpriteAtlas],
-    prefab + "game_haul",
+    ["Module/Game/Game",        cc.SpriteAtlas],
+    ["Module/Common/Common",    cc.SpriteAtlas],
+    "Prefab/game_haul",
 ];
 
 C.game_union = [
-    [texture + "Game/Game", cc.SpriteAtlas],
-    [texture + "Common/Common", cc.SpriteAtlas],
-    prefab + "game_union",
-    prefab + "game_star_item",
-    prefab + "dialog_item",
-    [sound + "star_like_1", cc.AudioClip],
-    [sound + "star_like_2", cc.AudioClip],
-    [sound + "star_like_23", cc.AudioClip],
+    ["Module/Game/Game",        cc.SpriteAtlas],
+    ["Module/Common/Common",    cc.SpriteAtlas],
+    "Prefab/game_union",
+    "Prefab/game_star_item",
+    "Prefab/dialog_item",
+    ["Sound/star_like_1",       cc.AudioClip],
+    ["Sound/star_like_2",       cc.AudioClip],
+    ["Sound/star_like_23",      cc.AudioClip],
 ];
 
 C.revive = [
-    prefab + "dialog_revive"
+    "Prefab/dialog_revive"
 ];
 
 C.pause = [
-    prefab + "dialog_pause",
+    "Prefab/dialog_pause",
 ];
 
 C.settle = [
-    prefab + "dialog_settle",
+    "Prefab/dialog_settle",
 ];
 
 C.rank = [
-    prefab + "rank",
+    "Prefab/rank",
 ];
 
 C.archive = [
-    prefab + "dialog_archive",
+    "Prefab/dialog_archive",
 ];
 
 let ResourceConfig = C;
