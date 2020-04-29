@@ -33,7 +33,7 @@ export default class RankView extends ya.View {
     onInitData (data: any) {
         this.mode = data.mode || GameConstant.GAME_MODE.STAR;
 
-        this.is_support_wx = CC_WECHATGAME && (!!(window['wx'] && window['wx'].getOpenDataContext));
+        this.is_support_wx = cc.sys.platform === cc.sys.WECHAT_GAME && (!!(window['wx'] && window['wx'].getOpenDataContext));
     }
 
     onInitUI () {

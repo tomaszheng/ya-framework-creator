@@ -1,5 +1,5 @@
 
-let SC = {};
+let SC: any = {};
 
 SC.NONE = 0;
 SC.RED = 1;
@@ -49,4 +49,5 @@ SC.ITEM_MAX_SHARE = 10;
 SC.GOAL_AWARD_SCORE = 2e4;
 SC.GOAL_AWARD_SCORE_INC = 1e4;
 
-export default SC;
+let StarConfig = SC;
+export default StarConfig;

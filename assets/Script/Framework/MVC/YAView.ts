@@ -10,10 +10,12 @@ export default class YAView extends cc.Component {
 
     data: any = null;
 
-    init (params: any) {
-        this.data = params;
+    init (data: any) {
+        data = data || {}
+        
+        this.data = data;
 
-        this.onInitData(params);
+        this.onInitData(data);
 
         this.onInitUI();
 
@@ -24,9 +26,9 @@ export default class YAView extends cc.Component {
 
     /**
      * 初始化数据
-     * @param params 创建视图时传进来的数据
+     * @param data 创建视图时传进来的数据
      */
-    onInitData (params: any) {
+    onInitData (data: any) {
 
     }
 

@@ -1,4 +1,4 @@
-let UC = {};
+let UC: any = {};
 
 UC.NONE = 0;
 UC.RED = 1;
@@ -42,4 +42,5 @@ UC.ITEM_MAX_SHARE = 10;
 UC.GOAL_AWARD_SCORE = 2e4;
 UC.GOAL_AWARD_SCORE_INC = 1e4;
 
-export default UC;
+let UnionConfig = UC;
+export default UnionConfig;

@@ -1,5 +1,5 @@
 
-let RC = {};
+let RC: any = {};
 
 RC.NONE = 0;
 RC.RED = 1;
@@ -74,4 +74,5 @@ RC.REVIVE_MAX_SHARE = 6; //最多分享复活几次
 RC.GOAL_AWARD_SCORE = 2e4;
 RC.GOAL_AWARD_SCORE_INC = 1e4;
 
-export default RC;
+let RussiaConfig = RC;
+export default RussiaConfig;

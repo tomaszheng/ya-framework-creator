@@ -2,6 +2,7 @@ import ya from "../Framework/ya";
 import GlobalController from "../Module/Global/GlobalController";
 import MainController from "../Module/Main/MainController";
 import LoadingController from "../Module/Loading/LoadingController";
+import RankController from "../Module/Rank/RankController";
 
 export default class ControllerManager {
 
@@ -18,9 +19,9 @@ export default class ControllerManager {
     }
 
     private initControllers () {
-        ya.viewManager.register("global", new GlobalController());
-        ya.viewManager.register("loading", new LoadingController());
-        ya.viewManager.register("main", new MainController());
+        ya.viewManager.register("global",   new GlobalController());
+        ya.viewManager.register("loading",  new LoadingController());
+        ya.viewManager.register("main",     new MainController());
+        ya.viewManager.register("rank",     new RankController());
     }
-
 }

@@ -1,7 +1,6 @@
 import ya from "../../Framework/ya";
 import ResourceConfig from "../../Config/Resource/ResourceConfig";
 import EventConfig from "../../Config/EventConfig";
-import MainView from "./MainView";
 
 export default class MainController extends ya.Controller {
     get prefab () {

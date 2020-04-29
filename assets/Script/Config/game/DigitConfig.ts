@@ -1,5 +1,5 @@
 
-let DC = {};
+let DC: any = {};
 
 DC.COLOR = [
     cc.color(255, 255, 255),
@@ -21,4 +21,5 @@ DC.ROW = 5;
 DC.COLUMN = 5;
 
 
-export default DC;
+let DigitConfig = DC;
+export default DigitConfig;
