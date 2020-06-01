@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>unity_circle_bg.png</key>
+            <key>common_circle_bg.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,278},{90,90}}</string>
@@ -17,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_close.png</key>
+            <key>common_close.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,612},{60,60}}</string>
@@ -30,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{60,60}</string>
             </dict>
-            <key>unity_game_club.png</key>
+            <key>common_game_club.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,674},{50,50}}</string>
@@ -43,7 +43,7 @@
                 <key>sourceSize</key>
                 <string>{50,50}</string>
             </dict>
-            <key>unity_more.png</key>
+            <key>common_more.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,186},{90,90}}</string>
@@ -56,7 +56,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_pause.png</key>
+            <key>common_pause.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,550},{60,60}}</string>
@@ -69,7 +69,7 @@
                 <key>sourceSize</key>
                 <string>{60,60}</string>
             </dict>
-            <key>unity_rank.png</key>
+            <key>common_rank.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,94},{90,90}}</string>
@@ -82,7 +82,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_return.png</key>
+            <key>common_return.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,460},{88,88}}</string>
@@ -95,7 +95,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_service.png</key>
+            <key>common_service.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{90,90}}</string>
@@ -108,7 +108,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_share.png</key>
+            <key>common_share.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,370},{88,88}}</string>
@@ -121,7 +121,7 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>unity_sound_off.png</key>
+            <key>common_sound_off.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{44,726},{50,40}}</string>
@@ -134,7 +134,7 @@
                 <key>sourceSize</key>
                 <string>{60,60}</string>
             </dict>
-            <key>unity_sound_on.png</key>
+            <key>common_sound_on.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,726},{50,40}}</string>
@@ -153,13 +153,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>unity.png</string>
+            <string>common.png</string>
             <key>size</key>
             <string>{94,778}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:f543c2e7936632246654eb58d5e54fb7:1/1$</string>
             <key>textureFileName</key>
-            <string>unity.png</string>
+            <string>common.png</string>
         </dict>
     </dict>
 </plist>

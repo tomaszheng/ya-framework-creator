@@ -11,7 +11,7 @@
   "height": 126,
   "platformSettings": {},
   "subMetas": {
-    "Game": {
+    "game": {
       "ver": "1.0.4",
       "uuid": "68211c18-6af5-426b-8dfd-ba011b410da4",
       "rawTextureUuid": "dd0c54f3-4c48-4fa2-86b3-3ff280f69acf",
