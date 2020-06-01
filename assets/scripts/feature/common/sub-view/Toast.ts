@@ -1,11 +1,14 @@
 import ya from "../../../framework/ya";
 import SpriteFrameConfig from "../../../config/resource/SpriteFrameConfig";
 
+const {ccclass, property} = cc._decorator;
+
+@ccclass
 export default class Toast extends cc.Component {
 
     lblContent: cc.Label = null;
 
-    start () {
+    init () {
         this.node.setContentSize(cc.size(600, 100));
 
         let imgBg = new cc.Node();

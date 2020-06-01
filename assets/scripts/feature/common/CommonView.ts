@@ -13,22 +13,23 @@ export default class CommonView extends ya.View {
     }
 
     showToast (params: any) {
-        let node = null, script = null;
+        let node = null, toast = null;
         if (this.poolToasts.size() > 0) {
             node = this.poolToasts.get();
-            script = node.getComponent("Toast");
+            toast = node.getComponent("Toast");
         }
         else {
             node = new cc.Node();
-            script = node.addComponent(Toast);
+            toast = node.addComponent(Toast);
         }
 
-        script.reset(params);
+        toast.init();
+        toast.reset(params);
 
         node.position = cc.v2(cc.winSize.width * 0.5, cc.winSize.height * 0.6);
         this.node.addChild(node);
 
-        script.show(()=>{
+        toast.show(()=>{
             this.poolToasts.put(node);
         });
     }
