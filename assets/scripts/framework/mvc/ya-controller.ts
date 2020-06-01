@@ -77,13 +77,10 @@ export default class YAController {
             node = new cc.Node();
         }
 
-        console.error("this.component= " + this.component);
-
         view = node.getComponent(this.component);
         if (!view) {
             view = node.addComponent(this.component);
         }
-        console.error("this.component= " + this.component);
         view.init(params);
         
         return view;
