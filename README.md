@@ -1,4 +1,4 @@
-# YAFrameworkForCocosCreator
+# ya-framework-creator
 YAFramework一个基于CocosCreator的游戏框架，里面集合了几个方块游戏。
 
 # 目录结构说明
