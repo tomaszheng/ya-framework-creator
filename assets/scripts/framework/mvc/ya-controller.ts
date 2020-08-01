@@ -5,6 +5,7 @@
 
 import YAEventDispatcher from "../event/ya-event-dispatcher";
 import YALayerManager from "../manager/ya-layer-manager";
+import YAModel from "./ya-model";
 
 const {ccclass, property} = cc._decorator;
 
@@ -30,11 +31,11 @@ export default class YAController {
         return YALayerManager.getInstance().view;
     }
 
-    _model = null;
-    get model() {
+    protected _model: any = null;
+    public get model() {
         return this._model;
     }
-    set model(m) {
+    public set model(m) {
         this._model = m;
     }
 
@@ -51,14 +52,14 @@ export default class YAController {
     /**
      * 初始化全局事件监听
      */
-    initGlobalListener() {
+    protected initGlobalListener() {
         // 这里使用addGlobalListener添加事件
     }
 
     /**
      * 控制器事件，随着主view销毁而销毁
      */
-    initLifeListener() {
+    protected initLifeListener() {
         // 这里使用addModuleEvent添加事件
         // 销毁事件时使用clearModuleEvent
     }

@@ -74,5 +74,5 @@ RC.REVIVE_MAX_SHARE = 6; //最多分享复活几次
 RC.GOAL_AWARD_SCORE = 2e4;
 RC.GOAL_AWARD_SCORE_INC = 1e4;
 
-let RussiaConfig = RC;
-export default RussiaConfig;
+const RussiaConfig = RC;
+export { RussiaConfig };

@@ -12,13 +12,13 @@
   "design-resolution-width": 720,
   "design-resolution-height": 1280,
   "fit-width": true,
-  "fit-height": true,
+  "fit-height": false,
   "use-project-simulator-setting": true,
   "simulator-orientation": false,
-  "use-customize-simulator": true,
+  "use-customize-simulator": false,
   "simulator-resolution": {
-    "height": 1280,
-    "width": 720
+    "height": 1334,
+    "width": 750
   },
   "last-module-event-record-time": 0,
   "assets-sort-type": "name",

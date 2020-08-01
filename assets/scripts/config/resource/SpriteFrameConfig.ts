@@ -22,6 +22,5 @@ let T = {
     unity_circle_bg: "unity_circle_bg",
 };
 
-
-let SpriteFrameConfig = T;
-export default SpriteFrameConfig;
+const SpriteFrameConfig = T;
+export { SpriteFrameConfig }

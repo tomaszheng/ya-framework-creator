@@ -20,6 +20,5 @@ DC.COLOR = [
 DC.ROW = 5;
 DC.COLUMN = 5;
 
-
-let DigitConfig = DC;
-export default DigitConfig;
+const DigitConfig = DC;
+export { DigitConfig }

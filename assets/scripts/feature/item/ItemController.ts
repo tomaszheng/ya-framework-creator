@@ -1,5 +1,5 @@
 import ya from "../../framework/ya";
-import EventConfig from "../../config/EventConfig";
+import { EventConfig } from "../../config/EventConfig";
 
 export default class ItemController extends ya.Controller {
 

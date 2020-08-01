@@ -57,5 +57,5 @@ C.LIKE.UNION_PERFECT = 15;
 C.LIKE.UNION_SUPERSTAR = 20;
 
 
-let GameConstant = C;
-export default GameConstant;
+const GameConstant = C;
+export { GameConstant }

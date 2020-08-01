@@ -8,7 +8,7 @@ let uuid = () => {
     return "ekey" + (__uuid++).toString();
 }
 
-let EventConfig = {
+const EventConfig = {
     NET_CONNECTED: uuid(), //网络链接成功
 
     ON_SHOW: uuid(), // 切前台
@@ -50,4 +50,4 @@ let EventConfig = {
     MD_UNION_GOAL_CHANGE: uuid(),
 }
 
-export default EventConfig;
+export { EventConfig }

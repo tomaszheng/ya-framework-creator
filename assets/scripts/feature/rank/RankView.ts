@@ -1,5 +1,5 @@
 import ya from "../../framework/ya";
-import GameConstant from "../../config/GameConstant";
+import { GameConstant } from "../../config/GameConstant";
 
 const {ccclass, property} = cc._decorator;
 

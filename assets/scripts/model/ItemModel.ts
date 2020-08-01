@@ -4,11 +4,11 @@
 */
 
 import ya from "../framework/ya";
-import StorageConfig from "../config/StorageConfig";
-import GameConstant from "../config/GameConstant";
-import EventConfig from "../config/EventConfig";
+import {StorageConfig} from "../config/StorageConfig";
+import {GameConstant} from "../config/GameConstant";
+import {EventConfig} from "../config/EventConfig";
 
-export default class ItemModel extends ya.Model {
+class ItemModel extends ya.Model {
 
     item_dye_num: number = 0;
     item_mix_num: number = 0;
@@ -72,3 +72,5 @@ export default class ItemModel extends ya.Model {
         this.setItemNum(mode, m);
     }
 }
+
+export { ItemModel }

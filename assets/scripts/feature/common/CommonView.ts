@@ -13,7 +13,8 @@ export default class CommonView extends ya.View {
     }
 
     showToast (params: any) {
-        let node = null, toast = null;
+        let node = null;
+        let toast: Toast;
         if (this.poolToasts.size() > 0) {
             node = this.poolToasts.get();
             toast = node.getComponent("Toast");

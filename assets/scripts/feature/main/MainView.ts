@@ -1,8 +1,8 @@
 import ya from "../../framework/ya";
 import ResourceConfig from "../../config/resource/ResourceConfig";
-import StorageConfig from "../../config/StorageConfig";
-import EventConfig from "../../config/EventConfig";
-import GameText from "../../config/GameText";
+import { StorageConfig } from "../../config/StorageConfig";
+import { EventConfig } from "../../config/EventConfig";
+import { GameText } from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 

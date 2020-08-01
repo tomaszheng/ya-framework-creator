@@ -5,7 +5,7 @@
 
 import ya from "../framework/ya";
 
-export default class CacheModel extends ya.Model {
+class CacheModel extends ya.Model {
     inReview: boolean = false;
 
     constructor () {
@@ -22,3 +22,5 @@ export default class CacheModel extends ya.Model {
         }
     }
 }
+
+export { CacheModel }

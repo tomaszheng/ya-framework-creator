@@ -46,5 +46,5 @@ T.item_bomb = "炸弹";
 T.item_dye = "换色";
 
 
-let GameText = T;
-export default GameText;
+const GameText = T;
+export { GameText }

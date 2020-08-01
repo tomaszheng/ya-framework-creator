@@ -4,10 +4,11 @@
 主场景被加载后，用来对游戏的初始化
 */
 
-// import BasicPlatform from "./Platform/YABasicPlatform";
-// import WeChatPlatform from "./Platform/YAWeChatPlatform";
+// import BasicPlatform from "./Platform/BasicPlatform";
+// import WeChatPlatform from "./Platform/WeChatPlatform";
 import ya from "./framework/ya";
 import ControllerManager from "./manager/ControllerManager";
+import { ModelManager } from "./manager/ModelManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -30,6 +31,8 @@ export default class launcher extends cc.Component {
         ya.getInstance();
 
         ControllerManager.getInstance();
+
+        ModelManager.instance.init();
 
         this.launch();
     }

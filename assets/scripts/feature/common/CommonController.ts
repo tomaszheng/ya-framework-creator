@@ -4,7 +4,7 @@
 */
 
 import ya from "../../framework/ya"
-import EventConfig from "../../config/EventConfig";
+import { EventConfig } from "../../config/EventConfig";
 
 export default class CommonController extends ya.Controller {
     get root () {
@@ -16,8 +16,8 @@ export default class CommonController extends ya.Controller {
     }
 
     initGlobalListener() {
-        ya.eventDispatcher.on(EventConfig.ON_SHOW, this.onShow, this); // 监听切前台
-        ya.eventDispatcher.on(EventConfig.ON_HIDE, this.onHide, this); // 监听切后台
+        cc.game.on(cc.game.EVENT_SHOW, this.onShow, this);
+        cc.game.on(cc.game.EVENT_HIDE, this.onHide, this);
 
         ya.eventDispatcher.on(EventConfig.SHOW_TOAST,       this.onShowToast, this);        // 显示toast
         ya.eventDispatcher.on(EventConfig.SHOW_WAITING,     this.onShowWaitting, this);     // 显示等待界面

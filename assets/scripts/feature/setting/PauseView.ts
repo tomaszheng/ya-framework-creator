@@ -1,5 +1,5 @@
 import ya from "../../framework/ya";
-import GameText from "../../config/GameText";
+import { GameText } from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 

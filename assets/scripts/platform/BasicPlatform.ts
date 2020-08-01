@@ -2,13 +2,13 @@
 平台接口的基础类
 */
 
-import YAEventConfig from "../config/ya-event-config";
-import ya from "../ya";
+import YAEventConfig from "../framework/config/ya-event-config";
+import ya from "../framework/ya";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class YABasicPlatform {
+export default class BasicPlatform {
     OS: string = "web";
 
     // 无需做适配的手机品牌
@@ -60,7 +60,7 @@ export default class YABasicPlatform {
     }
 
     //登录
-    login() {
+    login(cb?: Function) {
 
     }
 
@@ -129,12 +129,12 @@ export default class YABasicPlatform {
     }
 
     //获取用户的设置信息
-    getSetting() {
+    getSetting(cb?: Function, scope?: string) {
 
     }
 
     //打开用户的设置界面
-    openSetting(cb:Function|null) {
+    openSetting(cb?: Function, scope?: string) {
         cb && cb(0);
     }
 
@@ -163,12 +163,12 @@ export default class YABasicPlatform {
     }
 
     //创建视频广告
-    createVideoAd(name:string) {
+    createVideoAd(name?: string) {
 
     }
 
     //显示视频广告
-    showVideoAd(name:string, cb) {
+    showVideoAd(cb, name?: string) {
 
     }
 

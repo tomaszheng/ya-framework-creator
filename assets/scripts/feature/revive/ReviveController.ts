@@ -1,6 +1,6 @@
 import ya from "../../framework/ya";
-import EventConfig from "../../config/EventConfig";
 import ResourceConfig from "../../config/resource/ResourceConfig";
+import { EventConfig } from "../../config/EventConfig";
 
 export default class ReviveController extends ya.Controller {
     initGlobalListener () {

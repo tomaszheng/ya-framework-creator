@@ -3,7 +3,7 @@
 本地存储的关键字
 */
 
-let StorageConfig = {    
+const StorageConfig = {
     SHARE_STAR_REVIVE_NUM: "s4", //star分享复活次数
     STAR_WEEK_SCORE: "s5",
     STAR_WEEK_TIME: "s6",
@@ -29,5 +29,5 @@ let StorageConfig = {
     SHARE_UNION_REVIVE_NUM: "s36",
 }
 
-export default StorageConfig;
+export { StorageConfig }
 

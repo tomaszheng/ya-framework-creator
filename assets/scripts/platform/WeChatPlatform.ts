@@ -2,12 +2,16 @@
 微信小游戏平台接口类
 */
 
-import YABasicPlatform from "./ya-basic-platform";
+import BasicPlatform from "./BasicPlatform";
+import {GameConstant} from "../config/GameConstant";
+import {EventConfig} from "../config/EventConfig";
+import {GameText} from "../config/GameText";
+import ya from "../framework/ya";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class YAWeChatPlatform extends YABasicPlatform {
+class WeChatPlatform extends BasicPlatform {
     systemInfo:any = null;
     btnUserInfo:any = null;
     btnGameClub:any = null;
@@ -27,6 +31,8 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     videoCloses:any = {};
     videoLoaded:any = {};   // 视频广告是否加载成功
 
+    loc_login_data: any = {};
+
     bannerHandler:any = null;
     shareCallback:Function = null;
 
@@ -41,7 +47,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     }
 
     onError() {
-        wx.onError((res) => {
+        window['wx'].onError((res) => {
 
         });
     }
@@ -54,16 +60,16 @@ export default class YAWeChatPlatform extends YABasicPlatform {
             data_list.push({ key: key, value: params[key].toString() });
         }
 
-        let context = wx.getOpenDataContext();
-        context.postMessage({ action: ya.const.WX.AC_STORAGE, kvlist: data_list });
+        let context = window['wx'].getOpenDataContext();
+        context.postMessage({ action: GameConstant.WX.AC_STORAGE, kvlist: data_list });
     }
 
     authorize(scope, cb) {
-        if (!wx.authorize) return;
+        if (!window['wx'].authorize) return;
 
         !cb && (cb = scope, scope = "scope.userInfo");
-        
-        wx.authorize({
+
+        window['wx'].authorize({
             scope: scope,
             success: () => {
                 if (scope === "scope.userInfo") {
@@ -77,7 +83,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         });
     }
 
-    _callSetting(code, settings, scope, cb) {
+    _callSetting(code, settings?: any, scope?: string, cb?: Function) {
         let callback = (code) => {
             cb && (cb(code), cb = null);
         };
@@ -101,17 +107,17 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         }
     }
 
-    getSetting(scope, cb) {
-        !cb && (cb = scope, scope = "scope.userInfo");
+    getSetting(callback, scope) {
+        !scope && (scope = "scope.userInfo");
 
-        if (!wx.getSetting) {
+        if (!window['wx'].getSetting) {
             callback(-1);
             return;
         }
 
-        wx.getSetting({
+        window['wx'].getSetting({
             success: (res) => {
-                this._callSetting(0, res.authSetting, scope, cb);
+                this._callSetting(0, res.authSetting, scope, callback);
             },
             fail: () => {
                 this._callSetting(-1);
@@ -119,12 +125,12 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         });
     }
 
-    openSetting(scope, cb) {
-        !cb && (cb = scope, scope = "scope.userInfo");
+    openSetting(cb, scope) {
+        !scope && (scope = "scope.userInfo");
 
-        if (!wx.openSetting) return;
-        
-        wx.openSetting({
+        if (!window['wx'].openSetting) return;
+
+        window['wx'].openSetting({
             success: (res) => {
                 this._callSetting(0, res.authSetting, scope, cb);
             },
@@ -135,12 +141,12 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     }
 
     getUserInfo(cb) {
-        if (!wx.getUserInfo) {
+        if (!window['wx'].getUserInfo) {
             cb && cb(-1);
             return;
         }
 
-        wx.getUserInfo({
+        window['wx'].getUserInfo({
             withCredentials: true,
             success: (res) => {
                 cb && cb(0, res);
@@ -152,15 +158,15 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     }
 
     login(cb:Function) {
-        if (!wx.login) return;
-        
-        wx.login({
+        if (!window['wx'].login) return;
+
+        window['wx'].login({
             success: (res) => {
                 this.loc_login_data = this.loc_login_data || {};
                 this.loc_login_data.code = res.code;
                 this.getSetting((ret) => {
                     if (ret === 0) {
-                        this.getUserInfoWithOutButton(cb);
+                        // this.getUserInfoWithOutButton(cb);
                     } else {
                         if (cb) cb(0);
                     }
@@ -173,9 +179,9 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     }
 
     checkSession(cb) {
-        if (!wx.checkSession) return;
+        if (!window['wx'].checkSession) return;
 
-        wx.checkSession({
+        window['wx'].checkSession({
             success: () => {
                 cb && cb(0);
             },
@@ -187,7 +193,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
 
     getSystemInfoSync() {
         if (!this.systemInfo) {
-            this.systemInfo = wx.getSystemInfoSync();
+            this.systemInfo = window['wx'].getSystemInfoSync();
         }
         return this.systemInfo;
     }
@@ -202,14 +208,14 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         let systemInfo = this.getSystemInfoSync();
         let version = systemInfo.version;
 
-        if (!wx.createUserInfoButton || version === "6.6.6") return false;
+        if (!window['wx'].createUserInfoButton || version === "6.6.6") return false;
 
         if (this.btnUserInfo) {
             this.btnUserInfo.destroy();
             this.btnUserInfo = null;
         }
 
-        this.btnUserInfo = wx.createUserInfoButton({
+        this.btnUserInfo = window['wx'].createUserInfoButton({
             type: "image",
             image: "images/img_pure.png",
             style: {
@@ -233,8 +239,8 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     }
 
     saveImageToPhotosAlbum(filePath, cb) {
-        if (wx.saveImageToPhotosAlbum) {
-            wx.saveImageToPhotosAlbum({
+        if (window['wx'].saveImageToPhotosAlbum) {
+            window['wx'].saveImageToPhotosAlbum({
                 filePath: filePath,
                 success: () => {
                     cb && cb(0);
@@ -255,8 +261,8 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     completeCb: 调用接口后的回调
     */
     navigateToProgram(appid, data, cb) {
-        if (wx.navigateToMiniProgram) {
-            wx.navigateToMiniProgram({
+        if (window['wx'].navigateToMiniProgram) {
+            window['wx'].navigateToMiniProgram({
                 appId: appid,
                 path: data.path,
                 extraData: data.extra,
@@ -276,9 +282,9 @@ export default class YAWeChatPlatform extends YABasicPlatform {
 
     //预览图片
     previewImage(urls, cb) {
-        if (!urls || url.length < 1 || !wx.previewImage) return;
+        if (!urls || urls.length < 1 || !window['wx'].previewImage) return;
 
-        wx.previewImage({
+        window['wx'].previewImage({
             urls: urls,
             success: () => {
                 cb && cb(0);
@@ -295,13 +301,13 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         return false;
     }
 
-    createVideoAd(name:string) {
+    createVideoAd(name?: string) {
         if (!this.isSupportAd()) return;
 
         let adid = this.videoIds[name];
         let handler = this.videoHandlers[name];
         if (!handler) {
-            handler = wx.createRewardedVideoAd({
+            handler = window['wx'].createRewardedVideoAd({
                 adUnitId: adid
             });
 
@@ -310,7 +316,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
                     this.loadVideoAd(name);
                 }, 500);
                 if (err.errCode) {
-                    ya.event.emit(ya.ekey.SHOW_TOAST, { txt: cc.js.formatStr(ya.txt.ad_err_tips, err.errCode.toString()) });
+                    ya.eventDispatcher.emit(EventConfig.SHOW_TOAST, { txt: cc.js.formatStr(GameText.ad_err_tips, err.errCode.toString()) });
                 }
             });
 
@@ -337,7 +343,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         this.videoHandlers[name].load();
     }
 
-    showVideoAd(name:string, cb) {
+    showVideoAd(cb, name: string) {
         let handler = this.videoHandlers[name];
         if (handler) {
             this.videoCloses[name] = cb;
@@ -357,7 +363,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         this.destoryBannerAd();
 
         let frame_size = cc.view.getFrameSize();
-        this.bannerHandler = wx.createBannerAd({
+        this.bannerHandler = window['wx'].createBannerAd({
             adUnitId: 'adunit-bc4c247f8cbd5fce',
             style: {
                 left: 0,
@@ -389,10 +395,10 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         if (!this.isSupportGameClub()) return;
 
         if (!this.btnGameClub) {
-            this.btnGameClub = wx.createGameClubButton({
+            this.btnGameClub = window['wx'].createGameClubButton({
                 type: "image",
                 icon: "white",
-                image: ya.res.image_pure,
+                image: "images/img_pure.png",
                 style: {
                     top: params.top,
                     left: params.left,
@@ -400,7 +406,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
                     height: params.height,
                 }
             });
-            this.btnGameClub.image = ya.res.image_pure;
+            this.btnGameClub.image = "images/img_pure.png";
         }
         else {
             let style = this.btnGameClub.style;
@@ -429,7 +435,7 @@ export default class YAWeChatPlatform extends YABasicPlatform {
     openCustomerService() {
         if (!this.isSupportCustomerService()) return;
 
-        wx.openCustomerServiceConversation({
+        window['wx'].openCustomerServiceConversation({
             showMessageCard: false,
         });
     }
@@ -441,8 +447,8 @@ export default class YAWeChatPlatform extends YABasicPlatform {
 
     setClipboardData(content) {
         !content && (content = "");
-        
-        wx.setClipboardData({
+
+        window['wx'].setClipboardData({
             data: String(content)
         });
     }
@@ -451,29 +457,29 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         super.listen();
 
         //菜单栏转发
-        wx.showShareMenu({
+        window['wx'].showShareMenu({
             withShareTicket: true
         });
 
-        wx.onShareAppMessage(() => {
+        window['wx'].onShareAppMessage(() => {
             return {
-                title: ya.txt.share_title_common,
-                imageUrl: ya.res.share_common_img,
+                title: GameText.share_title_common,
+                imageUrl: GameText.share_common_img,
             };
         });
 
         if (window['wx'] && window['wx'].getOpenDataContext) {
-            window['wx'].getOpenDataContext().postMessage({ action: ya.const.WX.AC_INIT });
+            window['wx'].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_INIT });
         }
     }
 
     exit() {
-        wx.exitMiniProgram();
+        window['wx'].exitMiniProgram();
     }
 
     hideKeyboard(scb, fcb, ccb) {
-        if (wx.hideKeyboard) {
-            wx.hideKeyboard({
+        if (window['wx'].hideKeyboard) {
+            window['wx'].hideKeyboard({
                 success: () => {
                     scb && scb();
                 },
@@ -485,23 +491,23 @@ export default class YAWeChatPlatform extends YABasicPlatform {
                 }
             });
         }
-        if (wx.offKeyboardConfirm) {
-            wx.offKeyboardConfirm();
+        if (window['wx'].offKeyboardConfirm) {
+            window['wx'].offKeyboardConfirm();
         }
-        if (wx.offKeyboardInput) {
-            wx.offKeyboardInput();
+        if (window['wx'].offKeyboardInput) {
+            window['wx'].offKeyboardInput();
         }
-        if (wx.offKeyboardComplete) {
-            wx.offKeyboardComplete();
+        if (window['wx'].offKeyboardComplete) {
+            window['wx'].offKeyboardComplete();
         }
     }
 
     garbageCollect() {
-        wx.triggerGC();
+        window['wx'].triggerGC();
     }
 
     keepScreenOn() {
-        wx.setKeepScreenOn({
+        window['wx'].setKeepScreenOn({
             keepScreenOn: true
         });
     }
@@ -514,10 +520,10 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         let greater230 = (this.getSystemInfoSync().SDKVersion || "0") >= "2.3.0";
 
         let query = params.query || "";
-        let title = params.title || ya.txt.share_title_common;
-        let imageUrl = params.imageUrl || ya.res.image_share_common;
+        let title = params.title || GameText.share_title_common;
+        let imageUrl = params.imageUrl || "images/common_share_img.jpg";
 
-        wx.shareAppMessage({
+        window['wx'].shareAppMessage({
             title: title,
             imageUrl: imageUrl,
             query: query, //透传参数"key1=1&key2=2"格式
@@ -544,3 +550,5 @@ export default class YAWeChatPlatform extends YABasicPlatform {
         }, 3200);
     }
 }
+
+export { WeChatPlatform }
