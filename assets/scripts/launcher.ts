@@ -6,14 +6,14 @@
 
 // import BasicPlatform from "./Platform/BasicPlatform";
 // import WeChatPlatform from "./Platform/WeChatPlatform";
-import ya from "./framework/ya";
 import ControllerManager from "./manager/ControllerManager";
 import { ModelManager } from "./manager/ModelManager";
+import {ya} from "./framework/ya";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class launcher extends cc.Component {
+export default class Launcher extends cc.Component {
     @property(cc.Node)
     layerView:cc.Node = null;
 
@@ -28,9 +28,8 @@ export default class launcher extends cc.Component {
         ya.layer.dialog = this.layerDialog; // 弹窗层
         ya.layer.view = this.layerView;     // 场景层
 
-        ya.getInstance();
-
-        ControllerManager.getInstance();
+        ya.init();
+        ControllerManager.getInstance().init();
 
         ModelManager.instance.init();
 

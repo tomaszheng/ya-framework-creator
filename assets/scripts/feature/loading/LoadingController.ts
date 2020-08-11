@@ -2,10 +2,11 @@
 加载界面控制器
 */
 
-import ya from "../../framework/ya";
+import {ya} from "../../framework/ya";
+import {LoadingView} from "./LoadingView";
 
-export default class LoadingController extends ya.Controller {
-    get component () {
-        return "LoadingView";
-    }
+class LoadingController extends ya.Controller {
+    protected _view: LoadingView;
 }
+
+export {LoadingController};

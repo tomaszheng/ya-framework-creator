@@ -1,20 +1,22 @@
-import ya from "../../framework/ya";
+import {ya} from "../../framework/ya";
+import {EventConfig} from "../../config/EventConfig";
 import ResourceConfig from "../../config/resource/ResourceConfig";
-import { EventConfig } from "../../config/EventConfig";
 
-export default class SettingController extends ya.Controller {
-    initGlobalListener () {
+class SettingController extends ya.Controller {
+    protected initGlobalListener() {
+        super.initGlobalListener();
+
         this.addGlobalListener(EventConfig.EVT_SHOW_PAUSE, this.onShowPause, this);
     }
 
-    onShowPause (params: any) {
+    onShowPause (data: any) {
         ya.resourceManager.load(ResourceConfig.pause, () => {
-            ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "Prefab/dialog_pause",
-                script: "PauseView",
-                dataLoadded: true,
-                showType: ya.DialogProperty.ShowTypes.SCALE,
-            }), params);
+            ya.dialogManager.show('Prefab/dialog_pause', data, {
+                showType: ya.DialogShowTypes.SCALE,
+                dataLoaded: true,
+            });
         });
     }
 }
+
+export {SettingController};

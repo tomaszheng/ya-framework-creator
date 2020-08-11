@@ -3,111 +3,78 @@
 统一初始化Controller，并持有所有Controller的句柄
 */
 
-import YAController from "../mvc/ya-controller";
+import {YaController} from "../mvc/ya-controller";
+import {Singleton} from "../singleton/Singleton";
 
-export default class YAViewManager {
-    static CLASS_NAME = "YAViewManager";
+class YaViewManager extends Singleton<YaViewManager> {
 
-    private static _instance: YAViewManager;
-    static getInstance(): YAViewManager {
-        if (!this._instance) {
-            this._instance = new YAViewManager();
-        }
-        return this._instance;
-    }
+    views: string[] = [];
+    controllers: YaController[] = [];
 
-    controllers = [];
-    stack = [];
-
-    private constructor () {
-
-    }
-
-    register (name: string, controller: YAController) {
+    public register(name: string, controller: YaController) {
         if (!this.isViewExist(name)) {
             this.controllers[name] = controller;
         }
     }
 
-    isViewExist (name: string) {
+    public isViewExist(name: string) {
         return !!this.controllers[name];
     }
 
-    get (name: string) {
+    public get(name: string) {
         return this.controllers[name];
     }
 
-    /**
-     * 显示某一视图模块
-     * @param name 待显示的模块名称
-     * @param data 传给视图的初始数据
-     * @param cleanly 显示视图之前是否要清理其他已打开的视图
-     */
-    show (name: string, data?: any, cleanly?: boolean) {
-        data = data || null;
-        cleanly = cleanly || false;
+    public show(name: string, data?: any, cleanly?: boolean) {
+        if (cleanly) this.clear();
 
-        if (cleanly) {
-            this.clean();
-        }
-
-        let controller = this.controllers[name];
+        const controller = this.controllers[name];
         if (!controller) {
-            cc.warn(`Not Found: ${name} in show fun of ${YAViewManager.CLASS_NAME}`);
+            cc.error(`Not found view '${name}`);
             return;
         }
 
         controller.show(data);
 
-        this.stack.push(name);
+        this.views.push(name);
     }
 
-    /**
-     * 隐藏除了栈顶视图之外的其他所有视图
-     */
-    hide () {
-        let controller:YAController;
-        for (let i = 0; i < this.stack.length - 1; i++) {
-            controller = this.controllers[this.stack[i]];
-            controller && controller.hide();
+    public hide() {
+        let controller: YaController;
+        for (let i = 0; i < this.views.length - 1; i++) {
+            controller = this.controllers[this.views[i]];
+            if (controller) controller.hide();
         }
     }
 
-    /**
-     * 移除某一视图模块
-     * @param name 视图名称
-     */
-    remove (name: string) {
+    public remove(name: string) {
         let controller = this.get(name);
-        if (!controller) {
-            cc.warn(`Not Found: ${name} in remove fun of ${YAViewManager.CLASS_NAME}`);
-            return;
-        }
+        if (!controller) return;
 
         controller.remove();
 
-        for (let i = 0; i < this.stack.length; i++) {
-            if (this.stack[i] === name) {
-                if (i === this.stack.length - 1 && i !== 0) {
-                    controller = this.controllers[this.stack[i - 1]];
-                    controller && controller.display();
+        this.views.some((viewName, i) => {
+            if (viewName === name) {
+                if (i === this.views.length - 1 && i !== 0) {
+                    controller = this.controllers[this.views[i - 1]];
+                    controller.display();
                 }
-                this.stack.splice(i, 1);
-                break;
+                this.views.splice(i, 1);
+                return true;
             }
-        }
+        });
     }
 
-    /**
-     * 移除所有的视图模块
-     */
-    clean () {
-        let name: string, controller: YAController;
-        while (this.stack.length > 0) {
-            name = this.stack.pop();
+    public clear() {
+        let name: string;
+        let controller: YaController;
+        while (this.views.length > 0) {
+            name = this.views.pop();
             controller = this.get(name);
-
-            controller && controller.remove();
+            if (controller) controller.remove();
         }
     }
 }
+
+const yaViewManager = YaViewManager.instance(YaViewManager);
+export {yaViewManager};

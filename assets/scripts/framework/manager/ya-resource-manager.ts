@@ -1,54 +1,46 @@
 /*
 资源管理器
-统一处理资源的加载
+统一处理资源的加载，针对Native和Web平台，略有区别：
+Native平台：
+有需要时再加载
+Web平台：
+在打开某一功能模块之前，建议把所有依赖和用到的资源全部加载/下载
 */
 
-import YAUtils from "../utils/ya-utils";
+import {YaUtils} from "../utils/ya-utils";
+import {Singleton} from "../singleton/Singleton";
 
-export default class YAResourceManager {
-    
-    private spriteAtalss = {};
+class YaResourceManager extends Singleton<YaResourceManager> {
+    private spriteAtlases = {};
     private spriteFrames = {};
-    private resourceLoaddeds = {};
+    private resourceLoaded = {};
 
-    private static _instance: YAResourceManager = null;
-    static getInstance(): YAResourceManager {
-        if (!this._instance) {
-            this._instance = new YAResourceManager();
-        }
-        return this._instance;
-    }
-
-    private constructor () {
-
-    }
-
-    splitPathAndType (res: any) {
-        let path: string = "", type: cc.Asset = null;
+    splitPathAndType(res: any) {
+        let path = "";
+        let type: cc.Asset = null;
         if (typeof res === "string") {
-            path = res
-        }
-        else {
+            path = res;
+        } else {
             path = res[0];
             type = res[1];
         }
-        return {path: path, type: type};
+        return {path, type};
     }
 
-    splitPathsAndTypes (resList: any[]) {
-        let paths = [], types: typeof cc.Asset[] = [];
+    splitPathsAndTypes(resList: any[]) {
+        const paths = [];
+        const types: typeof cc.Asset[] = [];
 
         for (let i = 0; i < resList.length; i++) {
             if (typeof resList[i] === "string") {
                 paths[i] = resList[i];
-            }
-            else {
+            } else {
                 paths[i] = resList[i][0];
                 types[i] = resList[i][1];
             }
         }
 
-        return {paths: paths, types: types};
+        return {paths, types};
     }
 
     /**
@@ -57,50 +49,47 @@ export default class YAResourceManager {
      * @param progressCallback 加载进度回调
      * @param completedCallback 加载完成回调
      */
-    load (resList: any[], completedCallback: Function, progressCallback?: any) {
-        if (this.isLoadded(resList)) {
-            YAUtils.doCallback(completedCallback, null);
-        }
-        else {
-            let pathAndTypes = this.splitPathsAndTypes(resList);
+    load(resList: any[], completedCallback: () => void, progressCallback?: any) {
+        if (this.isLoaded(resList)) {
+            YaUtils.doCallback(completedCallback, null);
+        } else {
+            const pathAndTypes = this.splitPathsAndTypes(resList);
             cc.loader.loadResArray(pathAndTypes.paths, pathAndTypes.types, (completedCount: number, totalCount: number, item: any) => {
                 this.loadProgress(completedCount, totalCount, item, progressCallback);
             }, (error: Error, resource: any[]) => {
                 if (!!error) {
                     console.error(`error=${error}`);
                     this.load(resList, completedCallback, progressCallback);
-                }
-                else {
+                } else {
                     this.loadCompleted(resource, resList, completedCallback);
                 }
             });
         }
     }
-    
-    private loadProgress(completedCount: number, totalCount: number, item: any, progressCallback: Function) {
+
+    private loadProgress(completedCount: number, totalCount: number, item: any, progressCallback: ()=>void) {
         if (!item) { // 下载出错
 
-        }
-        else {
-            YAUtils.doCallback(progressCallback, {
-                item: item,
-                totalCount: totalCount,
-                completedCount: completedCount,
+        } else {
+            YaUtils.doCallback(progressCallback, {
+                item,
+                totalCount,
+                completedCount,
             });
         }
     }
 
-    private loadCompleted(resource: any[], resList: any[], completedCallback: Function) {
-        this.setLoadded(resList, true);
+    private loadCompleted(resource: any[], resList: any[], completedCallback: ()=>void) {
+        this.setLoaded(resList, true);
 
         this.cacheSpriteAtlas(resource);
 
-        YAUtils.doCallback(completedCallback, null);
+        YaUtils.doCallback(completedCallback, null);
     }
-    
-    setLoadded (resList: any[], loadded: boolean) {
-        for (let i = 0; i < resList.length; i++) {
-            this.resourceLoaddeds[resList[i]] = loadded;
+
+    setLoaded(resList: any[], loaded: boolean) {
+        for (const res of resList) {
+            this.resourceLoaded[res] = loaded;
         }
     }
 
@@ -108,27 +97,26 @@ export default class YAResourceManager {
      * 判断给定的资源列表是否加载完成
      * @param resList 资源列表
      */
-    isLoadded (resList: any[]) {
-        for (let i = 0; i < resList.length; i++) {
-            if (!this.resourceLoaddeds[resList[i]]) {
+    isLoaded(resList: any[]) {
+        for (const res of resList) {
+            if (!this.resourceLoaded[res]) {
                 return false;
             }
         }
-
         return true;
     }
 
-    private cacheSpriteAtlas (resource: any[]) {
+    private cacheSpriteAtlas(resource: any[]) {
         if (!resource || resource.length <= 0) return;
-        
+
         resource.forEach(item => {
             if (item instanceof cc.SpriteAtlas) {
-                this.spriteAtalss[item.name] = item;
+                this.spriteAtlases[item.name] = item;
 
-                let spriteFrames = item.getSpriteFrames();
+                const spriteFrames = item.getSpriteFrames();
                 spriteFrames.forEach(spriteFrame => {
                     this.spriteFrames[spriteFrame.name] = spriteFrame;
-                })
+                });
             }
         });
     }
@@ -137,7 +125,10 @@ export default class YAResourceManager {
      * 获取图集中的精灵帧
      * @param name 精灵帧名称
      */
-    getSpriteFrame (name: string) {
+    getSpriteFrame(name: string) {
         return this.spriteFrames[name];
     }
 }
+
+const yaResourceManager = YaResourceManager.instance(YaResourceManager);
+export {yaResourceManager};

@@ -1,10 +1,10 @@
-import ya from "../../framework/ya";
-import Toast from "./sub-view/Toast";
+import {ya} from "../../framework/ya";
+import {Toast} from "./sub-view/Toast";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class CommonView extends ya.View {
+class CommonView extends ya.View {
 
     poolToasts: cc.NodePool = null;
 
@@ -35,3 +35,5 @@ export default class CommonView extends ya.View {
         });
     }
 }
+
+export {CommonView};

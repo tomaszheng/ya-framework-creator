@@ -7,8 +7,7 @@ class PlatformManager {
         if (!this._instance) {
             if (cc.sys.platform === cc.sys.WECHAT_GAME) {
                 this._instance = new WeChatPlatform();
-            }
-            else {
+            } else {
                 this._instance = new BasicPlatform();
             }
         }
@@ -16,4 +15,4 @@ class PlatformManager {
     }
 }
 
-export { PlatformManager }
+export {PlatformManager};

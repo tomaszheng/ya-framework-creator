@@ -1,11 +1,8 @@
-import ya from "../../framework/ya";
+import {ya} from "../../framework/ya";
+import {RankView} from "./RankView";
 
-export default class RankController extends ya.Controller{
-    get prefab () {
-        return 'prefab/rank';
-    }
-
-    get component () {
-        return 'RankView';
-    }
+class RankController extends ya.Controller {
+    protected _view: RankView;
 }
+
+export {RankController};

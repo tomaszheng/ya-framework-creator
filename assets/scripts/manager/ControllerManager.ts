@@ -1,8 +1,8 @@
-import ya from "../framework/ya";
 import CommonController from "../feature/common/CommonController";
 import MainController from "../feature/main/MainController";
 import LoadingController from "../feature/loading/LoadingController";
 import RankController from "../feature/rank/RankController";
+import {ya} from "../framework/ya";
 
 export default class ControllerManager {
 
@@ -14,11 +14,7 @@ export default class ControllerManager {
         return this._instance;
     }
 
-    private constructor () {
-        this.initControllers();
-    }
-
-    private initControllers () {
+    public init() {
         ya.viewManager.register("common",   new CommonController());
         ya.viewManager.register("loading",  new LoadingController());
         ya.viewManager.register("main",     new MainController());

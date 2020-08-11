@@ -3,259 +3,270 @@
 统一处理视图、弹窗的生命周期：显示、关闭
 */
 
-import YALayerManager from "./ya-layer-manager";
-import YADialogProperty from "../mvc/ya-dialog-property";
-import YAFunctions from "../utils/ya-functions";
+import {YaDialogProperty} from "../mvc/ya-dialog-property";
+import {Singleton} from "../singleton/Singleton";
+import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "../mvc/ya-dialog";
+import {yaLayerManager} from "./ya-layer-manager";
+import getClassName = cc.js.getClassName;
 
-export default class YADialogManager {
+interface IOption {
+    showType?: YaDialogShowTypes;
+    character?: number;
+    dataLoaded?: boolean;
+}
 
-    /**
-     * 所有弹窗的根节点
-     */
-    get root () {
-        return YALayerManager.getInstance().dialog;
+interface IWaitingData {
+    id: number;
+    option: IOption;
+    prefabPath?: string;
+    classname?: string;
+    data?: any;
+}
+
+class YaDialogManager extends Singleton<YaDialogManager> {
+
+    public get root() {
+        return yaLayerManager.dialog;
     }
 
-    _zIndex: number = 0;
-    set zIndex (zIndex: number) {
+    public set zIndex(zIndex: number) {
         this._zIndex = zIndex;
     }
-    get zIndex () {
+
+    public get zIndex() {
         return this._zIndex++;
     }
 
-    queue = [];
-    stack = [];
+    private static _idSeed = 0;
 
-    _background: cc.Node = null;
-    /**
-     * 所有弹窗公用的背景
-     */
-    set background (background: cc.Node) {
-        this._background = background;
-        this.root.addChild(background);
-    }
-    get background () {
-        return this._background;
+    private _waitingList = [];
+    private _dialogs = [];
+
+    private _zIndex = 0;
+    private _background: cc.Node = null;
+
+    public static nextId() {
+        return this._idSeed++;
     }
 
-    private static _instance: YADialogManager = null;
-    static getInstance (): YADialogManager {
-        if (!this._instance) {
-            this._instance = new YADialogManager();
+    private static generateDefaultWaitingData(prefabOrClassname: string, data: any, option: IOption) {
+        if (!option.showType) {
+            option.showType = YaDialogShowTypes.SCALE;
         }
-        return this._instance;
+        if (!option.character) {
+            option.character = YaDialogCharacter.UNIQUE;
+        }
+        option.dataLoaded = !!option.dataLoaded;
+
+        let prefabPath = '';
+        let classname = '';
+        if (prefabOrClassname.indexOf('/') === -1) {
+            classname = prefabOrClassname;
+        } else {
+            prefabPath = prefabOrClassname;
+        }
+
+        const id = YaDialogManager.nextId();
+        const waitingData: IWaitingData = {
+            id,
+            data,
+            prefabPath,
+            classname,
+            option
+        };
+        return waitingData;
     }
 
-    private constructor () {
+    private static isSameClass(waitingData: IWaitingData, dialog: YaDialog) {
+        if (waitingData.classname && cc.js.getClassName(dialog) === waitingData.classname) return true;
+        return waitingData.prefabPath && dialog.instantiatedPrefabPath === waitingData.prefabPath;
+    }
+
+    public init() {
         this.root.setContentSize(cc.winSize);
         this.root.setAnchorPoint(cc.v2());
         this.zIndex = this.root.zIndex;
     }
-    
-    getDialog (did: number) {
-        for (let i = 0; i < this.stack.length; i++) {
-            if (this.stack[i].did === did) {
-                return this.stack[i];
+
+    getDialog(id: number) {
+        for (const dialog of this._dialogs) {
+            if (dialog.id === id) {
+                return dialog;
             }
         }
     }
 
-    checkBackgroud () {
-        if (!this.background) {
-            let node = new cc.Node();
-            let sprite = node.addComponent(cc.Sprite);
+    private _checkBackground() {
+        if (!this._background) {
+            const node = new cc.Node();
+            const sprite = node.addComponent(cc.Sprite);
             sprite.type = cc.Sprite.Type.SLICED;
             sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM;
             node.color = cc.color(0, 0, 0);
             node.active = false;
             node.opacity = 0;
             node.anchorX = node.anchorY = 0;
+            node.parent = this.root;
             node.setContentSize(cc.winSize);
-            this.background = node;
+            this._background = node;
         }
 
-        if (this.stack.length <= 0) {
-            this.background.active = false;
-        }
-        else {
-            let active = this.background.active;
-            this.background.active = true;
+        if (this._dialogs.length <= 0) {
+            this._background.active = false;
+        } else {
+            const active = this._background.active;
+            this._background.active = true;
             if (!active) {
-                cc.Tween.stopAllByTarget(this.background);
-                this.background.opacity = 0;
-                cc.tween(this.background).to(0.2, {fade: 178});
+                cc.Tween.stopAllByTarget(this._background);
+                this._background.opacity = 0;
+                cc.tween(this._background).to(0.2, {fade: 178});
             }
-            this.background.zIndex = this.stack[this.stack.length - 1].node.zIndex - 1;
+            this._background.zIndex = this.getLastSiblingZIndex() - 1;
         }
     }
 
-    push (property: YADialogProperty): number;
-    push (property: YADialogProperty, data: any): number;
-    push (property: YADialogProperty, data: any, index: any): number;
-    push (property: YADialogProperty, ...args: any[]): number {
-        if (!property.prefab || !property.script) {
-            return property.did;
+    public getLastSiblingZIndex() {
+        let zIndex = 0;
+        if (this._dialogs.length > 0) {
+            zIndex = this._dialogs[this._dialogs.length - 1].node.zIndex;
         }
-
-        let data: any = null, index: number = 0;
-        if (args.length === 1) {
-            data = args[0];
-        }
-        else if (args.length === 2) {
-            data = args[0];
-            data = args[1];
-        }
-
-        if (!YAFunctions.isValid(index) || index >= this.queue.length || index < 0) {
-            this.queue.push({property: property, data: data});
-        }
-        else {
-            this.queue.splice(index, 0, {property: property, data: data});
-        }
-
-        return property.did;
+        return zIndex;
     }
-    
+
     /**
-     * 取出队列前端的弹窗数据，并打开相应的弹窗，与push配合适用
+     * 用于弹窗队列，与pop方法配合使用
+     * @param prefabOrClassname
+     * @param data
+     * @param option
      */
-    pop () {
-        if (this.queue.length <= 0) return;
+    public push(prefabOrClassname: string, data: any, option: IOption) {
+        const waitingData = YaDialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
+        this._waitingList.splice(0, 0, waitingData);
+    }
 
-        if (this.stack.length > 0) {
-            let dialog = this.stack[this.stack.length - 1];
-            if (dialog.node.active && dialog.property.top) {
-                if (!this.queue[0].property.top) {
+    public pop() {
+        if (this._waitingList.length <= 0) return;
+
+        if (this._dialogs.length > 0) {
+            const dialog = this._dialogs[this._dialogs.length - 1];
+            if (dialog.node.active && (dialog.character & YaDialogCharacter.TOP) > 0) {
+                if ((this._waitingList[0].character & YaDialogCharacter.TOP) > 0) {
                     return;
                 }
             }
         }
 
-        let info = this.queue.shift();
-        this.show(info.property, info.data);
+        const waitingData = this._waitingList.shift();
+        this._show(waitingData);
     }
-    
-	/*
-	_hide 私有方法，外部不能调用
-	    新界面被打开，隐藏当前已经显示的界面
-	    逻辑控制
-	        如果当前界面设置了ALWAYS_SHOW=true 不隐藏当前界面
+
+    /*
+    _hide 私有方法，外部不能调用
+        新界面被打开，隐藏当前已经显示的界面
+        逻辑控制
+            如果当前界面设置了ALWAYS_SHOW=true 不隐藏当前界面
     */
     /**
      * 当新界面被打开时，隐藏原先最顶部的弹窗
      */
-    private hide () {
-        if (this.stack.length > 0) {
-            let dialog = this.stack[this.stack.length - 1]
-            if (!dialog.params.always) {
+    private _hide() {
+        if (this._dialogs.length > 0) {
+            const dialog = this._dialogs[this._dialogs.length - 1];
+            if ((dialog.character & YaDialogCharacter.RESIDENT) > 0) {
                 dialog.hide();
             }
         }
     }
 
-    /**
-     * 检查是否存在已经打开的界面与t界面相同，如果相同则移除已经打开的界面
-     * @param t 
-     */
-    private unique (property: YADialogProperty) {
-        if (this.stack.length <= 0) return;
+    private _unique(waitingData: IWaitingData) {
+        if (this._dialogs.length <= 0) return;
 
-        for (let i = 0; i < this.stack.length; i++) {
-            if (property.script === this.stack[i].property.script && this.stack[i].property.unique) {
-                this.stack[i].node.destroy();
-                this.stack.splice(i, 1);
-                break;
+        this._dialogs.some((dialog, i) => {
+            if (YaDialogManager.isSameClass(waitingData, dialog) && (dialog.character & YaDialogCharacter.UNIQUE) > 0) {
+                dialog.node.destroy();
+                this._dialogs.splice(i, 1);
             }
-        }
+        });
     }
 
-   /**
-    * 打开一个弹窗
-    * @param property 弹窗属性
-    * @param data 初始化弹窗的数据
-    */
-    show (property: YADialogProperty, data?: any) {
-        //打开一个界面之前先检查弹窗层状态
+    public show(prefabOrClassname: string, data: any, option: IOption) {
+        // 打开一个界面之前先检查弹窗层状态
         // this.reset();
 
-        this.hide();
-        this.unique(property);
+        const waitingData = YaDialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
 
-        this._show(property, data);
+        this._hide();
+        this._unique(waitingData);
 
-        this.checkBackgroud();
+        this._show(waitingData);
+
+        this._checkBackground();
     }
 
-    private _show (property: YADialogProperty, data?: any) {
-        let handler = cc.instantiate(cc.loader.getRes(property.prefab));
-        let component = handler.getComponent(property.script);
+    private _show(waitingData: IWaitingData) {
+        const handler = cc.instantiate(cc.loader.getRes(waitingData.prefabPath));
+        const dialog = handler.getComponent(YaDialog);
 
-        this.stack.push(component);
+        this._dialogs.push(dialog);
 
-        component.init(property, data);
-        component.show();
+        dialog.id = waitingData.id;
+        dialog.showType = waitingData.option.showType;
+        dialog.character = waitingData.option.character;
+        dialog.dataLoaded = waitingData.option.dataLoaded;
+        dialog.init(waitingData.data);
+        dialog.show();
 
-        this.root.addChild(handler, ++this.zIndex);
+        dialog.node.parent = this.root;
+        dialog.node.zIndex = ++this.zIndex;
     }
 
-    private _remove (did: number) {
-       if (this.stack.length <= 0) return;
-       
-        for (let i = 0; i < this.stack.length; i++) {
-            if (this.stack[i].property.did === did) {
-                this.stack[i].node.destroy();
-                this.stack.splice(i, 1);
-                break;
+    private _remove(id: number) {
+        if (this._dialogs.length <= 0) return;
+
+        this._dialogs.some((dialog, i) => {
+            if (dialog.id === id) {
+                dialog.node.destroy();
+                this._dialogs.splice(i, 1);
+                return true;
             }
-        }
+        });
     }
 
-    /**
-    * 关闭一个弹窗或者一组弹窗
-    * @param did 
-    */
-    remove (did: number|number[]) {
-        if (did instanceof Array) {
-            for (let i = 0; i < did.length; i++) {
-                this._remove(did[i]);
-            }
-        }
-        else {
-            this._remove(did);
+    public remove(ids: number | number[]) {
+        if (ids instanceof Array) {
+            ids.forEach((id) => {
+                this._remove(id);
+            });
+        } else {
+            this._remove(ids);
         }
 
-        this.check();
+        this._check();
 
-        this.checkBackgroud();
-    }
-    
-    private prepare () {
-        this.pop();
+        this._checkBackground();
     }
 
-    private check () {
-        let length = this.stack.length;
-        if (this.stack.length > 0) {
-            let dialog = this.stack[length - 1];
+    private _check() {
+        const length = this._dialogs.length;
+        if (this._dialogs.length > 0) {
+            const dialog = this._dialogs[length - 1];
             if (!dialog.node.active) {
                 dialog.display();
             }
-        }
-        else if (this.queue.length > 0) {
-            this.prepare();
+        } else if (this._waitingList.length > 0) {
+            this.pop();
         }
     }
 
-    /**
-     * 清理所有的弹窗
-     */
-    clean () {
-        this.queue = [];
+    public clear() {
+        this._waitingList = [];
 
-        for (let i = 0; i < this.stack.length; i++) {
-            this.stack[i].node.destroy();
-        }
-        this.stack = [];
+        this._dialogs.forEach((dialog) => {
+            dialog.node.destroy();
+        });
+        this._dialogs = [];
     }
 }
+
+const yaDialogManager = YaDialogManager.instance(YaDialogManager);
+export {yaDialogManager};

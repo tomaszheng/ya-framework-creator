@@ -1,61 +1,56 @@
-import ya from "../../framework/ya";
-import { GameText } from "../../config/GameText";
+import {ya} from "../../framework/ya";
+import {GameText} from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PauseView extends ya.Dialog {
-    @property(cc.Label)
-    lbl_sound: cc.Label = null;
-    
-    @property(cc.Node)
-    btn_close: cc.Node = null;
+class PauseView extends ya.Dialog {
+    @property(cc.Label) lblSound: cc.Label = null;
+    @property(cc.Node) btnClose: cc.Node = null;
+    @property(cc.Node) btnContinue: cc.Node = null;
+    @property(cc.Node) btnRestart: cc.Node = null;
+    @property(cc.Node) btnMain: cc.Node = null;
+    @property(cc.Node) btnSound: cc.Node = null;
 
-    @property(cc.Node)
-    btn_continue: cc.Node = null;
+    continueCb: ()=>void = null;
+    restartCb: ()=>void = null;
+    mainCb: ()=>void = null;
 
-    @property(cc.Node)
-    btn_restart: cc.Node = null;
+    protected initData(data?: any) {
+        super.initData(data);
 
-    @property(cc.Node)
-    btn_main: cc.Node = null;
-
-    @property(cc.Node)
-    btn_sound: cc.Node = null;
-
-    continue_cb: Function = null;
-    restart_cb: Function = null;
-    main_cb: Function = null;
-
-    onInitData (data: any) {
-        this.continue_cb = data.continue_cb;
-        this.restart_cb = data.restart_cb;
-        this.main_cb = data.main_cb;
+        this.continueCb = data.continue_cb;
+        this.restartCb = data.restart_cb;
+        this.mainCb = data.main_cb;
     }
 
-    onInitUI () {
-        let enabled = ya.localStorage.bool(ya.StorageConfig.EFFECT_ENABLED, true);
-        this.lbl_sound.string = enabled ? GameText.str_005 : GameText.str_006;
+    protected initUI() {
+        super.initUI();
+
+        const enabled = ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
+        this.lblSound.string = enabled ? GameText.str_005 : GameText.str_006;
     }
 
-    onInitClick () {
-        ya.utils.addClickEvent(this.btn_close, ()=>{
+    protected initTouchEvent() {
+        super.initTouchEvent();
+
+        ya.button.addClick(this.btnClose, ()=>{
             this.onClickClose();
         });
 
-        ya.utils.addClickEvent(this.btn_continue, ()=>{
+        ya.button.addClick(this.btnContinue, ()=>{
             this.onClickContinue();
         });
 
-        ya.utils.addClickEvent(this.btn_restart, ()=>{
+        ya.button.addClick(this.btnRestart, ()=>{
             this.onClickRestart();
         });
 
-        ya.utils.addClickEvent(this.btn_main, ()=>{
+        ya.button.addClick(this.btnMain, ()=>{
             this.onClickMain();
         });
 
-        ya.utils.addClickEvent(this.btn_sound, ()=>{
+        ya.button.addClick(this.btnSound, ()=>{
             this.onClickSound();
         });
     }
@@ -63,7 +58,7 @@ export default class PauseView extends ya.Dialog {
     onClickClose () {
         this.removeSelf();
 
-        this.continue_cb && this.continue_cb();
+        ya.utils.doCallback(this.continueCb);
     }
 
     onClickSpace () {
@@ -73,26 +68,28 @@ export default class PauseView extends ya.Dialog {
     onClickContinue () {
         this.removeSelf();
 
-        this.continue_cb && this.continue_cb();
+        ya.utils.doCallback(this.continueCb);
     }
 
     onClickRestart () {
         this.removeSelf();
 
-        this.restart_cb && this.restart_cb();
+        ya.utils.doCallback(this.restartCb);
     }
 
     onClickMain () {
         this.removeSelf();
 
-        this.main_cb && this.main_cb();
+        ya.utils.doCallback(this.mainCb);
 
         ya.viewManager.show("main", null, true);
     }
 
     onClickSound () {
-        let enabled = !ya.localStorage.bool(ya.StorageConfig.EFFECT_ENABLED, true);
-        this.lbl_sound.string = enabled ? GameText.str_005 : GameText.str_006;
+        const enabled = !ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
+        this.lblSound.string = enabled ? GameText.str_005 : GameText.str_006;
         ya.soundManager.effect = enabled;
     }
 }
+
+export {PauseView};

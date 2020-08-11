@@ -3,65 +3,40 @@
 支持一对多的事件派发
 */
 
-const {ccclass, property} = cc._decorator;
+import {Singleton} from "../singleton/Singleton";
 
-@ccclass
-export default class YAEventDispatcher {
-    @property(cc.EventTarget)
-    private dispatcher: cc.EventTarget = null;
+class YaEventDispatcher extends Singleton<YaEventDispatcher> {
 
-    private static _instance: YAEventDispatcher = null;
-    static getInstance (): YAEventDispatcher {
-        if (!this._instance) {
-            this._instance = new YAEventDispatcher();
-        }
-        return this._instance;
+    private _dispatcher: cc.EventTarget = null;
+
+    public init() {
+        this._dispatcher = new cc.EventTarget();
     }
 
-    private constructor () {
-        this.dispatcher = new cc.EventTarget();
-    }
-    
-    on (name: string, callback: Function, target?: any) {
+    public add(name: string, callback: (args) => void, target?: any) {
         target = target || this;
-        this.dispatcher.on(name, callback, target);
+        this._dispatcher.on(name, callback, target);
     }
 
-    emit (name: string, params?: any) {
-        this.dispatcher.emit(name, params);
+    public dispatch(name: string, args?: any) {
+        this._dispatcher.emit(name, args);
     }
 
-    off (name: string, callback?: Function, target?: any) {
+    public remove(name: string, callback?: (args) => void, target?: any) {
         if (!callback) {
-            this.dispatcher.off(name);
-        }
-        else if (!target) {
-            this.dispatcher.off(name, callback);
-        }
-        else {
-            this.dispatcher.off(name, callback, target);
+            this._dispatcher.off(name);
+        } else if (!target) {
+            this._dispatcher.off(name, callback);
+        } else {
+            this._dispatcher.off(name, callback, target);
         }
     }
 
-    targetOff (target?: any) {
+    public removeTarget(target: any) {
         target = target || this;
-        this.dispatcher.targetOff(target);
-    }
-
-    addEvent (name: string, callback: Function, target?: any) {
-        target = target || this;
-        this.on(name, callback, target);
-    }
-
-    dispatchEvent (name: string, params?: any) {
-        this.emit(name, params);
-    }
-
-    removeEvent (name: string, callback?: Function, target?: any) {
-        this.off(name, callback, target);
-    }
-
-    removeTargetEvent (target: any) {
-        this.targetOff(target);
+        this._dispatcher.targetOff(target);
     }
 }
+
+const yaEventDispatcher = YaEventDispatcher.instance(YaEventDispatcher);
+export {yaEventDispatcher};

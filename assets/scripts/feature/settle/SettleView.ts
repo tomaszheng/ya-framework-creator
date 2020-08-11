@@ -1,54 +1,48 @@
-import ya from "../../framework/ya";
-import { GameConstant } from "../../config/GameConstant";
-import { GameText } from "../../config/GameText";
+import {GameConstant} from "../../config/GameConstant";
+import {ya} from "../../framework/ya";
+import {GameText} from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class SettleView extends ya.Dialog {
-    @property(cc.Label)
-    lbl_cur_score: cc.Label = null;
+class SettleView extends ya.Dialog {
+    @property(cc.Label) lblCurScore: cc.Label = null;
+    @property(cc.Node) imgRank: cc.Node = null;
+    @property(cc.Node) btnClose: cc.Node = null;
+    @property(cc.Node) btnShare: cc.Node = null;
+    @property(cc.Node) btnMain: cc.Node = null;
+    @property(cc.Node) btnRestart: cc.Node = null;
 
-    @property(cc.Node)
-    img_rank: cc.Node = null;
+    mode = -1;
+    score = -1;
+    restartCb: ()=>void = null;
+    mainCb: ()=>void = null;
 
-    @property(cc.Node)
-    btn_close: cc.Node = null;
+    viewWidth = 580;
+    viewHeight = 220;
 
-    @property(cc.Node)
-    btn_share: cc.Node = null;
+    isSupportWx = false;
 
-    @property(cc.Node)
-    btn_main: cc.Node = null;
+    _wxTex: cc.Texture2D = null;
+    _wxSpriteFrame: cc.SpriteFrame = null;
 
-    @property(cc.Node)
-    btn_restart: cc.Node = null;
+    protected initData(data?: any) {
+        super.initData(data);
 
-    mode: number = -1;
-    score: number = -1;
-    restart_cb: Function = null;
-    main_cb: Function = null;
-
-    view_width: number = 580;
-    view_height: number = 220;
-
-    is_support_wx: boolean = false;
-
-    _wx_tex: cc.Texture2D = null;
-    _wx_spriteframe: cc.SpriteFrame = null;
-    
-    onInitData (data: any) {
         this.mode = data.mode;
         this.score = data.score;
 
-        this.restart_cb = data.restart_cb;
-        this.main_cb = data.main_cb;
+        this.restartCb = data.restart_cb;
+        this.mainCb = data.main_cb;
 
-        this.is_support_wx = CC_WECHATGAME && (!!(window['wx'] && window['wx'].getOpenDataContext));
+        const wx = 'wx';
+        this.isSupportWx = CC_WECHATGAME && (!!(window[wx] && window[wx].getOpenDataContext));
     }
 
-    onInitUI () {
-        this.lbl_cur_score.string = this.score.toString();
+    protected initUI() {
+        super.initUI();
+
+        this.lblCurScore.string = this.score.toString();
 
         let action = 0;
         if (this.mode === GameConstant.GAME_MODE.STAR) {
@@ -61,42 +55,47 @@ export default class SettleView extends ya.Dialog {
             action = GameConstant.WX.AC_F_UNION_SETTLE;
         }
 
-        if (this.is_support_wx) {
-            let canvas = window['wx'].getOpenDataContext().canvas;
-            canvas.width = this.view_width;
-            canvas.height = this.view_height;
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            const canvas = window[wx].getOpenDataContext().canvas;
+            canvas.width = this.viewWidth;
+            canvas.height = this.viewHeight;
 
-            this._wx_tex = new cc.Texture2D();
-            this._wx_spriteframe = new cc.SpriteFrame();
+            this._wxTex = new cc.Texture2D();
+            this._wxSpriteFrame = new cc.SpriteFrame();
 
-            window['wx'].getOpenDataContext().postMessage({ action: action });
+            window[wx].getOpenDataContext().postMessage({ action });
         }
     }
 
-    onInitClick () {
-        ya.utils.addClickEvent(this.btn_close, ()=>{
+    protected initTouchEvent() {
+        super.initTouchEvent();
+        ya.button.addClick(this.btnClose, ()=>{
             this.onClickClose();
         });
 
-        ya.utils.addClickEvent(this.btn_share, ()=>{
+        ya.button.addClick(this.btnShare, ()=>{
             this.onClickShare();
         });
 
-        ya.utils.addClickEvent(this.btn_main, ()=>{
+        ya.button.addClick(this.btnMain, ()=>{
             this.onClickMain();
         });
 
-        ya.utils.addClickEvent(this.btn_restart, ()=>{
+        ya.button.addClick(this.btnRestart, ()=>{
             this.onClickRestart();
         });
     }
 
-    update (dt: number) {
-        if (this.is_support_wx) {
-            this._wx_tex.initWithElement(window['wx'].getOpenDataContext().canvas);
-            this._wx_tex.handleLoadedTexture();
-            this._wx_spriteframe.setTexture(this._wx_tex);
-            this.img_rank.getComponent(cc.Sprite).spriteFrame = this._wx_spriteframe;
+    protected update(dt: number) {
+        super.update(dt);
+
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            this._wxTex.initWithElement(window[wx].getOpenDataContext().canvas);
+            this._wxTex.handleLoadedTexture();
+            this._wxSpriteFrame.setTexture(this._wxTex);
+            this.imgRank.getComponent(cc.Sprite).spriteFrame = this._wxSpriteFrame;
         }
     }
 
@@ -111,7 +110,8 @@ export default class SettleView extends ya.Dialog {
     }
 
     onClickShare () {
-        let title = "", str = "";
+        let title = '';
+        let str = '';
         if (this.mode === GameConstant.GAME_MODE.STAR) {
             str = GameText.mode_001;
         }
@@ -131,12 +131,14 @@ export default class SettleView extends ya.Dialog {
     onClickRestart () {
         this.removeSelf();
 
-        this.restart_cb && this.restart_cb();
+        ya.utils.doCallback(this.restartCb);
     }
 
     onClickMain () {
         this.removeSelf();
 
-        this.main_cb && this.main_cb();
+        ya.utils.doCallback(this.mainCb);
     }
 }
+
+export {SettleView};

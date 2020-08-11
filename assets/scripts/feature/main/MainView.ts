@@ -1,59 +1,32 @@
-import ya from "../../framework/ya";
 import ResourceConfig from "../../config/resource/ResourceConfig";
-import { StorageConfig } from "../../config/StorageConfig";
-import { EventConfig } from "../../config/EventConfig";
-import { GameText } from "../../config/GameText";
+import {StorageConfig} from "../../config/StorageConfig";
+import {ya} from "../../framework/ya";
+import {GameText} from "../../config/GameText";
+import {EventConfig} from "../../config/EventConfig";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class MainView extends ya.View {
-    @property(cc.Node)
-    img_bg: cc.Node = null;
+class MainView extends ya.View {
+    @property(cc.Node) imgBg: cc.Node = null;
+    @property(cc.Node) btnSound: cc.Node = null;
+    @property(cc.Node) btnCustomerService: cc.Node = null;
+    @property(cc.Node) btnGameClub: cc.Node = null;
+    @property(cc.Node) btnShare: cc.Node = null;
+    @property(cc.Node) btnRank: cc.Node = null;
+    @property(cc.Node) btnMore: cc.Node = null;
+    @property(cc.Node) btnRecommend: cc.Node = null;
+    @property(cc.Node) lblTagRecommend: cc.Node = null;
+    @property(cc.Node) btnHot: cc.Node = null;
+    @property(cc.Node) lblTagHot: cc.Node = null;
+    @property(cc.Node) btnPlayed: cc.Node = null;
+    @property(cc.Node) lblTagPlayed: cc.Node = null;
+    @property(cc.Node) lblTitle: cc.Node = null;
+    @property(cc.Node) imgTitleBg: cc.Node = null;
 
-    @property(cc.Node)
-    btn_sound: cc.Node = null;
+    protected initUI() {
+        super.initUI();
 
-    @property(cc.Node)
-    btn_customer_service: cc.Node = null;
-
-    @property(cc.Node)
-    btn_game_club: cc.Node = null;
-
-    @property(cc.Node)
-    btn_share: cc.Node = null;
-
-    @property(cc.Node)
-    btn_rank: cc.Node = null;
-
-    @property(cc.Node)
-    btn_more: cc.Node = null;
-
-    @property(cc.Node)
-    btn_recommend: cc.Node = null;
-
-    @property(cc.Node)
-    lbl_tag_recommend: cc.Node = null;
-
-    @property(cc.Node)
-    btn_hot: cc.Node = null;
-
-    @property(cc.Node)
-    lbl_tag_hot: cc.Node = null;
-
-    @property(cc.Node)
-    btn_played: cc.Node = null;
-
-    @property(cc.Node)
-    lbl_tag_played: cc.Node = null;
-
-    @property(cc.Node)
-    lbl_title: cc.Node = null;
-
-    @property(cc.Node)
-    img_title_bg: cc.Node = null;
-
-    onInitUI () {
         this.runRelativeAction();
 
         cc.tween(this.node)
@@ -61,55 +34,56 @@ export default class MainView extends ya.View {
                 cc.tween()
                     .delay(2.0)
                     .call(()=>{
-                        this.runBounceAction(this.btn_recommend, this.lbl_tag_recommend);
+                        this.runBounceAction(this.btnRecommend, this.lblTagRecommend);
                     })
                     .delay(3.0)
                     .call(()=>{
-                        this.runBounceAction(this.btn_hot, this.lbl_tag_hot);
+                        this.runBounceAction(this.btnHot, this.lblTagHot);
                     })
                     .delay(3.0)
                     .call(()=>{
-                        this.runBounceAction(this.btn_played, this.lbl_tag_played);
+                        this.runBounceAction(this.btnPlayed, this.lblTagPlayed);
                     })
                     .delay(1.0)
             )
             .start();
-        
-        let enabled = ya.soundManager.music;
-        this.btn_sound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
+
+        const enabled = ya.soundManager.music;
+        this.btnSound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
 
         this.scheduleOnce(()=>{
             this.setGameClub();
         }, 0.1);
     }
-    
-    onInitClick () {
-        ya.utils.addClickEvent(this.btn_sound, ()=>{
+
+    protected initTouchEvent() {
+        super.initTouchEvent();
+
+        ya.button.addClick(this.btnSound, ()=>{
             this.onClickSound();
         });
-        ya.utils.addClickEvent(this.btn_customer_service, ()=>{
-            this.onClickCostomerService();
+        ya.button.addClick(this.btnCustomerService, ()=>{
+            this.onClickCustomerService();
         });
-        ya.utils.addClickEvent(this.btn_game_club, ()=>{
+        ya.button.addClick(this.btnGameClub, ()=>{
             this.onClickGameClub();
         });
-        ya.utils.addClickEvent(this.btn_share, ()=>{
+        ya.button.addClick(this.btnShare, ()=>{
             this.onClickShare();
         });
-        ya.utils.addClickEvent(this.btn_rank, ()=>{
+        ya.button.addClick(this.btnRank, ()=>{
             this.onClickRank();
         });
-        ya.utils.addClickEvent(this.btn_more, ()=>{
+        ya.button.addClick(this.btnMore, ()=>{
             this.onClickMoreGame();
         });
-
-        ya.utils.addClickEvent(this.btn_recommend, ()=>{
+        ya.button.addClick(this.btnRecommend, ()=>{
             this.onClickRecommend();
         });
-        ya.utils.addClickEvent(this.btn_hot, ()=>{
+        ya.button.addClick(this.btnHot, ()=>{
             this.onClickHot();
         });
-        ya.utils.addClickEvent(this.btn_played, ()=>{
+        ya.button.addClick(this.btnPlayed, ()=>{
             this.onClickPlayed();
         });
     }
@@ -123,14 +97,14 @@ export default class MainView extends ya.View {
 
     onClickRecommend () {
         ya.resourceManager.load(ResourceConfig.game_star, () => {
-            let data = ya.localStorage.obj(StorageConfig.STAR_ARCHIVE);
+            const data = ya.localStorage.getObject(StorageConfig.STAR_ARCHIVE);
             if (data && data.l > 0) {
-                ya.eventDispatcher.emit(EventConfig.EVT_SHOW_ARCHIVE, {
+                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
                     continue_cb: () => {
                         ya.viewManager.show('star', null, true);
                     },
                     restart_cb: () => {
-                        ya.localStorage.clean(StorageConfig.STAR_ARCHIVE);
+                        ya.localStorage.clear(StorageConfig.STAR_ARCHIVE);
                         ya.viewManager.show('star', null, true);
                     }
                 });
@@ -143,14 +117,14 @@ export default class MainView extends ya.View {
 
     onClickHot() {
         ya.resourceManager.load(ResourceConfig.game_union, () => {
-            let data = ya.localStorage.obj(StorageConfig.UNION_ARCHIVE);
+            const data = ya.localStorage.getObject(StorageConfig.UNION_ARCHIVE);
             if (data && data.s > 0) {
-                ya.eventDispatcher.emit(EventConfig.EVT_SHOW_ARCHIVE, {
+                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
                     continue_cb: () => {
                         ya.viewManager.show('union', null, true);
                     },
                     restart_cb: () => {
-                        ya.localStorage.clean(StorageConfig.UNION_ARCHIVE);
+                        ya.localStorage.clear(StorageConfig.UNION_ARCHIVE);
                         ya.viewManager.show('union', null, true);
                     }
                 });
@@ -163,14 +137,14 @@ export default class MainView extends ya.View {
 
     onClickPlayed() {
         ya.resourceManager.load(ResourceConfig.game_russia, () => {
-            let data = ya.localStorage.obj(StorageConfig.RUSSIA_ARCHIVE);
+            const data = ya.localStorage.getObject(StorageConfig.RUSSIA_ARCHIVE);
             if (data && data.s > 0) {
-                ya.eventDispatcher.emit(EventConfig.EVT_SHOW_ARCHIVE, {
+                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
                     continue_cb: () => {
                         ya.viewManager.show('russia', null, true);
                     },
                     restart_cb: () => {
-                        ya.localStorage.clean(StorageConfig.RUSSIA_ARCHIVE);
+                        ya.localStorage.clear(StorageConfig.RUSSIA_ARCHIVE);
                         ya.viewManager.show('russia', null, true);
                     }
                 });
@@ -182,7 +156,7 @@ export default class MainView extends ya.View {
     }
 
     onClickMoreGame() {
-        ya.eventDispatcher.emit(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
+        ya.eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
     }
 
     onClickRank() {
@@ -201,7 +175,7 @@ export default class MainView extends ya.View {
 
     }
 
-    onClickCostomerService() {
+    onClickCustomerService() {
         // if (!ya.platform.isSupportCustomerService()) {
         //     ya.event.emit(ya.ekey.SHOW_TOAST, {txt: ya.txt.str_009});
         // }
@@ -211,15 +185,15 @@ export default class MainView extends ya.View {
     }
 
     setGameClub() {
-        let p = this.btn_game_club.parent.convertToWorldSpaceAR(this.btn_game_club.position);
-        let size = this.btn_game_club.getContentSize();
+        const p = this.btnGameClub.parent.convertToWorldSpaceAR(this.btnGameClub.position);
+        const size = this.btnGameClub.getContentSize();
 
-        let lx = p.x - size.width * 0.5;
-        let ty = p.y + size.height * 0.5;
+        const lx = p.x - size.width * 0.5;
+        const ty = p.y + size.height * 0.5;
 
-        let fsz = cc.view.getFrameSize();
-        let dsz = cc.view.getDesignResolutionSize();
-        let scale = fsz.width / dsz.width;
+        const fsz = cc.view.getFrameSize();
+        const dsz = cc.view.getDesignResolutionSize();
+        const scale = fsz.width / dsz.width;
 
         // ya.platform.createGameClubButton({
         //     left: lx * scale,
@@ -236,7 +210,7 @@ export default class MainView extends ya.View {
     }
 
     onClickSound () {
-        let enabled = !ya.localStorage.bool(ya.StorageConfig.EFFECT_ENABLED, true);
+        const enabled = !ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
         if (enabled) {
             ya.soundManager.playMusic('Sound/bmg', true);
         }
@@ -244,21 +218,20 @@ export default class MainView extends ya.View {
             ya.soundManager.stopMusic();
         }
 
-        this.btn_sound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
+        this.btnSound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
 
         ya.soundManager.music = enabled;
         ya.soundManager.effect = enabled;
     }
 
     runRelativeAction () {
-        cc.tween(this.lbl_title)
+        cc.tween(this.lblTitle)
             .repeatForever(
                 cc.tween()
                     .by(2, {position: cc.v2(0, 32)})
                     .by(2, {position: cc.v2(0, -32)}))
             .start();
-        
-        cc.tween(this.img_title_bg)
+        cc.tween(this.imgTitleBg)
             .delay(2)
             .repeatForever(
                 cc.tween()
@@ -267,7 +240,7 @@ export default class MainView extends ya.View {
             .start();
     }
 
-    runBounceAction (node: cc.Node, sub_node: cc.Node) {
+    runBounceAction (node: cc.Node, subNode: cc.Node) {
         cc.tween(node)
             .parallel(
                 cc.tween().by(0.2, {position: cc.v2(0, 30)}, {easing: "sineOut"}),
@@ -281,7 +254,7 @@ export default class MainView extends ya.View {
             .by(0.2, {position: cc.v2(0, -30)}, {easing: "sineIn"})
             .start();
 
-        cc.tween(sub_node)
+        cc.tween(subNode)
             .parallel(
                 cc.tween()
                     .by(0.7, {position: cc.v2(0, 80)}, {easing: "sineOut"})
@@ -297,3 +270,5 @@ export default class MainView extends ya.View {
         // ya.platform.destoryGameClubButton();
     }
 }
+
+export {MainView};

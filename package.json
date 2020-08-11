@@ -1,0 +1,12 @@
+{
+  "name": "academy",
+  "version": "1.0.0",
+  "scripts": {},
+  "private": true,
+  "dependencies": {
+    "typescript": "3.9.7",
+    "tslint": "6.1.2",
+    "codelyzer": "6.0.0"
+  },
+  "devDependencies": {}
+}

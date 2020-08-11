@@ -1,42 +1,37 @@
-import ya from "../../framework/ya";
 import { GameConstant } from "../../config/GameConstant";
+import {ya} from "../../framework/ya";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class RankView extends ya.View {
-    @property(cc.Node)
-    nd_rank: cc.Node = null;
+class RankView extends ya.View {
+    @property(cc.Node) ndRank: cc.Node = null;
+    @property(cc.Node) imgRank: cc.Node = null;
+    @property(cc.Node) btnStar: cc.Node = null;
+    @property(cc.Node) btnUnion: cc.Node = null;
+    @property(cc.Node) btnRussia: cc.Node = null;
 
-    @property(cc.Node)
-    img_rank: cc.Node = null;
+    mode = -1;
 
-    @property(cc.Node)
-    btn_star: cc.Node = null;
+    viewWidth = 500;
+    viewHeight = 790;
 
-    @property(cc.Node)
-    btn_union: cc.Node = null;
+    isSupportWx = false;
 
-    @property(cc.Node)
-    btn_russia: cc.Node = null;
+    wxTexture: cc.Texture2D = null;
+    wxSpriteFrame: cc.SpriteFrame = null;
 
-    mode: number = -1;
+    protected initData(data?: any) {
+        super.initData(data);
 
-    view_width: number = 500;
-    view_height: number = 790;
-
-    is_support_wx: boolean = false;
-
-    wx_texture: cc.Texture2D = null;
-    wx_spriteFrame: cc.SpriteFrame = null;
-    
-    onInitData (data: any) {
         this.mode = data.mode || GameConstant.GAME_MODE.STAR;
-
-        this.is_support_wx = cc.sys.platform === cc.sys.WECHAT_GAME && (!!(window['wx'] && window['wx'].getOpenDataContext));
+        const wx = 'wx';
+        this.isSupportWx = cc.sys.platform === cc.sys.WECHAT_GAME && (!!(window[wx] && window[wx].getOpenDataContext));
     }
 
-    onInitUI () {
+    protected initUI() {
+        super.initUI();
+
         let action = 0;
         if (this.mode === GameConstant.GAME_MODE.STAR) {
             action = GameConstant.WX.AC_F_STAR_FETCH;
@@ -48,53 +43,59 @@ export default class RankView extends ya.View {
             action = GameConstant.WX.AC_F_RUSSIA_FETCH;
         }
 
-        if (this.is_support_wx) {
-            let canvas = window['wx'].getOpenDataContext().canvas;
-            canvas.width = this.view_width;
-            canvas.height = this.view_height;
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            const canvas = window[wx].getOpenDataContext().canvas;
+            canvas.width = this.viewWidth;
+            canvas.height = this.viewHeight;
 
-            this.wx_texture = new cc.Texture2D();
-            this.wx_spriteFrame = new cc.SpriteFrame();
+            this.wxTexture = new cc.Texture2D();
+            this.wxSpriteFrame = new cc.SpriteFrame();
 
-            window['wx'].getOpenDataContext().postMessage({ action: action });
+            window[wx].getOpenDataContext().postMessage({ action });
         }
     }
 
-    onInitClick () {
-        if (this.is_support_wx) {
-            this.nd_rank.on(cc.Node.EventType.TOUCH_MOVE, (event: cc.Event) => {
+    protected initTouchEvent() {
+        super.initTouchEvent();
+        if (this.isSupportWx) {
+            this.ndRank.on(cc.Node.EventType.TOUCH_MOVE, (event: cc.Event) => {
                 this.onMove(event);
             }, this);
         }
 
-        ya.utils.addClickEvent(this.btn_star, ()=>{
+        ya.button.addClick(this.btnStar, ()=>{
             this.onClickStar();
         });
-        ya.utils.addClickEvent(this.btn_union, ()=>{
+        ya.button.addClick(this.btnUnion, ()=>{
             this.onClickUnion();
         });
-        ya.utils.addClickEvent(this.btn_russia, ()=>{
+        ya.button.addClick(this.btnRussia, ()=>{
             this.onClickRussia();
         });
     }
 
-    update (dt: number) {
-        if (this.is_support_wx) {
-            this.wx_texture.initWithElement(window['wx'].getOpenDataContext().canvas);
-            this.wx_texture.handleLoadedTexture();
-            this.wx_spriteFrame.setTexture(this.wx_texture);
-            this.img_rank.getComponent(cc.Sprite).spriteFrame = this.wx_spriteFrame;
+    protected update(dt: number) {
+        super.update(dt);
+
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            this.wxTexture.initWithElement(window[wx].getOpenDataContext().canvas);
+            this.wxTexture.handleLoadedTexture();
+            this.wxSpriteFrame.setTexture(this.wxTexture);
+            this.imgRank.getComponent(cc.Sprite).spriteFrame = this.wxSpriteFrame;
         }
     }
 
     onMove (event: any) {
-        let touch = event.touch;
-        let curp = touch.getLocation();
-        let prep = touch.getPreviousLocation();
+        const touch = event.touch;
+        const curp = touch.getLocation();
+        const prep = touch.getPreviousLocation();
 
-        let action = GameConstant.WX.AC_SCROLL_V;
-        if (this.is_support_wx) {
-            window['wx'].getOpenDataContext().postMessage({ action: action, offsety: curp.y - prep.y });
+        const wx = 'wx';
+        const action = GameConstant.WX.AC_SCROLL_V;
+        if (this.isSupportWx) {
+            window[wx].getOpenDataContext().postMessage({ action, offsety: curp.y - prep.y });
         }
     }
 
@@ -107,8 +108,9 @@ export default class RankView extends ya.View {
 
         this.mode = GameConstant.GAME_MODE.STAR;
 
-        if (this.is_support_wx) {
-            window['wx'].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_STAR_FETCH });
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            window[wx].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_STAR_FETCH });
         }
     }
 
@@ -117,8 +119,9 @@ export default class RankView extends ya.View {
 
         this.mode = GameConstant.GAME_MODE.UNION;
 
-        if (this.is_support_wx) {
-            window['wx'].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_UNION_FETCH });
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            window[wx].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_UNION_FETCH });
         }
     }
 
@@ -127,9 +130,11 @@ export default class RankView extends ya.View {
 
         this.mode = GameConstant.GAME_MODE.RUSSIA;
 
-        if (this.is_support_wx) {
-            window['wx'].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_RUSSIA_FETCH });
+        const wx = 'wx';
+        if (this.isSupportWx) {
+            window[wx].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_F_RUSSIA_FETCH });
         }
     }
-
 }
+
+export {RankView};

@@ -3,7 +3,7 @@
 图集中的贴图纹理配置文件
 */
 
-let T = {
+const SpriteFrameConfig = {
     game_cube_square: "game_cube_square",
     game_cube_fillet: "game_cube_fillet",
     game_img_halo: "game_img_halo",
@@ -18,9 +18,7 @@ let T = {
     game_star_yellow: "game_star_yellow",
     game_star_select: "game_star_select",
     game_item_circle: "game_item_circle",
-    
     unity_circle_bg: "unity_circle_bg",
 };
 
-const SpriteFrameConfig = T;
-export { SpriteFrameConfig }
+export { SpriteFrameConfig };

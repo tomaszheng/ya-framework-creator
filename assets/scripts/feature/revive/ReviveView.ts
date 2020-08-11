@@ -1,52 +1,53 @@
-import ya from "../../framework/ya";
-import { GameText } from "../../config/GameText";
-import { GameConstant } from "../../config/GameConstant";
+import {GameConstant} from "../../config/GameConstant";
+import {ya} from "../../framework/ya";
+import {GameText} from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class ReviveView extends ya.Dialog {
-    @property(cc.Label)
-    lbl_tip: cc.Label = null;
+class ReviveView extends ya.Dialog {
+    @property(cc.Label) lblTip: cc.Label = null;
+    @property(cc.Label) lblReviveTxt: cc.Label = null;
 
-    @property(cc.Label)
-    lbl_revive_txt: cc.Label = null;
+    mode = -1;
+    score = -1;
+    reviveNum = -1;
+    totalNum = -1;
+    successCb: ()=>void = null;
+    failCb: ()=>void = null;
 
-    mode: number = -1;
-    score: number = -1;
-    revive_num: number = -1;
-    total_num: number = -1;
-    success_cb: Function = null;
-    fail_cb: Function = null;
+    protected initData(data?: any) {
+        super.initData(data);
 
-    onInitData (data: any) {
         this.mode = data.mode;
         this.score = data.score;
-        this.revive_num = data.revive_num;
-        this.total_num = data.total_num;
-        this.success_cb = data.success_cb;
-        this.fail_cb = data.fail_cb;
+        this.reviveNum = data.revive_num;
+        this.totalNum = data.total_num;
+        this.successCb = data.success_cb;
+        this.failCb = data.fail_cb;
     }
 
-    onInitUI () {
+    protected initUI() {
+        super.initUI();
+
         ya.soundManager.playEffect("Sound/die");
 
-        let str = cc.js.formatStr(GameText.str_004, this.revive_num, this.total_num);
-        this.lbl_tip.string = str;
+        const str = cc.js.formatStr(GameText.str_004, this.reviveNum, this.totalNum);
+        this.lblTip.string = str;
 
         if (this.mode === GameConstant.REVIVE_MODE.FREE) {
-            this.lbl_revive_txt.string = GameText.str_001;
+            this.lblReviveTxt.string = GameText.str_001;
         }
         else if (this.mode === GameConstant.REVIVE_MODE.SHARE) {
-            this.lbl_revive_txt.string = GameText.str_002;
+            this.lblReviveTxt.string = GameText.str_002;
         }
         else if (this.mode === GameConstant.REVIVE_MODE.VIDEO) {
-            this.lbl_revive_txt.string = GameText.str_003;
+            this.lblReviveTxt.string = GameText.str_003;
         }
     }
 
     onClickClose () {
-        this.fail_cb && this.fail_cb();
+        ya.utils.doCallback(this.failCb);
 
         this.removeSelf();
     }
@@ -80,8 +81,10 @@ export default class ReviveView extends ya.Dialog {
     }
 
     reviveSuccess () {
-        this.success_cb && this.success_cb();
+        ya.utils.doCallback(this.successCb);
 
         this.removeSelf();
     }
 }
+
+export {ReviveView};

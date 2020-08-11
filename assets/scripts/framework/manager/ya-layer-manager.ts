@@ -1,36 +1,48 @@
+import {Singleton} from "../singleton/Singleton";
 
-export default class YALayerManager {
-    
-    private static _instance: YALayerManager = null;
-    static getInstance(): YALayerManager {
-        if (!this._instance) {
-            this._instance = new YALayerManager();
-        }
-        return this._instance;
+class YaLayerManager extends Singleton<YaLayerManager> {
+    public get view(): cc.Node {
+        return this._view;
     }
 
-    _layerView: cc.Node = null;
-    set view(v: cc.Node) {
-        this._layerView = v;
-    }
-    get view() {
-        return this._layerView;
+    public get dialog(): cc.Node {
+        return this._dialog;
     }
 
-    _layerDialog:cc.Node = null;
-    set dialog(v: cc.Node) {
-        this._layerDialog = v;
-    }
-    get dialog() {
-        return this._layerDialog;
+    public get top(): cc.Node {
+        return this._top;
     }
 
-    _layerTop:cc.Node = null;
-    set top(v: cc.Node) {
-        this._layerTop = v;
-    }
-    get top() {
-        return this._layerTop;
+    private _view: cc.Node = null;
+    private _dialog: cc.Node = null;
+    private _top: cc.Node = null;
+
+    private static addFullScreenWidget(node) {
+        const widget: cc.Widget = node.addComponent(cc.Widget);
+        widget.alignMode = cc.Widget.AlignMode.ON_WINDOW_RESIZE;
+        widget.top = widget.bottom = widget.left = widget.right = 0;
     }
 
+    public init(): void {
+        const canvas = cc.find('Canvas');
+
+        this._view = new cc.Node();
+        this._view.parent = canvas;
+        this._view.zIndex = 1;
+
+        this._dialog = new cc.Node();
+        this._dialog.parent = canvas;
+        this._dialog.zIndex = 2;
+
+        this._top = new cc.Node();
+        this._top.parent = canvas;
+        this._top.zIndex = 3;
+
+        YaLayerManager.addFullScreenWidget(this._view);
+        YaLayerManager.addFullScreenWidget(this._dialog);
+        YaLayerManager.addFullScreenWidget(this._top);
+    }
 }
+
+const yaLayerManager = YaLayerManager.instance(YaLayerManager);
+export {yaLayerManager};

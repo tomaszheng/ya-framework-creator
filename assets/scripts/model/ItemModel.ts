@@ -3,34 +3,34 @@
 道具
 */
 
-import ya from "../framework/ya";
+import {ya} from "../framework/ya";
 import {StorageConfig} from "../config/StorageConfig";
 import {GameConstant} from "../config/GameConstant";
 import {EventConfig} from "../config/EventConfig";
 
 class ItemModel extends ya.Model {
 
-    item_dye_num: number = 0;
-    item_mix_num: number = 0;
-    item_bomb_num: number = 0;
+    itemDyeNum = 0;
+    itemMixNum = 0;
+    itemBombNum = 0;
 
     constructor () {
         super();
 
-        this.item_dye_num = ya.localStorage.int(StorageConfig.ITEM_DYE_NUM, 0);
-        this.item_mix_num = ya.localStorage.int(StorageConfig.ITEM_MIX_NUM, 0);
-        this.item_bomb_num = ya.localStorage.int(StorageConfig.ITEM_BOMB_NUM, 0);
+        this.itemDyeNum = ya.localStorage.getInt(StorageConfig.ITEM_DYE_NUM, 0);
+        this.itemMixNum = ya.localStorage.getInt(StorageConfig.ITEM_MIX_NUM, 0);
+        this.itemBombNum = ya.localStorage.getInt(StorageConfig.ITEM_BOMB_NUM, 0);
     }
 
     getItemNum (mode: number): number {
         let num = 0;
         switch(mode) {
             case GameConstant.ITEM_MODE.MIX:
-                num = this.item_mix_num; break;
+                num = this.itemMixNum; break;
             case GameConstant.ITEM_MODE.DYE:
-                num = this.item_dye_num; break;
+                num = this.itemDyeNum; break;
             case GameConstant.ITEM_MODE.BOMB:
-                num = this.item_bomb_num; break;
+                num = this.itemBombNum; break;
         }
         return num;
     }
@@ -40,18 +40,18 @@ class ItemModel extends ya.Model {
         switch(mode) {
             case GameConstant.ITEM_MODE.MIX:
                 skey = StorageConfig.ITEM_MIX_NUM;
-                this.item_mix_num = n; break;
+                this.itemMixNum = n; break;
             case GameConstant.ITEM_MODE.DYE:
                 skey = StorageConfig.ITEM_DYE_NUM;
-                this.item_dye_num = n; break;
+                this.itemDyeNum = n; break;
             case GameConstant.ITEM_MODE.BOMB:
                 skey = StorageConfig.ITEM_BOMB_NUM;
-                this.item_bomb_num = n; break;
+                this.itemBombNum = n; break;
         }
 
         if (skey !== "") {
-            ya.localStorage.set(skey, n);
-            this.emit(EventConfig.MD_ITEM_NUM_CHANGE, {mode: mode, num: n});
+            ya.localStorage.setItem(skey, n);
+            this.emit(EventConfig.MD_ITEM_NUM_CHANGE, {mode, num: n});
         }
     }
 
@@ -59,18 +59,18 @@ class ItemModel extends ya.Model {
         let m = 0;
         switch(mode) {
             case GameConstant.ITEM_MODE.MIX:
-                m = this.item_mix_num + n;
+                m = this.itemMixNum + n;
                 break;
             case GameConstant.ITEM_MODE.DYE:
-                m = this.item_dye_num + n;
+                m = this.itemDyeNum + n;
                 break;
             case GameConstant.ITEM_MODE.BOMB:
-                m = this.item_bomb_num + n;
+                m = this.itemBombNum + n;
                 break;
         }
-        
+
         this.setItemNum(mode, m);
     }
 }
 
-export { ItemModel }
+export {ItemModel};

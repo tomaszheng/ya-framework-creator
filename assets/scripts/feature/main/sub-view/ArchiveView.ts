@@ -1,34 +1,33 @@
-import ya from "../../../framework/ya";
+import {ya} from "../../../framework/ya";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class ArchiveView extends ya.Dialog {
-    @property(cc.Node)
-    btn_close: cc.Node = null;
+    @property(cc.Node) btnClose: cc.Node = null;
+    @property(cc.Node) btnContinue: cc.Node = null;
+    @property(cc.Node) btnRestart: cc.Node = null;
 
-    @property(cc.Node)
-    btn_continue: cc.Node = null;
+    continueCallback: () => void = null;
+    restartCallback: () => void = null;
 
-    @property(cc.Node)
-    btn_restart: cc.Node = null;
+    protected initData(data?: any) {
+        super.initData(data);
 
-    continue_cb: Function|null = null;
-    restart_cb: Function|null = null;
-
-    onInitData (data: any) {
-        this.continue_cb = data.continue_cb;
-        this.restart_cb = data.restart_cb;
+        this.continueCallback = data.continue_cb;
+        this.restartCallback = data.restart_cb;
     }
 
-    onInitClick () {
-        ya.utils.addClickEvent(this.btn_close, () => {
+    protected initTouchEvent() {
+        super.initTouchEvent();
+
+        ya.button.addClick(this.btnClose, () => {
             this.onClickClose();
         });
-        ya.utils.addClickEvent(this.btn_continue, () => {
+        ya.button.addClick(this.btnContinue, () => {
             this.onClickContinue();
         });
-        ya.utils.addClickEvent(this.btn_restart, () => {
+        ya.button.addClick(this.btnRestart, () => {
             this.onClickRestart();
         });
     }
@@ -40,12 +39,12 @@ export default class ArchiveView extends ya.Dialog {
     onClickContinue() {
         this.removeSelf();
 
-        ya.utils.doCallback(this.continue_cb);
+        ya.utils.doCallback(this.continueCallback);
     }
 
     onClickRestart() {
         this.removeSelf();
 
-        ya.utils.doCallback(this.restart_cb);
+        ya.utils.doCallback(this.restartCallback);
     }
 }

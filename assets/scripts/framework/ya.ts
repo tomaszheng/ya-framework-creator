@@ -1,73 +1,57 @@
 
-import YAModel from "./mvc/ya-model";
-import YAView from "./mvc/ya-view";
-import YADialog from "./mvc/ya-dialog";
-import YADialogProperty from "./mvc/ya-dialog-property";
-import YAController from "./mvc/ya-controller";
+import {YaBaseComponent} from "./base/ya-base-component";
+import {YaController} from "./mvc/ya-controller";
+import {YaUtils} from "./utils/ya-utils";
+import {YaDialogProperty} from "./mvc/ya-dialog-property";
+import {YaFunctions} from "./utils/ya-functions";
+import {YaDateUtils} from "./utils/ya-date-utils";
+import {YaView} from "./mvc/ya-view";
+import {YaModel} from "./mvc/ya-model";
+import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "./mvc/ya-dialog";
+import {YaButtonHelper} from "./utils/ya-button-helper";
+import {YaUIHelper} from "./utils/ya-ui-helper";
+import {yaEventDispatcher} from "./event/ya-event-dispatcher";
+import {yaLocalStorage} from "./storage/ya-local-storage";
+import {yaDialogManager} from "./manager/ya-dialog-manager";
+import {yaLayerManager} from "./manager/ya-layer-manager";
+import {yaSoundManager} from "./manager/ya-sound-manager";
+import {yaViewManager} from "./manager/ya-view-manager";
+import {yaResourceManager} from "./manager/ya-resource-manager";
+import {YaStorageConfig} from "./config/ya-storage-config";
 
-import YAStorageConfig from "./config/ya-storage-config";
+class Ya {
+    public static BaseComponent = YaBaseComponent;
+    public static Model = YaModel;
+    public static View = YaView;
+    public static Dialog = YaDialog;
+    public static DialogShowTypes = YaDialogShowTypes;
+    public static DialogCharacter = YaDialogCharacter;
+    public static DialogProperty = YaDialogProperty;
+    public static Controller = YaController;
 
-import YADialogManager from "./manager/ya-dialog-manager";
-import YALayerManager from "./manager/ya-layer-manager";
-import YASoundManager from "./manager/ya-sound-manager";
-import YAViewManager from "./manager/ya-view-manager";
-import YAResourceManager from "./manager/ya-resource-manager";
-import YAUtils from "./utils/ya-utils";
-import YAFunctions from "./utils/ya-functions";
-import YADateUtils from "./utils/ya-date-utils";
-import YAEventDispatcher from "./event/ya-event-dispatcher";
-import YALocalStorage from "./storage/ya-local-storage";
+    public static utils = YaUtils;
+    public static func = YaFunctions;
+    public static dates = YaDateUtils;
+    public static button = YaButtonHelper;
+    public static uiHelper = YaUIHelper;
 
-const {ccclass, property} = cc._decorator;
+    public static soundManager = yaSoundManager;
+    public static dialogManager = yaDialogManager;
+    public static viewManager = yaViewManager;
+    public static layerManager = yaLayerManager;
+    public static resourceManager = yaResourceManager;
+    public static eventDispatcher = yaEventDispatcher;
+    public static localStorage = yaLocalStorage;
 
-@ccclass
-export default class ya {
+    public static StorageConfig = YaStorageConfig;
 
-    static Model = YAModel;
-    static View = YAView;
-    static Dialog = YADialog;
-    static DialogProperty = YADialogProperty;
-    static Controller = YAController;
-
-    static StorageConfig = YAStorageConfig;
-
-    static utils = YAUtils;
-    static funcs = YAFunctions;
-    static dates = YADateUtils;
-
-    static layer = {
-        top: null,
-        dialog: null,
-        view: null,
-    };
-
-    static soundManager: YASoundManager;
-    static dialogManager: YADialogManager;
-    static viewManager: YAViewManager;
-    static layerManager: YALayerManager;
-    static resourceManager: YAResourceManager;
-    static eventDispatcher: YAEventDispatcher;
-    static localStorage: YALocalStorage;
-
-    private static _instance = null;
-    static getInstance(): ya {
-        if (!this._instance) {
-            this._instance = new ya();
-        }
-        return this._instance;
-    }
-
-    private constructor() {
-        ya.layerManager = YALayerManager.getInstance();
-        ya.layerManager.top = ya.layer.top;
-        ya.layerManager.dialog = ya.layer.dialog;
-        ya.layerManager.view = ya.layer.view;
-
-        ya.soundManager = YASoundManager.getInstance();
-        ya.dialogManager = YADialogManager.getInstance();
-        ya.viewManager = YAViewManager.getInstance();
-        ya.resourceManager = YAResourceManager.getInstance();
-        ya.eventDispatcher = YAEventDispatcher.getInstance();
-        ya.localStorage = YALocalStorage.getInstance();
+    public static init() {
+        this.layerManager.init();
+        this.eventDispatcher.init();
+        this.soundManager.init();
+        this.dialogManager.init();
     }
 }
+
+const ya = Ya;
+export {ya};

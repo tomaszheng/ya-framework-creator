@@ -1,20 +1,21 @@
-import ya from "../../framework/ya";
+import {ya} from "../../framework/ya";
+import {EventConfig} from "../../config/EventConfig";
 import ResourceConfig from "../../config/resource/ResourceConfig";
-import { EventConfig } from "../../config/EventConfig";
 
-export default class SettleController extends ya.Controller {
-    initGlobalListener () {
+class SettleController extends ya.Controller {
+    protected initGlobalListener() {
+        super.initGlobalListener();
         this.addGlobalListener(EventConfig.EVT_SHOW_SETTLE, this.onShowSettle, this);
     }
 
-    onShowSettle (params: any) {
+    onShowSettle (data: any) {
         ya.resourceManager.load(ResourceConfig.settle, () => {
-            ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "Prefab/dialog_settle",
-                script: "SettleView",
-                dataLoadded: true,
-                showType: ya.DialogProperty.ShowTypes.SCALE
-            }), params);
+            ya.dialogManager.show('Prefab/dialog_settle"', data, {
+                showType: ya.DialogShowTypes.SCALE,
+                dataLoaded: true,
+            });
         });
     }
 }
+
+export {SettleController};

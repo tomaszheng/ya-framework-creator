@@ -3,18 +3,16 @@
 游戏全局缓存
 */
 
-import ya from "../framework/ya";
+import {ya} from "../framework/ya";
 
 class CacheModel extends ya.Model {
-    inReview: boolean = false;
+    inReview = false;
 
-    constructor () {
-        super();
+    public init() {
+        const reviewTime = 1546266593773;
+        const curTime = new Date().getTime();
 
-        let review_time = 1546266593773;
-        let cur_time = new Date().getTime();
-
-        if (cur_time < review_time) {
+        if (curTime < reviewTime) {
             this.inReview = true;
         }
         else {
@@ -23,4 +21,4 @@ class CacheModel extends ya.Model {
     }
 }
 
-export { CacheModel }
+export {CacheModel};

@@ -32,30 +32,33 @@ export default class TouchHaloAnimation extends cc.Component {
     }
 
     initTouch() {
-        ya.utils.addTouchEvent(this.node, 
-            (event: any) => {
-                this.cur_halo_pos = event.touch.getLocation();
-                this.is_touching = false;
-                this.runHaloAction(this.cur_halo_pos, 0.4);
-            }, 
-            (event: any) => {
-                this.cur_halo_pos = event.touch.getLocation();
-                let t = new Date().getTime();
-                if (t - this.pre_halo_time >= 50) {
-                    this.runHaloAction(this.cur_halo_pos);
-                    this.pre_halo_time = t;
-                }
-                this.is_moving = true;
-            }, 
-            (event: any) => {
-                this.pre_halo_time = new Date().getTime();
-                this.is_touching = true;
-                this.cur_halo_pos = event.touch.getLocation();
+        ya.utils.addStartEvent(this.node, (event: cc.Event) => {
+            this.cur_halo_pos = event.touch.getLocation();
+            this.is_touching = false;
+            this.runHaloAction(this.cur_halo_pos, 0.4);
+        });
+
+        ya.utils.addMoveEvent(this.node, (event: cc.Event) => {
+
+            this.cur_halo_pos = event.touch.getLocation();
+            let t = new Date().getTime();
+            if (t - this.pre_halo_time >= 50) {
                 this.runHaloAction(this.cur_halo_pos);
-            },
-            (event: any)=>{
-                this.is_touching = false;
-            });
+                this.pre_halo_time = t;
+            }
+            this.is_moving = true;
+        });
+
+        ya.utils.addButtonClick(this.node, (event: cc.Event) => {
+            this.pre_halo_time = new Date().getTime();
+            this.is_touching = true;
+            this.cur_halo_pos = event.touch.getLocation();
+            this.runHaloAction(this.cur_halo_pos);
+        });
+
+        ya.utils.addCancelEvent(this.node, (event: cc.Event) => {
+            this.is_touching = false;
+        });
     }
 
     update () {

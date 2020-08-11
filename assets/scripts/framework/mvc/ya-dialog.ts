@@ -1,118 +1,123 @@
-
 /*
 弹窗的基础类
+弹窗打开逻辑遵循以下逻辑：
+1，请求服务器数据；
+2，执行打开动作；
+在上述两步均完成后，才进行弹窗的处理逻辑
 */
 
-import YADialogProperty from "./ya-dialog-property";
-import YADialogManager from "../manager/ya-dialog-manager";
 
-const {ccclass, property} = cc._decorator;
+import {YaBaseComponent} from "../base/ya-base-component";
+import {yaDialogManager} from "../manager/ya-dialog-manager";
+
+const {ccclass} = cc._decorator;
+
+enum YaDialogShowTypes {
+    NONE = 0,
+
+    /**
+     * 从中间缩放打开
+     */
+    SCALE,
+
+    /**
+     * 从指定位置缩放打开
+     */
+    POSITION_SCALE,
+
+    /**
+     * 从指定位置移动
+     */
+    POSITION_MOVE,
+
+    /**
+     * 自定义
+     */
+    CUSTOM,
+}
+
+const YaDialogCharacter = {
+    NONE: 0,
+
+    /**
+     * 常驻，一直显示
+     */
+    RESIDENT: 1,
+
+    /**
+     * 唯一性，此类型的弹窗同时只能存在一个
+     */
+    UNIQUE: 2,
+
+    /**
+     * 置顶
+     */
+    TOP: 4,
+};
 
 @ccclass
-export default class YADialog extends cc.Component {
-    _data = {};
-    /**
-     * 打开弹窗时，传入的初始数据
-     */
-    set data (data: any) {
-        this._data = data;
+class YaDialog extends YaBaseComponent {
+    public set id(i) {
+        this._id = i;
     }
-    get data () {
-        return this._data;
+    public get id() {
+        return this._id;
     }
 
-    _property: YADialogProperty = null;
-    /**
-     * 弹窗的属性
-     */
-    set params (property: YADialogProperty) {
-        this._property = property;
+    public set showType(type) {
+        this._showType = type;
     }
-    get params (): YADialogProperty {
-        return this._property;
+    public get showType() {
+        return this._showType;
     }
 
-    initted: boolean = false;
-    isDataLoadded: boolean = false;
+    public set character(c) {
+        this._character = c;
+    }
+    public get character() {
+        return this._character;
+    }
 
-    isEnterCompleted: boolean = false;
-    isExitCompleted: boolean = false;
+    public set dataLoaded(loaded) {
+        this._isDataLoaded = loaded;
+    }
 
-    normalPosition: cc.Vec3 = cc.v3();
+    private _isDataLoaded = false;
+    private _isEnterCompleted = false;
+    private _isExitCompleted = false;
+    private _oldOriginalPosition = cc.v3();
+    private _actionEnter: cc.Tween<any>;
 
-    actionEnter = null;
+    protected _id = -1;
+    protected _showType = YaDialogShowTypes.NONE;
+    protected _character = YaDialogCharacter.NONE;
 
-    onLoad () {
-        this.node.on(cc.Node.EventType.TOUCH_START, () => { }, this, true);
+    public init(data?: any) {
+        super.init(data);
+
+        this.requestServer();
+    }
+
+    protected initTouchEvent() {
+        super.initTouchEvent();
+
+        this.node.on(cc.Node.EventType.TOUCH_START, () => {
+        }, this, true);
         this.node.on(cc.Node.EventType.TOUCH_END, () => {
             this.onClickSpace();
         }, this);
-    }
-    
-    swallowTouch (node: cc.Node) {
-        node.on(cc.Node.EventType.TOUCH_START, () => { }, this, true);
-    }
-
-    init (params: YADialogProperty, data: any) {
-        this.params = params;
-        this.data = data;
-
-        this.onInitData(data);
-
-        this.onInitUI();
-
-        this.onInitEvent();
-
-        this.onInitClick();
-
-        this.initted = true;
-
-        this.onRequestServer();
-    }
-
-    /**
-     * override
-     * 初始化数据
-     * @param data 
-     */
-    onInitData (data: any) {
-        
-    }
-
-    /**
-     * override
-     * 初始化UI，对UI进行初始化操作
-     */
-    onInitUI () {
-
-    }
-
-    /**
-     * override
-     * 初始化数据发生变化时的监听
-     */
-    onInitEvent () {
-
-    }
-
-    /**
-     * override
-     * 初始化按钮点击事件
-     */
-    onInitClick() {
-
     }
 
     /**
      * 触摸到了空白区域，默认关闭弹窗
      */
-    onClickSpace () {
-        if (this.isEnterCompleted) {
+    onClickSpace() {
+        if (this._isEnterCompleted) {
             this.removeSelf();
         }
     }
 
-    private setNormalStatus () {
+    private setNormalStatus() {
         this.node.scale = 1.0;
         this.node.opacity = 0;
     }
@@ -121,17 +126,17 @@ export default class YADialog extends cc.Component {
      * override
      * 请求此弹窗的数据
      */
-    onRequestServer () {
+    requestServer() {
 
     }
 
     /**
      * 请求数据回报后，调用此方法
      */
-    updateUI () {
-        this.isDataLoadded = true;
+    updateUI() {
+        this._isDataLoaded = true;
 
-        if (this.isEnterCompleted) {
+        if (this._isEnterCompleted) {
             this.onUpdateUI();
         }
     }
@@ -140,112 +145,99 @@ export default class YADialog extends cc.Component {
      * override
      * 弹窗所需要的数据已经全部拿到并且弹窗进入动作已经完成，可以对UI进行更新
      */
-    onUpdateUI () {
+    onUpdateUI() {
 
     }
 
-    /**
-     * 打开弹窗
-     */
-    show () {
-        this.normalPosition = this.node.position;
+    public show() {
+        this._oldOriginalPosition = this.node.position;
 
-        if (this.params.showType === YADialogProperty.ShowTypes.NO) { // 直接打开
-            this.node.active = true;
-            this.onEnterCompleted();
-        }
-        else if (this.params.showType === YADialogProperty.ShowTypes.SCALE) { // 缩放打开
-            this.runEnterScaleAction(() => {
+        switch (this._showType) {
+            case YaDialogShowTypes.NONE: {
+                this.node.active = true;
                 this.onEnterCompleted();
-            })
-        }
-        else if (this.params.showType === YADialogProperty.ShowTypes.CUSTOM) { // 自定义进入动作
-            this.runEnterCustomAction(() => {
-                this.onEnterCompleted();
-            });
+                break;
+            }
+            case YaDialogShowTypes.SCALE: {
+                this.runEnterScaleAction(() => {
+                    this.onEnterCompleted();
+                });
+                break;
+            }
+            case YaDialogShowTypes.CUSTOM: {
+                this.runEnterCustomAction(() => {
+                    this.onEnterCompleted();
+                });
+                break;
+            }
         }
     }
 
-    /**
-     * 直接展示弹窗
-     */
-    display () {
+    public display() {
         this.setNormalStatus();
 
         this.node.active = true;
-        this.node.position = this.normalPosition;
+        this.node.scale = 1.0;
+        this.node.position = this._oldOriginalPosition;
     }
 
-    /**
-     * 关闭弹窗
-     */
-    close () {
-        // 缩放打开时也缩放关闭
-        if (this.params.showType === YADialogProperty.ShowTypes.SCALE) {
-            this.runExitScaleAction(() => {
+    public close() {
+        switch (this._showType) {
+            case YaDialogShowTypes.SCALE: {
+                this.runExitScaleAction(() => {
+                    this.onExitCompleted();
+                });
+                break;
+            }
+            default: {
                 this.onExitCompleted();
-            })
-        }
-        else {
-            this.onExitCompleted();
+            }
         }
     }
 
-    /**
-     * 直接隐藏弹窗
-     */
-    hide () {
+    public hide() {
         this.setNormalStatus();
 
-        if (this.actionEnter) {
-            this.actionEnter.stop();
-            this.actionEnter = null;
+        if (this._actionEnter) {
+            this._actionEnter.stop();
+            this._actionEnter = null;
 
             this.onEnterCompleted();
         }
-        
+
         this.node.active = false;
     }
 
-    onEnterCompleted() {
-        this.isEnterCompleted = true;
+    protected onEnterCompleted() {
+        this._isEnterCompleted = true;
 
-        if (this.isDataLoadded) {
+        if (this._isDataLoaded) {
             this.onUpdateUI();
         }
     }
 
-    removeSelf() {
-        let did = this.params.did;
-        YADialogManager.getInstance().remove(did);
-    }
-
-    /**
-     * 弹窗关闭完成时回调
-     */
-    onExitCompleted () {
-        this.isExitCompleted = true;
+    protected onExitCompleted() {
+        this._isExitCompleted = true;
 
         this.node.active = false;
-
         this.removeSelf();
     }
 
-    /**
-     * 执行缩放打开的进入动作
-     * @param callback 完成回调
-     */
-    runEnterScaleAction (callback: Function) {
+    public removeSelf() {
+        yaDialogManager.remove(this.id);
+    }
+
+    private runEnterScaleAction(callback: () => void) {
         this.node.scale = 0.6;
         this.node.anchorX = this.node.anchorY = 0.5;
 
-        this.actionEnter = cc.tween(this.node)
+        this._actionEnter = cc.tween(this.node)
             .to(0.2, {scale: 1.08}, {easing: "sineOut"})
             .to(0.2, {scale: 1.00}, {easing: "sineOut"})
             .delay(0.0)
             .call(() => {
-                this.actionEnter = null;
-                callback && callback();
+                this._actionEnter = null;
+                if (callback) callback();
             });
     }
 
@@ -253,26 +245,24 @@ export default class YADialog extends cc.Component {
      * override
      * 执行定制的进入动作
      */
-    runEnterCustomAction (callback: Function) {
-        callback && callback();
+    protected runEnterCustomAction(callback: () => void) {
+        if (callback) callback();
     }
 
-    /**
-     * 执行缩放退出动作
-     * @param callback 
-     */
-    runExitScaleAction (callback: Function) {
+    private runExitScaleAction(callback: () => void) {
         cc.tween(this.node)
             .parallel(
                 cc.tween().to(0.1, {scale: 0.8}),
                 cc.tween().to(0.1, {opacity: 130})
             )
             .call(() => {
-                callback && callback();
+                if (callback) callback();
             });
     }
-    
-    onDestroy() {
 
+    protected onDestroy() {
+        super.onDestroy();
     }
 }
+
+export {YaDialog, YaDialogShowTypes, YaDialogCharacter};

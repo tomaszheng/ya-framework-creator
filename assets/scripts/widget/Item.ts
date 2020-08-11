@@ -78,19 +78,22 @@ export default class Item extends cc.Node {
     }
 
     initClick () {
-        let start_time: number = 0, end_time: number;
-        ya.utils.addTouchEvent(this, (event: any) => {
-                end_time = new Date().getTime();
-                if (end_time - start_time < 500) {
-                    this.click_cb && this.click_cb(this.mode);
-                }
-                else {
-                    this.bubble_enabled && (this.onLongPress());
-                }
-            }, null,
-            (event: any) => {
-                start_time = new Date().getTime();
-            });
+        let startTime = 0;
+        let endTime = 0;
+
+        ya.utils.addStartEvent(this, (event: cc.Event) => {
+            endTime = new Date().getTime();
+            if (endTime - startTime < 500) {
+                if (this.click_cb) this.click_cb(this.mode);
+            }
+            else {
+                if (this.bubble_enabled) (this.onLongPress());
+            }
+        });
+
+        ya.utils.addButtonClick(this, (event: cc.Event) => {
+            startTime = new Date().getTime();
+        });
     }
 
     onLongPress () {

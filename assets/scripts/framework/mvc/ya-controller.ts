@@ -1,51 +1,60 @@
-
 /*
 控制器基类
 */
 
-import YAEventDispatcher from "../event/ya-event-dispatcher";
-import YALayerManager from "../manager/ya-layer-manager";
-import YAModel from "./ya-model";
+import {yaLayerManager} from "../manager/ya-layer-manager";
+import {YaView} from "./ya-view";
+import {yaEventDispatcher} from "../event/ya-event-dispatcher";
 
-const {ccclass, property} = cc._decorator;
+interface IEventRecord {
+    name: string;
+    callback: (args)=>void;
+    target?: cc.Node;
+}
 
-@ccclass
-export default class YAController {
-    _view = null;
-    get view() {
+class YaController {
+    protected _view: YaView = null;
+    public get view() {
         return this._view;
     }
-    set view(v) {
-        this._view = v;
-    }
 
-    get prefab (): string {
+    public get prefabPath(): string {
+        return '';
+    }
+    get prefab(): string {
         return null;
     }
 
-    get component (): string {
+    get component(): string {
         return null;
     }
 
-    get root() {
-        return YALayerManager.getInstance().view;
+    public get viewName(): string {
+        return '';
+    }
+
+    public get root() {
+        return yaLayerManager.view;
     }
 
     protected _model: any = null;
     public get model() {
         return this._model;
     }
+
     public set model(m) {
         this._model = m;
     }
 
-    private events = [];
+    private readonly events: IEventRecord[];
 
     constructor() {
+        this.events = [];
+
         this.initGlobalListener();
     }
 
-    initModel() {
+    protected initModel() {
 
     }
 
@@ -64,83 +73,70 @@ export default class YAController {
         // 销毁事件时使用clearModuleEvent
     }
 
-    createView (params: any) {
-        let node = null, view = null;
-
-        if (this.prefab) {
-            let res = this.prefab;
-            if (typeof res === "string") {
-                res = cc.loader.getRes(this.prefab);
-            }
-            node = cc.instantiate(res);
-        }
-        else {
+    public createView(args: any): void {
+        let node: cc.Node = null;
+        if (this.prefabPath) {
+            const obj = cc.loader.getRes(this.prefabPath);
+            node = cc.instantiate(obj);
+        } else {
             node = new cc.Node();
         }
 
-        view = node.getComponent(this.component);
+        let view = node.getComponent(YaView);
         if (!view) {
-            view = node.addComponent(this.component);
+            view = node.addComponent(this.viewName);
         }
-        view.init(params);
-        
-        return view;
-    }
 
-    addComponent (node?: cc.Node) {
+        this._view = view;
+        this._view.node.parent = this.root;
 
+        view.init(args);
     }
 
     /**
      * 显示或创建当前视图
-     * @param params 参数
+     * @param args 参数
      */
-    show (params: any) {
-        if (!this.view) {
-            this.view = this.createView(params);
-            if (this.view) {
-                this.root.addChild(this.view.node);
-    
-                this.initModel();
-                this.initLifeListener();
-            }
-        }
-        else {
-            if (!this.view.active) {
-                this.view.active = true;
-            }
-        }
+    public show(args: any): void {
+        if (!this._view) {
+            this.initModel();
+            this.initLifeListener();
 
-        return this.view;
+            this.createView(args);
+        } else {
+            if (!this._view.node.active) {
+                this._view.node.active = true;
+            }
+        }
     }
 
     /**
      * 移除当前视图
      */
-    remove () {
-        if (this.view) {
-            this.cleanListener();
+    public remove(): void {
+        this.clearListeners();
 
-            this.view.node.destroy();
-            this.view = null;
+        if (this._view) {
+            this._view.node.destroy();
+            this._view = null;
         }
     }
 
     /**
      * 隐藏当前视图
      */
-    hide () {
-        if (this.view && this.view.node.active) {
-            this.view.node.active = false;
+    public hide() {
+        if (this._view && this._view.node.active) {
+            this._view.node.active = false;
         }
     }
-    
+
     /**
      * 显示当前视图
      */
-    display () {
-        if (this.view && !this.view.node.active) {
-            this.view.node.active = true;
+    public display() {
+        if (this._view && !this._view.node.active) {
+            this._view.node.active = true;
         }
     }
 
@@ -150,10 +146,10 @@ export default class YAController {
      * @param callback 监听
      * @param target 目标
      */
-    addGlobalListener (name:string, callback:Function, target:any) {
+    public addGlobalListener(name: string, callback: (args) => void, target: any) {
         target = target || this;
 
-        YAEventDispatcher.getInstance().on(name, callback, target);
+        yaEventDispatcher.add(name, callback, target);
     }
 
     /**
@@ -162,21 +158,22 @@ export default class YAController {
      * @param callback 监听
      * @param target 目标
      */
-    addLifeListener (name:string, callback:Function, target:any) {
+    public addLifeListener(name: string, callback: (args)=>void, target: any) {
         this.addGlobalListener(name, callback, target);
 
         this.events.push({
-            name: name,
-            callback: callback,
+            name,
+            callback,
             target: target || this.view,
         });
     }
 
-    cleanListener() {
-        for (let i = 0; i < this.events.length; i++) {
-            let event = this.events[i];
-            YAEventDispatcher.getInstance().off(event.name, event.callback, event.target);
-        }
+    public clearListeners() {
+        this.events.every((event) => {
+            yaEventDispatcher.remove(event.name, event.callback, event.target);
+        });
         this.events.length = 0;
     }
 }
+
+export {YaController};

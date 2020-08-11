@@ -1,18 +1,20 @@
-import ya from "../../../framework/ya";
-import SpriteFrameConfig from "../../../config/resource/SpriteFrameConfig";
+import {ya} from "../../../framework/ya";
+import {SpriteFrameConfig} from "../../../config/resource/SpriteFrameConfig";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass} = cc._decorator;
 
 @ccclass
-export default class Toast extends cc.Component {
+class Toast extends ya.BaseComponent {
 
     lblContent: cc.Label = null;
 
-    init () {
+    protected initUI() {
+        super.initUI();
+
         this.node.setContentSize(cc.size(600, 100));
 
-        let imgBg = new cc.Node();
-        let sprite = imgBg.addComponent(cc.Sprite);
+        const imgBg = new cc.Node();
+        const sprite = imgBg.addComponent(cc.Sprite);
         sprite.type = cc.Sprite.Type.SLICED;
         sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = ya.resourceManager.getSpriteFrame(SpriteFrameConfig.game_cube_square);
@@ -20,19 +22,18 @@ export default class Toast extends cc.Component {
         imgBg.setContentSize(cc.size(600, 50));
         this.node.addChild(imgBg);
 
-        let node = new cc.Node();
+        const node = new cc.Node();
         this.lblContent = node.addComponent(cc.Label);
         this.lblContent.fontSize = 25;
         this.lblContent.lineHeight = 25;
         this.node.addChild(node);
     }
 
-    reset (params: any) {
-        let txt = params.txt;
-        this.lblContent.string = txt;
+    reset(params: any) {
+        this.lblContent.string = params.txt;
     }
 
-    show (callback: Function) {
+    show(callback: () => void) {
         this.node.opacity = 0;
         cc.tween(this.node)
             .parallel(
@@ -46,3 +47,5 @@ export default class Toast extends cc.Component {
             });
     }
 }
+
+export {Toast};

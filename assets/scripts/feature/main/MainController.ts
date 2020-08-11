@@ -1,28 +1,23 @@
-import ya from "../../framework/ya";
 import ResourceConfig from "../../config/resource/ResourceConfig";
-import { EventConfig } from "../../config/EventConfig";
+import {EventConfig} from "../../config/EventConfig";
+import {ya} from "../../framework/ya";
+import {MainView} from "./MainView";
 
-export default class MainController extends ya.Controller {
-    get prefab () {
-        return "prefab/main";
+class MainController extends ya.Controller {
+    protected _view: MainView;
+
+    initGlobalListener() {
+        ya.eventDispatcher.add(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
     }
 
-    get component (): string {
-        return "MainView";
-    }
-
-    initGlobalListener () {
-        ya.eventDispatcher.on(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
-    }
-    
-    onShowArchive (params: any) {
+    onShowArchive(params: any) {
         ya.resourceManager.load(ResourceConfig.archive, () => {
-            ya.dialogManager.show(new ya.DialogProperty({
-                prefab: "prefab/dialog_archive",
-                script: "ArchiveView",
-                showType: ya.DialogProperty.ShowTypes.SCALE,
-                dataLoadded: true,
-            }));
+            ya.dialogManager.show('prefab/dialog_archive', null, {
+                showType: ya.DialogShowTypes.SCALE,
+                dataLoaded: true,
+            });
         });
     }
 }
+
+export {MainController};

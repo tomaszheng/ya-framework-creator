@@ -3,14 +3,16 @@
 加载界面
 */
 
-import ya from "../../framework/ya";
+import {ya} from "../../framework/ya";
 import ResourceConfig from "../../config/resource/ResourceConfig";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass} = cc._decorator;
 
 @ccclass
-export default class LoadingView extends ya.View {
-    onInitUI () {
+class LoadingView extends ya.View {
+    protected initUI() {
+        super.initUI();
+
         ya.resourceManager.load(ResourceConfig.main, () => {
             ya.viewManager.show("main");
 
@@ -18,3 +20,5 @@ export default class LoadingView extends ya.View {
         });
     }
 }
+
+export {LoadingView};
