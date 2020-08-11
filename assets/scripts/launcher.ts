@@ -14,28 +14,17 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Launcher extends cc.Component {
-    @property(cc.Node)
-    layerView:cc.Node = null;
-
-    @property(cc.Node)
-    layerDialog:cc.Node = null;
-
-    @property(cc.Node)
-    layerTop:cc.Node = null;
-
-    start () {
+    protected start() {
         ya.init();
 
         modelManager.init();
-
         controllerManager.init();
 
         this.launch();
     }
 
-    launch () {
+    private launch () {
         ya.viewManager.show("common");
-
         ya.viewManager.show("loading");
     }
 }

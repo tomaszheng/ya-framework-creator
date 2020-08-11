@@ -13,6 +13,10 @@ class CommonController extends ya.Controller {
         return this._view;
     }
 
+    public get viewName() {
+        return 'CommonView';
+    }
+
     public get root () {
         return ya.layerManager.top;
     }

@@ -5,10 +5,12 @@
 import {yaLayerManager} from "../manager/ya-layer-manager";
 import {YaView} from "./ya-view";
 import {yaEventDispatcher} from "../event/ya-event-dispatcher";
+import {yaResourceManager} from "../manager/ya-resource-manager";
+import {YaBaseComponent} from "../base/ya-base-component";
 
 interface IEventRecord {
     name: string;
-    callback: (args)=>void;
+    callback: (args) => void;
     target?: cc.Node;
 }
 
@@ -20,13 +22,6 @@ class YaController {
 
     public get prefabPath(): string {
         return '';
-    }
-    get prefab(): string {
-        return null;
-    }
-
-    get component(): string {
-        return null;
     }
 
     public get viewName(): string {
@@ -73,24 +68,31 @@ class YaController {
         // 销毁事件时使用clearModuleEvent
     }
 
-    public createView(args: any): void {
-        let node: cc.Node = null;
+    private createView(data: any): void {
         if (this.prefabPath) {
-            const obj = cc.loader.getRes(this.prefabPath);
-            node = cc.instantiate(obj);
+            yaResourceManager.load(this.prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
+                const node = cc.instantiate(prefab);
+                this.doCreateView(node, data);
+            });
         } else {
-            node = new cc.Node();
+            this.doCreateView(new cc.Node(), data);
         }
+    }
 
+    private doCreateView(node: cc.Node, data: any) {
         let view = node.getComponent(YaView);
         if (!view) {
+            if (!this.viewName) {
+                cc.error(`Not found component 'YaBaseComponent', please check.`);
+                return;
+            }
             view = node.addComponent(this.viewName);
         }
 
         this._view = view;
+        this._view.instantiatedPrefabPath = this.prefabPath;
         this._view.node.parent = this.root;
-
-        view.init(args);
+        this._view.init(data);
     }
 
     /**
@@ -158,7 +160,7 @@ class YaController {
      * @param callback 监听
      * @param target 目标
      */
-    public addLifeListener(name: string, callback: (args)=>void, target: any) {
+    public addLifeListener(name: string, callback: (args) => void, target: any) {
         this.addGlobalListener(name, callback, target);
 
         this.events.push({

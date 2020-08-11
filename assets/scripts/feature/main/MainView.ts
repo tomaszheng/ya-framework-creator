@@ -96,63 +96,63 @@ class MainView extends ya.View {
     }
 
     onClickRecommend () {
-        ya.resourceManager.load(ResourceConfig.game_star, () => {
-            const data = ya.localStorage.getObject(StorageConfig.STAR_ARCHIVE);
-            if (data && data.l > 0) {
-                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
-                    continue_cb: () => {
-                        ya.viewManager.show('star', null, true);
-                    },
-                    restart_cb: () => {
-                        ya.localStorage.clear(StorageConfig.STAR_ARCHIVE);
-                        ya.viewManager.show('star', null, true);
-                    }
-                });
-            }
-            else {
-                ya.viewManager.show('star', null, true);
-            }
-        });
+        // ya.resourceManager.load(ResourceConfig.game_star, () => {
+        //     const data = ya.localStorage.getObject(StorageConfig.STAR_ARCHIVE);
+        //     if (data && data.l > 0) {
+        //         ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
+        //             continue_cb: () => {
+        //                 ya.viewManager.show('star', null, true);
+        //             },
+        //             restart_cb: () => {
+        //                 ya.localStorage.clear(StorageConfig.STAR_ARCHIVE);
+        //                 ya.viewManager.show('star', null, true);
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         ya.viewManager.show('star', null, true);
+        //     }
+        // });
     }
 
     onClickHot() {
-        ya.resourceManager.load(ResourceConfig.game_union, () => {
-            const data = ya.localStorage.getObject(StorageConfig.UNION_ARCHIVE);
-            if (data && data.s > 0) {
-                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
-                    continue_cb: () => {
-                        ya.viewManager.show('union', null, true);
-                    },
-                    restart_cb: () => {
-                        ya.localStorage.clear(StorageConfig.UNION_ARCHIVE);
-                        ya.viewManager.show('union', null, true);
-                    }
-                });
-            }
-            else {
-                ya.viewManager.show('union', null, true);
-            }
-        });
+        // ya.resourceManager.load(ResourceConfig.game_union, () => {
+        //     const data = ya.localStorage.getObject(StorageConfig.UNION_ARCHIVE);
+        //     if (data && data.s > 0) {
+        //         ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
+        //             continue_cb: () => {
+        //                 ya.viewManager.show('union', null, true);
+        //             },
+        //             restart_cb: () => {
+        //                 ya.localStorage.clear(StorageConfig.UNION_ARCHIVE);
+        //                 ya.viewManager.show('union', null, true);
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         ya.viewManager.show('union', null, true);
+        //     }
+        // });
     }
 
     onClickPlayed() {
-        ya.resourceManager.load(ResourceConfig.game_russia, () => {
-            const data = ya.localStorage.getObject(StorageConfig.RUSSIA_ARCHIVE);
-            if (data && data.s > 0) {
-                ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
-                    continue_cb: () => {
-                        ya.viewManager.show('russia', null, true);
-                    },
-                    restart_cb: () => {
-                        ya.localStorage.clear(StorageConfig.RUSSIA_ARCHIVE);
-                        ya.viewManager.show('russia', null, true);
-                    }
-                });
-            }
-            else {
-                ya.viewManager.show('russia', null, true);
-            }
-        });
+        // ya.resourceManager.load(ResourceConfig.game_russia, () => {
+        //     const data = ya.localStorage.getObject(StorageConfig.RUSSIA_ARCHIVE);
+        //     if (data && data.s > 0) {
+        //         ya.eventDispatcher.dispatch(EventConfig.EVT_SHOW_ARCHIVE, {
+        //             continue_cb: () => {
+        //                 ya.viewManager.show('russia', null, true);
+        //             },
+        //             restart_cb: () => {
+        //                 ya.localStorage.clear(StorageConfig.RUSSIA_ARCHIVE);
+        //                 ya.viewManager.show('russia', null, true);
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         ya.viewManager.show('russia', null, true);
+        //     }
+        // });
     }
 
     onClickMoreGame() {
@@ -160,9 +160,9 @@ class MainView extends ya.View {
     }
 
     onClickRank() {
-        ya.resourceManager.load(ResourceConfig.rank, () => {
-            ya.viewManager.show('rank', null, true);
-        });
+        // ya.resourceManager.load(ResourceConfig.rank, () => {
+        //     ya.viewManager.show('rank', null, true);
+        // });
     }
 
     onClickShare() {
@@ -235,15 +235,15 @@ class MainView extends ya.View {
             .delay(2)
             .repeatForever(
                 cc.tween()
-                    .by(2, {position: cc.v2(0, 32)})
-                    .by(2, {position: cc.v2(0, -32)}))
+                    .by(2, {position: cc.v3(0, 32)})
+                    .by(2, {position: cc.v3(0, -32)}))
             .start();
     }
 
     runBounceAction (node: cc.Node, subNode: cc.Node) {
         cc.tween(node)
             .parallel(
-                cc.tween().by(0.2, {position: cc.v2(0, 30)}, {easing: "sineOut"}),
+                cc.tween().by(0.2, {position: cc.v3(0, 30)}, {easing: "sineOut"}),
                 cc.tween().to(0.1, {angle: 10})
             )
             .to(0.2, {angle: -10})
@@ -251,14 +251,14 @@ class MainView extends ya.View {
             .to(0.2, {angle: -10})
             .to(0.2, {angle: 10})
             .to(0.1, {angle: 0})
-            .by(0.2, {position: cc.v2(0, -30)}, {easing: "sineIn"})
+            .by(0.2, {position: cc.v3(0, -30)}, {easing: "sineIn"})
             .start();
 
         cc.tween(subNode)
             .parallel(
                 cc.tween()
-                    .by(0.7, {position: cc.v2(0, 80)}, {easing: "sineOut"})
-                    .by(0.7, {position: cc.v2(0, -80)}, {easing: "sineIn"}),
+                    .by(0.7, {position: cc.v3(0, 80)}, {easing: "sineOut"})
+                    .by(0.7, {position: cc.v3(0, -80)}, {easing: "sineIn"}),
                 cc.tween()
                     .by(0.7, {angle: -10})
                     .by(0.7, {angle: 10})

@@ -3,28 +3,28 @@
 统一处理音效、音乐
 */
 
-import YAStorageConfig from "../config/ya-storage-config";
 import {Singleton} from "../singleton/Singleton";
 import {yaLocalStorage} from "../storage/ya-local-storage";
+import {YaStorageConfig} from "../config/ya-storage-config";
 
 class YaSoundManager extends Singleton<YaSoundManager> {
     set music (musicEnabled: boolean) {
         this.musicEnabled = musicEnabled;
-        yaLocalStorage.setItem(YAStorageConfig.MUSIC_ENABLED, this.musicEnabled);
+        yaLocalStorage.setItem(YaStorageConfig.MUSIC_ENABLED, this.musicEnabled);
     }
     get music () {
         return this.musicEnabled;
     }
     set effect (effectEnabled:boolean) {
         this.effectEnabled = effectEnabled;
-        yaLocalStorage.setItem(YAStorageConfig.EFFECT_ENABLED, this.effectEnabled);
+        yaLocalStorage.setItem(YaStorageConfig.EFFECT_ENABLED, this.effectEnabled);
     }
     get effect () {
         return this.effectEnabled;
     }
     set mute (mute: boolean) {
         this._mute = mute;
-        yaLocalStorage.setItem(YAStorageConfig.SOUND_MUTE, this.mute);
+        yaLocalStorage.setItem(YaStorageConfig.SOUND_MUTE, this.mute);
         cc.audioEngine.stopAllEffects();
         cc.audioEngine.stopMusic();
     }
@@ -33,7 +33,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
     }
     set vibration (vibrationEnabled: boolean) {
         this.vibrationEnabled = vibrationEnabled;
-        yaLocalStorage.setItem(YAStorageConfig.VIBRATION_ENABLED, this.vibrationEnabled);
+        yaLocalStorage.setItem(YaStorageConfig.VIBRATION_ENABLED, this.vibrationEnabled);
     }
     get vibration () {
         return this.vibrationEnabled;
@@ -56,9 +56,9 @@ class YaSoundManager extends Singleton<YaSoundManager> {
     _musicName = "";
 
     public init() {
-        this.musicEnabled = yaLocalStorage.getBool(YAStorageConfig.MUSIC_ENABLED, true);
-        this.effectEnabled = yaLocalStorage.getBool(YAStorageConfig.EFFECT_ENABLED, true);
-        this.vibrationEnabled = yaLocalStorage.getBool(YAStorageConfig.VIBRATION_ENABLED, true);
+        this.musicEnabled = yaLocalStorage.getBool(YaStorageConfig.MUSIC_ENABLED, true);
+        this.effectEnabled = yaLocalStorage.getBool(YaStorageConfig.EFFECT_ENABLED, true);
+        this.vibrationEnabled = yaLocalStorage.getBool(YaStorageConfig.VIBRATION_ENABLED, true);
     }
 
     // volume: 0.0 ~ 1.0

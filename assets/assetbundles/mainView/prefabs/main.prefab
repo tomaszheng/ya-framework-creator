@@ -547,6 +547,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "开心\n玩消除",
     "_N$string": "开心\n玩消除",
@@ -686,7 +688,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -997,6 +999,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "游戏圈",
     "_N$string": "游戏圈",
@@ -1242,7 +1246,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1444,6 +1448,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "客服",
     "_N$string": "客服",
@@ -1692,7 +1698,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -2003,6 +2009,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "音效开",
     "_N$string": "音效开",
@@ -2248,7 +2256,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -2450,6 +2458,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "推荐",
     "_N$string": "推荐",
@@ -2695,7 +2705,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -2897,6 +2907,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "排行榜",
     "_N$string": "排行榜",
@@ -3142,7 +3154,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -3344,6 +3356,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "全部玩法",
     "_N$string": "全部玩法",
@@ -3583,7 +3597,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -3676,6 +3690,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "消灭星星玩法",
     "_N$string": "消灭星星玩法",
@@ -3913,6 +3929,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "推荐",
     "_N$string": "推荐",
@@ -4016,7 +4034,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -4109,6 +4127,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "方块大合并玩法",
     "_N$string": "方块大合并玩法",
@@ -4346,6 +4366,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "热玩",
     "_N$string": "热玩",
@@ -4449,7 +4471,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -4542,6 +4564,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "俄罗斯方块",
     "_N$string": "俄罗斯方块",
@@ -4779,6 +4803,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "经典",
     "_N$string": "经典",
@@ -4900,49 +4926,49 @@
       "__id__": 1
     },
     "_enabled": true,
-    "img_bg": {
+    "imgBg": {
       "__id__": 2
     },
-    "btn_sound": {
+    "btnSound": {
       "__id__": 41
     },
-    "btn_customer_service": {
+    "btnCustomerService": {
       "__id__": 30
     },
-    "btn_game_club": {
+    "btnGameClub": {
       "__id__": 16
     },
-    "btn_share": {
+    "btnShare": {
       "__id__": 55
     },
-    "btn_rank": {
+    "btnRank": {
       "__id__": 66
     },
-    "btn_more": {
+    "btnMore": {
       "__id__": 77
     },
-    "btn_recommend": {
+    "btnRecommend": {
       "__id__": 88
     },
-    "lbl_tag_recommend": {
+    "lblTagRecommend": {
       "__id__": 95
     },
-    "btn_hot": {
+    "btnHot": {
       "__id__": 99
     },
-    "lbl_tag_hot": {
+    "lblTagHot": {
       "__id__": 106
     },
-    "btn_played": {
+    "btnPlayed": {
       "__id__": 110
     },
-    "lbl_tag_played": {
+    "lblTagPlayed": {
       "__id__": 117
     },
-    "lbl_title": {
+    "lblTitle": {
       "__id__": 11
     },
-    "img_title_bg": {
+    "imgTitleBg": {
       "__id__": 7
     },
     "_id": ""

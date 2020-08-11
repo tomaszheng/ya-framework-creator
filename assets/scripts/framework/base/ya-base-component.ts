@@ -65,16 +65,14 @@ class YaBaseComponent extends cc.Component {
     }
 
     protected update(dt: number) {
-        super.update(dt);
+
     }
 
     protected lateUpdate(dt: number) {
-        super.lateUpdate(dt);
+
     }
 
     protected onDestroy() {
-        super.onDestroy();
-
         // TODO - clear event
     }
 }
