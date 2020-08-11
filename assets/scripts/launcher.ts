@@ -6,9 +6,9 @@
 
 // import BasicPlatform from "./Platform/BasicPlatform";
 // import WeChatPlatform from "./Platform/WeChatPlatform";
-import ControllerManager from "./manager/ControllerManager";
-import { ModelManager } from "./manager/ModelManager";
 import {ya} from "./framework/ya";
+import {modelManager} from "./manager/ModelManager";
+import {controllerManager} from "./manager/ControllerManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -24,14 +24,11 @@ export default class Launcher extends cc.Component {
     layerTop:cc.Node = null;
 
     start () {
-        ya.layer.top = this.layerTop;       // 最顶层
-        ya.layer.dialog = this.layerDialog; // 弹窗层
-        ya.layer.view = this.layerView;     // 场景层
-
         ya.init();
-        ControllerManager.getInstance().init();
 
-        ModelManager.instance.init();
+        modelManager.init();
+
+        controllerManager.init();
 
         this.launch();
     }

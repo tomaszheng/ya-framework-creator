@@ -5,6 +5,7 @@ import {YaUtils} from "./utils/ya-utils";
 import {YaDialogProperty} from "./mvc/ya-dialog-property";
 import {YaFunctions} from "./utils/ya-functions";
 import {YaDateUtils} from "./utils/ya-date-utils";
+import {Singleton} from "./singleton/Singleton";
 import {YaView} from "./mvc/ya-view";
 import {YaModel} from "./mvc/ya-model";
 import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "./mvc/ya-dialog";
@@ -28,6 +29,7 @@ class Ya {
     public static DialogCharacter = YaDialogCharacter;
     public static DialogProperty = YaDialogProperty;
     public static Controller = YaController;
+    public static Singleton = Singleton;
 
     public static utils = YaUtils;
     public static func = YaFunctions;

@@ -1,19 +1,10 @@
-import CommonController from "../feature/common/CommonController";
-import MainController from "../feature/main/MainController";
-import LoadingController from "../feature/loading/LoadingController";
-import RankController from "../feature/rank/RankController";
 import {ya} from "../framework/ya";
+import {LoadingController} from "../feature/loading/LoadingController";
+import {CommonController} from "../feature/common/CommonController";
+import {RankController} from "../feature/rank/RankController";
+import {MainController} from "../feature/main/MainController";
 
-export default class ControllerManager {
-
-    private static _instance: ControllerManager = null;
-    static getInstance(): ControllerManager {
-        if (!this._instance) {
-            this._instance = new ControllerManager();
-        }
-        return this._instance;
-    }
-
+class ControllerManager extends ya.Singleton<ControllerManager> {
     public init() {
         ya.viewManager.register("common",   new CommonController());
         ya.viewManager.register("loading",  new LoadingController());
@@ -21,3 +12,6 @@ export default class ControllerManager {
         ya.viewManager.register("rank",     new RankController());
     }
 }
+
+const controllerManager = ControllerManager.instance(ControllerManager);
+export {controllerManager};

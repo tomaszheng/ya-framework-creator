@@ -1,16 +1,9 @@
+import {ya} from "../framework/ya";
 import {CacheModel} from "../model/CacheModel";
 import {UserModel} from "../model/UserModel";
 import {ItemModel} from "../model/ItemModel";
 
-class ModelManager {
-    private static _instance: ModelManager = null;
-    public static get instance(): ModelManager {
-        if (!this._instance) {
-            this._instance = new ModelManager();
-        }
-        return this._instance;
-    }
-
+class ModelManager extends ya.Singleton<ModelManager> {
     private _cache: CacheModel;
     public get cache(): CacheModel {
         return this._cache;
@@ -33,4 +26,5 @@ class ModelManager {
     }
 }
 
-export {ModelManager}
+const modelManager = ModelManager.instance(ModelManager);
+export {modelManager};
