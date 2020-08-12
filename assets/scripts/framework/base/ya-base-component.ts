@@ -1,7 +1,11 @@
+import {IRefRecord, yaResourceManager} from "../manager/ya-resource-manager";
+
 const {ccclass} = cc._decorator;
 
 @ccclass
 class YaBaseComponent extends cc.Component {
+    private _refRecords: Map<string, IRefRecord[]>;
+
     protected get data() {
         return this._data;
     }
@@ -14,10 +18,7 @@ class YaBaseComponent extends cc.Component {
         return '';
     }
 
-    public get instantiatedPrefabPath() {
-        return this._instantiatedPrefabPath;
-    }
-    public set instantiatedPrefabPath(path) {
+    public set instantiatedPrefabPath(path: string) {
         this._instantiatedPrefabPath = path;
     }
 
@@ -43,6 +44,7 @@ class YaBaseComponent extends cc.Component {
 
     protected initData(data?: any) {
         this._data = data;
+        this._refRecords = new Map<string, IRefRecord[]>();
     }
 
     protected initUI() {
@@ -55,6 +57,12 @@ class YaBaseComponent extends cc.Component {
 
     protected initModelEvent() {
 
+    }
+
+    protected async loadAsset(path: string, type: typeof cc.Asset) {
+        return yaResourceManager.load(path, type).then((asset: cc.Asset) => {
+
+        });
     }
 
     /**
@@ -72,8 +80,55 @@ class YaBaseComponent extends cc.Component {
 
     }
 
+    public addRef(path: string, type: typeof cc.Asset) {
+        if (this._refRecords.has(path)) {
+            const records = this._refRecords.get(path);
+            let found = false;
+            records.some((record) => {
+               if (path === record.path && type === record.type) {
+                   found = true;
+                   record.refCount++;
+                   return true;
+               }
+            });
+            if (!found) {
+                records.push({path, type, refCount: 1});
+                yaResourceManager.addRef(path, type);
+            }
+        } else {
+            this._refRecords.set(path, [{path, type, refCount: 1}]);
+            yaResourceManager.addRef(path, type);
+        }
+    }
+
+    public decRef(path: string, type: typeof cc.Asset) {
+        if (this._refRecords.has(path)) {
+            const records = this._refRecords.get(path);
+            records.some((record) => {
+                if (path === record.path && type === record.type && record.refCount > 0) {
+                    record.refCount--;
+                    if (record.refCount === 0) yaResourceManager.decRef(path, type);
+                    return true;
+                }
+            });
+        }
+    }
+
+    public decAllRef() {
+        this._refRecords.forEach((records, path) => {
+            records.every((record) => {
+                if (record.refCount > 0) {
+                    yaResourceManager.decRef(record.path, record.type);
+                }
+            });
+        });
+        this._refRecords = new Map<string, IRefRecord[]>();
+    }
+
     protected onDestroy() {
-        // TODO - clear event
+        if (this._instantiatedPrefabPath) yaResourceManager.decRef(this._instantiatedPrefabPath, cc.Prefab);
+
+        this.decAllRef();
     }
 }
 

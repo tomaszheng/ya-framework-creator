@@ -33,8 +33,16 @@ class YaUtils {
         return ret;
     }
 
-    public static doCallback (callback: (data?: any)=>void, params?: any) {
-        callback(params);
+    public static doCallback (callback?: (...args)=>void, args?: any) {
+        if (callback) callback(args);
+    }
+
+    public static mixins(derivedCtor: any, baseCtorList: any[]) {
+        baseCtorList.forEach(baseCtor => {
+            Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+                derivedCtor.prototype[name] = baseCtor.prototype[name];
+            });
+        });
     }
 
     /**

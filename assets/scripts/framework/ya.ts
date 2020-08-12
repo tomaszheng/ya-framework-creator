@@ -50,6 +50,7 @@ class Ya {
     public static init() {
         this.layerManager.init();
         this.eventDispatcher.init();
+        this.resourceManager.init();
         this.soundManager.init();
         this.dialogManager.init();
     }
