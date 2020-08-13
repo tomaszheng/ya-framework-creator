@@ -37,9 +37,7 @@ class YaController {
     }
 
     private readonly events: IEventRecord[];
-
     protected _view: YaView;
-
     protected _model: YaModel;
 
     public constructor() {
@@ -75,7 +73,7 @@ class YaController {
                 this.doCreateView(node, data);
             });
         } else {
-            const node = new cc.Node();
+            const node = new cc.Node(this.viewClassname);
             node.parent = this.root;
             this.doCreateView(node, data);
         }
@@ -97,13 +95,12 @@ class YaController {
 
     /**
      * 显示或创建当前视图
-     * @param args 参数
+     * @param data 参数
      */
-    public show(args: any): void {
+    public show(data: any): void {
         if (!this._view) {
             this.initLifeListener();
-
-            this.createView(args);
+            this.createView(data);
         } else {
             if (!this._view.node.active) {
                 this._view.node.active = true;

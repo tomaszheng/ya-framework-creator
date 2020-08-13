@@ -12,9 +12,8 @@ class LoadingView extends ya.View {
     protected initUI() {
         super.initUI();
 
-        ya.viewManager.show("main");
-
-        ya.soundManager.playMusic("bgm");
+        ya.viewManager.show('main');
+        ya.soundManager.playMusic('common/sounds/bgm');
     }
 }
 

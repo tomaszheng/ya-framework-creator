@@ -26,15 +26,15 @@ class YaLayerManager extends Singleton<YaLayerManager> {
     public init(): void {
         const canvas = cc.find('Canvas');
 
-        this._view = new cc.Node();
+        this._view = new cc.Node('view');
         this._view.parent = canvas;
         this._view.zIndex = 1;
 
-        this._dialog = new cc.Node();
+        this._dialog = new cc.Node('dialog');
         this._dialog.parent = canvas;
         this._dialog.zIndex = 2;
 
-        this._top = new cc.Node();
+        this._top = new cc.Node('top');
         this._top.parent = canvas;
         this._top.zIndex = 3;
 

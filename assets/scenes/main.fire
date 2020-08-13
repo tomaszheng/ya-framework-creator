@@ -171,7 +171,7 @@
       "array": [
         0,
         0,
-        366.31521415388346,
+        359.4005425705421,
         0,
         0,
         0,
@@ -282,6 +282,7 @@
       "__id__": 2
     },
     "_enabled": true,
+    "viewLayer": null,
     "_id": "7fkVnaxzNOuLxPiYmHdO7K"
   }
 ]

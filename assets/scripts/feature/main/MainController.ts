@@ -1,10 +1,11 @@
-import ResourceConfig from "../../config/resource/ResourceConfig";
 import {EventConfig} from "../../config/EventConfig";
 import {ya} from "../../framework/ya";
 import {MainView} from "./MainView";
 
 class MainController extends ya.Controller {
-    protected _view: MainView;
+    public get view(): MainView {
+        return this._view as MainView;
+    }
 
     public get prefabPath(): string {
         return 'mainView/prefabs/main';

@@ -1,5 +1,3 @@
-import ResourceConfig from "../../config/resource/ResourceConfig";
-import {StorageConfig} from "../../config/StorageConfig";
 import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
 import {EventConfig} from "../../config/EventConfig";

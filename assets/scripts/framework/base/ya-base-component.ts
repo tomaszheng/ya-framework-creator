@@ -72,9 +72,6 @@ class YaBaseComponent extends cc.Component {
         return promise;
     }
 
-    /**
-     * 更新UI
-     */
     public updateUI() {
 
     }

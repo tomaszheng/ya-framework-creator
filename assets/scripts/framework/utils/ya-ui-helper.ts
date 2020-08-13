@@ -2,6 +2,10 @@ import {YaBaseComponent} from "../base/ya-base-component";
 import {yaResourceManager} from "../manager/ya-resource-manager";
 
 class YaUIHelper {
+    public static getCanvasSize() {
+        return cc.find('Canvas').getContentSize();
+    }
+
     /**
      * 实例化Prefab（由prefabPath指定prefab），注意：必须在YaBaseComponent及子类中调用，否则资源会泄露
      * @param prefabPath prefab路径
@@ -23,9 +27,9 @@ class YaUIHelper {
 
     public static instantiate(prefab: cc.Prefab, data?: any, parent?: cc.Node): cc.Node {
         const node: cc.Node = cc.instantiate(prefab);
+        node.parent = parent;
         const component = node.getComponent(YaBaseComponent);
         if (component) component.init(data);
-        node.parent = parent;
         return node;
     }
 }
