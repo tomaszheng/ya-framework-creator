@@ -9,8 +9,9 @@ class SettleController extends ya.Controller {
     }
 
     onShowSettle (data: any) {
-        ya.resourceManager.load(ResourceConfig.settle, () => {
-            ya.dialogManager.show('Prefab/dialog_settle"', data, {
+        const prefabPath = 'resources/prefab/dialog_settle';
+        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=> {
+            ya.dialogManager.show(prefabPath, data, {
                 showType: ya.DialogShowTypes.SCALE,
                 dataLoaded: true,
             });

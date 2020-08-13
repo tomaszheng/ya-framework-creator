@@ -39,6 +39,12 @@ class YaResourceManager extends Singleton<YaResourceManager> {
         this._refRecords = new Map<string, Map<string, IRefRecord>>();
     }
 
+    public isLoaded(path: string, type: typeof cc.Asset): boolean {
+        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const bundle = cc.assetManager.getBundle(bundleName);
+        return bundle && !!bundle.get(resPath, type);
+    }
+
     public async load(path: string, type: typeof cc.Asset) {
         return new Promise<cc.Asset>((resolve, reject) => {
             const {bundleName, resPath} = YaResourceManager.parsePath(path);

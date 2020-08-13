@@ -9,22 +9,22 @@ class YaUIHelper {
      * @param parent 父节点
      */
     public static async instantiatePath(prefabPath: string, data?: any, parent?: cc.Node) {
-        const promise = yaResourceManager.load(prefabPath, cc.Prefab);
-        promise.then((prefab: cc.Prefab) => {
-            const component = this.instantiate(prefab, data, parent).getComponent(YaBaseComponent);
-            if (component) {
-                component.addRef(prefabPath, cc.Prefab);
-            }
+        return new Promise<cc.Node>((resolve, reject) => {
+            yaResourceManager.load(prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
+                const node = this.instantiate(prefab, data, parent);
+                const component = node.getComponent(YaBaseComponent);
+                if (component) component.addRef(prefabPath, cc.Prefab);
+                resolve(node);
+            }).catch(() => {
+                reject();
+            });
         });
-        return promise;
     }
 
     public static instantiate(prefab: cc.Prefab, data?: any, parent?: cc.Node): cc.Node {
         const node: cc.Node = cc.instantiate(prefab);
         const component = node.getComponent(YaBaseComponent);
-        if (component) {
-            component.init(data);
-        }
+        if (component) component.init(data);
         node.parent = parent;
         return node;
     }

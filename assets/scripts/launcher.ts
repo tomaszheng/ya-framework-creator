@@ -1,4 +1,3 @@
-
 /*
 启动器
 主场景被加载后，用来对游戏的初始化
@@ -23,7 +22,7 @@ export default class Launcher extends cc.Component {
         this.launch();
     }
 
-    private launch () {
+    private launch() {
         ya.viewManager.show("common");
         ya.viewManager.show("loading");
     }

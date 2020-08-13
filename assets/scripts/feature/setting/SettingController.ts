@@ -10,8 +10,9 @@ class SettingController extends ya.Controller {
     }
 
     onShowPause (data: any) {
-        ya.resourceManager.load(ResourceConfig.pause, () => {
-            ya.dialogManager.show('Prefab/dialog_pause', data, {
+        const prefabPath = 'resources/prefab/dialog_pause';
+        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=> {
+            ya.dialogManager.show(prefabPath, data, {
                 showType: ya.DialogShowTypes.SCALE,
                 dataLoaded: true,
             });

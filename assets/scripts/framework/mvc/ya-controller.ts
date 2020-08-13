@@ -6,7 +6,8 @@ import {yaLayerManager} from "../manager/ya-layer-manager";
 import {YaView} from "./ya-view";
 import {yaEventDispatcher} from "../event/ya-event-dispatcher";
 import {yaResourceManager} from "../manager/ya-resource-manager";
-import {YaBaseComponent} from "../base/ya-base-component";
+import {yaUIHelper} from "../utils/ya-ui-helper";
+import {YaModel} from "./ya-model";
 
 interface IEventRecord {
     name: string;
@@ -15,16 +16,19 @@ interface IEventRecord {
 }
 
 class YaController {
-    protected _view: YaView = null;
     public get view() {
         return this._view;
+    }
+
+    public get model() {
+        return this._model;
     }
 
     public get prefabPath(): string {
         return '';
     }
 
-    public get viewName(): string {
+    public get viewClassname(): string {
         return '';
     }
 
@@ -32,25 +36,22 @@ class YaController {
         return yaLayerManager.view;
     }
 
-    protected _model: any = null;
-    public get model() {
-        return this._model;
-    }
-
-    public set model(m) {
-        this._model = m;
-    }
-
     private readonly events: IEventRecord[];
 
-    constructor() {
+    protected _view: YaView;
+
+    protected _model: YaModel;
+
+    public constructor() {
         this.events = [];
+
+        this.initData();
 
         this.initGlobalListener();
     }
 
-    protected initModel() {
-
+    protected initData() {
+        // TODO init model
     }
 
     /**
@@ -70,29 +71,28 @@ class YaController {
 
     private createView(data: any): void {
         if (this.prefabPath) {
-            yaResourceManager.load(this.prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
-                const node = cc.instantiate(prefab);
+            yaUIHelper.instantiatePath(this.prefabPath, data, this.root).then((node) => {
                 this.doCreateView(node, data);
             });
         } else {
-            this.doCreateView(new cc.Node(), data);
+            const node = new cc.Node();
+            node.parent = this.root;
+            this.doCreateView(node, data);
         }
     }
 
     private doCreateView(node: cc.Node, data: any) {
         let view = node.getComponent(YaView);
         if (!view) {
-            if (!this.viewName) {
+            if (!this.viewClassname) {
                 cc.error(`Not found component 'YaBaseComponent', please check.`);
                 return;
             }
-            view = node.addComponent(this.viewName);
+            view = node.addComponent(this.viewClassname);
+            view.init(data);
         }
 
         this._view = view;
-        this._view.instantiatedPrefabPath = this.prefabPath;
-        this._view.node.parent = this.root;
-        this._view.init(data);
     }
 
     /**
@@ -101,7 +101,6 @@ class YaController {
      */
     public show(args: any): void {
         if (!this._view) {
-            this.initModel();
             this.initLifeListener();
 
             this.createView(args);

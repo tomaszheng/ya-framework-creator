@@ -8,12 +8,11 @@ import {EventConfig} from "../../config/EventConfig";
 import {CommonView} from "./CommonView";
 
 class CommonController extends ya.Controller {
-    protected _view: CommonView;
     public get view(): CommonView {
-        return this._view;
+        return this._view as CommonView;
     }
 
-    public get viewName() {
+    public get viewClassname() {
         return 'CommonView';
     }
 

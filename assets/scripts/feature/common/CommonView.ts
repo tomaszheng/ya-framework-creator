@@ -8,7 +8,8 @@ class CommonView extends ya.View {
 
     poolToasts: cc.NodePool = null;
 
-    onInitData () {
+    protected initData(data?: any) {
+        super.initData(data);
         this.poolToasts = new cc.NodePool();
     }
 

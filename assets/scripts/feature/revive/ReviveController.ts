@@ -11,8 +11,9 @@ class ReviveController extends ya.Controller {
     }
 
     onShowRevive (data: any) {
-        ya.resourceManager.load(ResourceConfig.revive, () => {
-            ya.dialogManager.show('Prefab/dialog_revive', data, {
+        const prefabPath = 'prefab/dialog_revive';
+        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=>{
+            ya.dialogManager.show(prefabPath, data, {
                 showType: ya.DialogShowTypes.SCALE,
                 dataLoaded: true,
             });

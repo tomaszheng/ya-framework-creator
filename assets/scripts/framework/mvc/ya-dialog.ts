@@ -4,12 +4,11 @@
 1，请求服务器数据；
 2，执行打开动作；
 在上述两步均完成后，才进行弹窗的处理逻辑
+【注意1】弹窗是特殊的视图，因此继承于YaView
 */
 
-
-import {YaBaseComponent} from "../base/ya-base-component";
 import {yaDialogManager} from "../manager/ya-dialog-manager";
-import {YaModel} from "./ya-model";
+import {YaView} from "./ya-view";
 
 const {ccclass} = cc._decorator;
 
@@ -57,10 +56,11 @@ const YaDialogCharacter = {
 };
 
 @ccclass
-class YaDialog extends YaBaseComponent {
+class YaDialog extends YaView {
     public set id(i) {
         this._id = i;
     }
+
     public get id() {
         return this._id;
     }
@@ -68,6 +68,7 @@ class YaDialog extends YaBaseComponent {
     public set showType(type) {
         this._showType = type;
     }
+
     public get showType() {
         return this._showType;
     }
@@ -75,6 +76,7 @@ class YaDialog extends YaBaseComponent {
     public set character(c) {
         this._character = c;
     }
+
     public get character() {
         return this._character;
     }
@@ -93,14 +95,6 @@ class YaDialog extends YaBaseComponent {
     protected _showType = YaDialogShowTypes.NONE;
     protected _character = YaDialogCharacter.NONE;
 
-    protected _model: YaModel;
-
-    public init(data?: any) {
-        super.init(data);
-
-        this.requestServer();
-    }
-
     protected initTouchEvent() {
         super.initTouchEvent();
 
@@ -109,12 +103,6 @@ class YaDialog extends YaBaseComponent {
         this.node.on(cc.Node.EventType.TOUCH_END, () => {
             this.onClickSpace();
         }, this);
-    }
-
-    protected initModelEvent() {
-        super.initModelEvent();
-
-        this._model.on(this._model.EVENT_SERVER_LOADED, this.handlerServerLoaded, this);
     }
 
     /**
@@ -126,23 +114,11 @@ class YaDialog extends YaBaseComponent {
         }
     }
 
-    /**
-     * override
-     * 请求此弹窗的数据
-     */
-    protected requestServer() {
-
-    }
-
     protected handlerServerLoaded() {
         this._isDataLoaded = true;
         if (this._isEnterCompleted) {
             this.updateUI();
         }
-    }
-
-    public updateUI() {
-
     }
 
     private setNormalStatus() {

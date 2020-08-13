@@ -22,7 +22,6 @@ class MainView extends ya.View {
     @property(cc.Node) btnPlayed: cc.Node = null;
     @property(cc.Node) lblTagPlayed: cc.Node = null;
     @property(cc.Node) lblTitle: cc.Node = null;
-    @property(cc.Node) imgTitleBg: cc.Node = null;
 
     protected initUI() {
         super.initUI();
@@ -230,13 +229,6 @@ class MainView extends ya.View {
                 cc.tween()
                     .by(2, {position: cc.v2(0, 32)})
                     .by(2, {position: cc.v2(0, -32)}))
-            .start();
-        cc.tween(this.imgTitleBg)
-            .delay(2)
-            .repeatForever(
-                cc.tween()
-                    .by(2, {position: cc.v3(0, 32)})
-                    .by(2, {position: cc.v3(0, -32)}))
             .start();
     }
 

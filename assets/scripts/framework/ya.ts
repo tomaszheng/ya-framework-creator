@@ -1,6 +1,5 @@
 import {YaBaseComponent} from "./base/ya-base-component";
 import {YaController} from "./mvc/ya-controller";
-import {YaDialogProperty} from "./mvc/ya-dialog-property";
 import {Singleton} from "./singleton/Singleton";
 import {YaView} from "./mvc/ya-view";
 import {YaModel} from "./mvc/ya-model";
@@ -26,7 +25,6 @@ class Ya {
     public static Dialog = YaDialog;
     public static DialogShowTypes = YaDialogShowTypes;
     public static DialogCharacter = YaDialogCharacter;
-    public static DialogProperty = YaDialogProperty;
     public static Controller = YaController;
     public static Singleton = Singleton;
 

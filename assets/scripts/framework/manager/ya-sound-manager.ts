@@ -6,120 +6,188 @@
 import {Singleton} from "../singleton/Singleton";
 import {yaLocalStorage} from "../storage/ya-local-storage";
 import {YaStorageConfig} from "../config/ya-storage-config";
+import {yaResourceManager} from "./ya-resource-manager";
+import {yaUtils} from "../utils/ya-utils";
+
+interface IAudioRecord {
+    path: string;
+    audioId: number;
+}
 
 class YaSoundManager extends Singleton<YaSoundManager> {
-    set music (musicEnabled: boolean) {
-        this.musicEnabled = musicEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.MUSIC_ENABLED, this.musicEnabled);
+    public set music(musicEnabled: boolean) {
+        this._musicEnabled = musicEnabled;
+        yaLocalStorage.setItem(YaStorageConfig.MUSIC_ENABLED, this._musicEnabled);
     }
-    get music () {
-        return this.musicEnabled;
+
+    public get music() {
+        return this._musicEnabled;
     }
-    set effect (effectEnabled:boolean) {
-        this.effectEnabled = effectEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.EFFECT_ENABLED, this.effectEnabled);
+
+    public set effect(effectEnabled: boolean) {
+        this._effectEnabled = effectEnabled;
+        yaLocalStorage.setItem(YaStorageConfig.EFFECT_ENABLED, this._effectEnabled);
     }
-    get effect () {
-        return this.effectEnabled;
+
+    public get effect() {
+        return this._effectEnabled;
     }
-    set mute (mute: boolean) {
+
+    public set mute(mute: boolean) {
         this._mute = mute;
         yaLocalStorage.setItem(YaStorageConfig.SOUND_MUTE, this.mute);
         cc.audioEngine.stopAllEffects();
         cc.audioEngine.stopMusic();
     }
-    get mute () {
+
+    public get mute() {
         return this._mute;
     }
-    set vibration (vibrationEnabled: boolean) {
-        this.vibrationEnabled = vibrationEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.VIBRATION_ENABLED, this.vibrationEnabled);
-    }
-    get vibration () {
-        return this.vibrationEnabled;
-    }
-    set musicName (name:string) {
-        this._musicName = name;
-    }
-    get musicName () {
-        return this._musicName;
+
+    public set vibration(vibrationEnabled: boolean) {
+        this._vibrationEnabled = vibrationEnabled;
+        yaLocalStorage.setItem(YaStorageConfig.VIBRATION_ENABLED, this._vibrationEnabled);
     }
 
-    musicEnabled = true;
+    public get vibration() {
+        return this._vibrationEnabled;
+    }
 
-    effectEnabled = true;
+    public get nextAudioId() {
+        return ++this._audioIdSeed;
+    }
 
-    _mute = false;
+    private _musicEnabled = true;
+    private _effectEnabled = true;
+    private _vibrationEnabled = true;
+    private _mute = false;
+    private _audioIdSeed = 0;
 
-    vibrationEnabled = true;
-
-    _musicName = "";
+    private _refRecords: Map<string, number>;
+    private _audioRecords: Map<number, IAudioRecord>;
+    private _musicRecord: { path: string, localId: number };
 
     public init() {
-        this.musicEnabled = yaLocalStorage.getBool(YaStorageConfig.MUSIC_ENABLED, true);
-        this.effectEnabled = yaLocalStorage.getBool(YaStorageConfig.EFFECT_ENABLED, true);
-        this.vibrationEnabled = yaLocalStorage.getBool(YaStorageConfig.VIBRATION_ENABLED, true);
+        this._refRecords = new Map<string, number>();
+        this._audioRecords = new Map<number, IAudioRecord>();
+        this._musicRecord = {path: '', localId: -1};
+
+        this._musicEnabled = yaLocalStorage.getBool(YaStorageConfig.MUSIC_ENABLED, true);
+        this._effectEnabled = yaLocalStorage.getBool(YaStorageConfig.EFFECT_ENABLED, true);
+        this._vibrationEnabled = yaLocalStorage.getBool(YaStorageConfig.VIBRATION_ENABLED, true);
     }
 
-    // volume: 0.0 ~ 1.0
-    setMusicVolume (volume:number) {
+    private doPlay(localId: number, audioClip: cc.AudioClip, isLoop: boolean, volume: number, onComplete?: () => void) {
+        if (!this._audioRecords.has(localId)) return;
+
+        const audioId = cc.audioEngine.play(audioClip, isLoop, volume);
+        const record = this._audioRecords.get(localId);
+        record.audioId = audioId;
+
+        cc.audioEngine.setFinishCallback(audioId, () => {
+            this.stop(localId);
+            yaUtils.doCallback(onComplete);
+        });
+    }
+
+    private play(path: string, isLoop: boolean, volume: number, onComplete?: ()=>void): number {
+        const localId = this.nextAudioId;
+        this._audioRecords.set(localId, {audioId: -1, path});
+
+        if (yaResourceManager.isLoaded(path, cc.AudioClip)) {
+            const audioClip = yaResourceManager.getAsset(path, cc.AudioClip) as cc.AudioClip;
+            this.addRef(path);
+            this.doPlay(localId, audioClip, isLoop, volume, onComplete);
+        } else {
+            yaResourceManager.load(path, cc.AudioClip).then((audioClip: cc.AudioClip) => {
+                this.addRef(path);
+                this.doPlay(localId, audioClip, isLoop, volume, onComplete);
+            });
+        }
+
+        return localId;
+    }
+
+    public stop(localId: number) {
+        if (!this._audioRecords.has(localId)) return;
+
+        const {audioId, path} = this._audioRecords.get(localId);
+        this._audioRecords.delete(localId);
+
+        if (audioId !== -1) {
+            const state = cc.audioEngine.getState(audioId);
+            if (state !== cc.audioEngine.AudioState.STOPPED && state !== cc.audioEngine.AudioState.ERROR) {
+                cc.audioEngine.stop(audioId);
+            }
+            this.decRef(path);
+        }
+
+        if (this._musicRecord.localId === localId) {
+            this._musicRecord = {path: '', localId: -1};
+        }
+    }
+
+    public setMusicVolume(volume: number) {
         volume = Number(volume) || 0;
         cc.audioEngine.setMusicVolume(volume);
     }
 
-    getMusicVolume ():number {
+    public getMusicVolume(): number {
         return cc.audioEngine.getMusicVolume();
     }
 
-    stopMusic () {
-        cc.audioEngine.stopMusic();
-
-        this.musicName = "";
+    public playMusic(path: string, isLoop?: boolean, onComplete?: () => void) {
+        if (path === this._musicRecord.path || !this._musicEnabled || this._mute) return;
+        const localId = this.play(path, Boolean(isLoop), this.getMusicVolume(), onComplete);
+        this._musicRecord = {path, localId};
     }
 
-    playMusic (name: string, isLoop?: boolean) {
-        if (name === this.musicName || !this.musicEnabled || !this.mute) return;
+    public stopMusic() {
+        this.stop(this._musicRecord.localId);
 
-        isLoop = Boolean(isLoop);
-
-        const audioChip = cc.loader.getRes(name, cc.AudioClip);
-        if (audioChip) {
-            cc.audioEngine.playMusic(audioChip, isLoop);
-        }
-        else {
-            cc.loader.loadRes(name, cc.AudioClip, (err, audioClip: cc.AudioClip) => {
-                if (this.musicName === name) {
-                    cc.audioEngine.playMusic(audioChip, isLoop);
-                }
-            });
-        }
-
-        this.musicName = name;
+        this._musicRecord = {path: '', localId: -1};
     }
 
-    pauseMusic () {
+    public pauseMusic() {
         cc.audioEngine.pauseMusic();
     }
 
-    resumeMusic () {
+    public resumeMusic() {
         cc.audioEngine.resumeMusic();
     }
 
-    playEffect (name: string, isLoop?: boolean):number {
-        if (!this.effectEnabled || !this.mute) return -1;
-
-        const audioChip = cc.loader.getRes(name, cc.AudioClip);
-        if (audioChip) {
-            return cc.audioEngine.playEffect(audioChip, Boolean(isLoop));
-        }
-        else {
-            cc.loader.loadRes(name, cc.AudioClip);
-        }
-        return -1;
+    public getEffectsVolume(): number {
+        return cc.audioEngine.getEffectsVolume();
     }
 
-    stopEffect (id:number) {
-        cc.audioEngine.stopEffect(id);
+    public playEffect(path: string, isLoop?: boolean, onComplete?: () => void): number {
+        if (!this._effectEnabled || this._mute) return -1;
+        return this.play(path, Boolean(isLoop), this.getEffectsVolume(), onComplete);
+    }
+
+    public stopEffect(localId: number) {
+        this.stop(localId);
+    }
+
+    public addRef(path: string) {
+        if (this._refRecords.has(path)) {
+            const refCount = this._refRecords.get(path);
+            this._refRecords.set(path, refCount + 1);
+        } else {
+            this._refRecords.set(path, 1);
+            yaResourceManager.addRef(path, cc.AudioClip);
+        }
+    }
+
+    public decRef(path: string) {
+        if (this._refRecords.has(path)) {
+            let refCount = this._refRecords.get(path);
+            this._refRecords.set(path, --refCount);
+            if (refCount <= 0) {
+                this._refRecords.delete(path);
+                yaResourceManager.decRef(path, cc.AudioClip);
+            }
+        }
     }
 }
 
