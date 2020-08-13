@@ -70,4 +70,5 @@ class YaFunctions {
     }
 }
 
-export {YaFunctions};
+const yaFunctions = YaFunctions;
+export {yaFunctions};

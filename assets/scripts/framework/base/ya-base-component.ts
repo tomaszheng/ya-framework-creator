@@ -1,4 +1,5 @@
 import {IRefRecord, yaResourceManager} from "../manager/ya-resource-manager";
+import {yaUIHelper} from "../utils/ya-ui-helper";
 
 const {ccclass} = cc._decorator;
 
@@ -18,13 +19,8 @@ class YaBaseComponent extends cc.Component {
         return '';
     }
 
-    public set instantiatedPrefabPath(path: string) {
-        this._instantiatedPrefabPath = path;
-    }
-
     private _data: any = null;
     private _initialized = false;
-    private _instantiatedPrefabPath = '';
 
     /**
      * 初始化组件
@@ -59,10 +55,21 @@ class YaBaseComponent extends cc.Component {
 
     }
 
-    protected async loadAsset(path: string, type: typeof cc.Asset) {
-        return yaResourceManager.load(path, type).then((asset: cc.Asset) => {
-
+    protected async loadAsset(path: string, type: typeof cc.Asset, data?: any) {
+        let promise;
+        if (cc.js.isChildClassOf(type, cc.Prefab)) {
+            promise = yaUIHelper.instantiatePath(path, data);
+        } else {
+            promise = yaResourceManager.load(path, type);
+        }
+        promise.then(()=>{
+            if (cc.isValid(this)) {
+                this.addRef(path, type);
+            } else {
+                yaResourceManager.recordRef(path, type);
+            }
         });
+        return promise;
     }
 
     /**
@@ -126,8 +133,6 @@ class YaBaseComponent extends cc.Component {
     }
 
     protected onDestroy() {
-        if (this._instantiatedPrefabPath) yaResourceManager.decRef(this._instantiatedPrefabPath, cc.Prefab);
-
         this.decAllRef();
     }
 }

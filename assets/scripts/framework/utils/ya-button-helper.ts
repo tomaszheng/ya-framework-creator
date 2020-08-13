@@ -27,4 +27,5 @@ class YaButtonHelper {
     }
 }
 
-export {YaButtonHelper};
+const yaButtonHelper = YaButtonHelper;
+export {yaButtonHelper};

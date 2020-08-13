@@ -9,6 +9,7 @@
 
 import {YaBaseComponent} from "../base/ya-base-component";
 import {yaDialogManager} from "../manager/ya-dialog-manager";
+import {YaModel} from "./ya-model";
 
 const {ccclass} = cc._decorator;
 
@@ -92,6 +93,8 @@ class YaDialog extends YaBaseComponent {
     protected _showType = YaDialogShowTypes.NONE;
     protected _character = YaDialogCharacter.NONE;
 
+    protected _model: YaModel;
+
     public init(data?: any) {
         super.init(data);
 
@@ -108,45 +111,43 @@ class YaDialog extends YaBaseComponent {
         }, this);
     }
 
+    protected initModelEvent() {
+        super.initModelEvent();
+
+        this._model.on(this._model.EVENT_SERVER_LOADED, this.handlerServerLoaded, this);
+    }
+
     /**
      * 触摸到了空白区域，默认关闭弹窗
      */
-    onClickSpace() {
+    protected onClickSpace() {
         if (this._isEnterCompleted) {
             this.removeSelf();
         }
-    }
-
-    private setNormalStatus() {
-        this.node.scale = 1.0;
-        this.node.opacity = 0;
     }
 
     /**
      * override
      * 请求此弹窗的数据
      */
-    requestServer() {
+    protected requestServer() {
 
     }
 
-    /**
-     * 请求数据回报后，调用此方法
-     */
-    updateUI() {
+    protected handlerServerLoaded() {
         this._isDataLoaded = true;
-
         if (this._isEnterCompleted) {
-            this.onUpdateUI();
+            this.updateUI();
         }
     }
 
-    /**
-     * override
-     * 弹窗所需要的数据已经全部拿到并且弹窗进入动作已经完成，可以对UI进行更新
-     */
-    onUpdateUI() {
+    public updateUI() {
 
+    }
+
+    private setNormalStatus() {
+        this.node.scale = 1.0;
+        this.node.opacity = 0;
     }
 
     public show() {
@@ -212,7 +213,7 @@ class YaDialog extends YaBaseComponent {
         this._isEnterCompleted = true;
 
         if (this._isDataLoaded) {
-            this.onUpdateUI();
+            this.updateUI();
         }
     }
 

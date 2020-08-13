@@ -13,4 +13,5 @@ class YaDateUtils {
     }
 }
 
-export {YaDateUtils};
+const yaDateUtils = YaDateUtils;
+export {yaDateUtils};

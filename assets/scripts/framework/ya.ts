@@ -1,16 +1,11 @@
-
 import {YaBaseComponent} from "./base/ya-base-component";
 import {YaController} from "./mvc/ya-controller";
-import {YaUtils} from "./utils/ya-utils";
 import {YaDialogProperty} from "./mvc/ya-dialog-property";
-import {YaFunctions} from "./utils/ya-functions";
-import {YaDateUtils} from "./utils/ya-date-utils";
 import {Singleton} from "./singleton/Singleton";
 import {YaView} from "./mvc/ya-view";
 import {YaModel} from "./mvc/ya-model";
 import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "./mvc/ya-dialog";
-import {YaButtonHelper} from "./utils/ya-button-helper";
-import {YaUIHelper} from "./utils/ya-ui-helper";
+import {YaStorageConfig} from "./config/ya-storage-config";
 import {yaEventDispatcher} from "./event/ya-event-dispatcher";
 import {yaLocalStorage} from "./storage/ya-local-storage";
 import {yaDialogManager} from "./manager/ya-dialog-manager";
@@ -18,7 +13,11 @@ import {yaLayerManager} from "./manager/ya-layer-manager";
 import {yaSoundManager} from "./manager/ya-sound-manager";
 import {yaViewManager} from "./manager/ya-view-manager";
 import {yaResourceManager} from "./manager/ya-resource-manager";
-import {YaStorageConfig} from "./config/ya-storage-config";
+import {yaUIHelper} from "./utils/ya-ui-helper";
+import {yaButtonHelper} from "./utils/ya-button-helper";
+import {yaUtils} from "./utils/ya-utils";
+import {yaDateUtils} from "./utils/ya-date-utils";
+import {yaFunctions} from "./utils/ya-functions";
 
 class Ya {
     public static BaseComponent = YaBaseComponent;
@@ -31,11 +30,11 @@ class Ya {
     public static Controller = YaController;
     public static Singleton = Singleton;
 
-    public static utils = YaUtils;
-    public static func = YaFunctions;
-    public static dates = YaDateUtils;
-    public static button = YaButtonHelper;
-    public static uiHelper = YaUIHelper;
+    public static utils = yaUtils;
+    public static func = yaFunctions;
+    public static dates = yaDateUtils;
+    public static button = yaButtonHelper;
+    public static uiHelper = yaUIHelper;
 
     public static soundManager = yaSoundManager;
     public static dialogManager = yaDialogManager;

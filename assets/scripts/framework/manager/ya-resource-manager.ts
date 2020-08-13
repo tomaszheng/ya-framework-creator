@@ -47,6 +47,7 @@ class YaResourceManager extends Singleton<YaResourceManager> {
                     if (!err) {
                         resolve(asset);
                     } else {
+                        cc.log(`load ${path} failed. error: ${err}`);
                         reject(err);
                     }
                 });
@@ -93,6 +94,23 @@ class YaResourceManager extends Singleton<YaResourceManager> {
                 path,
                 type,
                 refCount: 1,
+            });
+        }
+    }
+
+    public recordRef(path: string, type: typeof cc.Asset) {
+        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+
+        if (!this._refRecords.has(bundleName)) {
+            this._refRecords.set(bundleName, new Map<string, IRefRecord>());
+        }
+
+        const record = this._refRecords.get(bundleName);
+        if (!record.has(resPath)) {
+            record.set(resPath, {
+                path,
+                type,
+                refCount: 0,
             });
         }
     }

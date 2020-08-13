@@ -61,4 +61,5 @@ class YaUtils {
     }
 }
 
-export {YaUtils};
+const yaUtils = YaUtils;
+export {yaUtils};
