@@ -26,8 +26,6 @@ class YaViewManager extends Singleton<YaViewManager> {
     }
 
     public show(name: string, data?: any, cleanly?: boolean) {
-        if (cleanly) this.clear();
-
         const controller = this.controllers[name];
         if (!controller) {
             cc.error(`Not found view '${name}`);
@@ -35,6 +33,8 @@ class YaViewManager extends Singleton<YaViewManager> {
         }
 
         controller.show(data);
+
+        if (cleanly) this.clear();
 
         this.views.push(name);
     }

@@ -58,31 +58,31 @@ class MainView extends ya.View {
 
         ya.button.addClick(this.btnSound, ()=>{
             this.onClickSound();
-        });
+        }, this);
         ya.button.addClick(this.btnCustomerService, ()=>{
             this.onClickCustomerService();
-        });
+        }, this);
         ya.button.addClick(this.btnGameClub, ()=>{
             this.onClickGameClub();
-        });
+        }, this);
         ya.button.addClick(this.btnShare, ()=>{
             this.onClickShare();
-        });
+        }, this);
         ya.button.addClick(this.btnRank, ()=>{
             this.onClickRank();
-        });
+        }, this);
         ya.button.addClick(this.btnMore, ()=>{
             this.onClickMoreGame();
-        });
+        }, this);
         ya.button.addClick(this.btnRecommend, ()=>{
             this.onClickRecommend();
-        });
+        }, this);
         ya.button.addClick(this.btnHot, ()=>{
             this.onClickHot();
-        });
+        }, this);
         ya.button.addClick(this.btnPlayed, ()=>{
             this.onClickPlayed();
-        });
+        }, this);
     }
 
     initCubeSnow () {
@@ -157,9 +157,7 @@ class MainView extends ya.View {
     }
 
     onClickRank() {
-        // ya.resourceManager.load(ResourceConfig.rank, () => {
-        //     ya.viewManager.show('rank', null, true);
-        // });
+        ya.viewManager.show('rank');
     }
 
     onClickShare() {

@@ -19,8 +19,8 @@ class YaUIHelper {
                 const component = node.getComponent(YaBaseComponent);
                 if (component) component.addRef(prefabPath, cc.Prefab);
                 resolve(node);
-            }).catch(() => {
-                reject();
+            }).catch((err: Error) => {
+                reject(err);
             });
         });
     }

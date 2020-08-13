@@ -28,13 +28,10 @@
     "_components": [
       {
         "__id__": 55
-      },
-      {
-        "__id__": 56
       }
     ],
     "_prefab": {
-      "__id__": 57
+      "__id__": 56
     },
     "_opacity": 255,
     "_color": {
@@ -58,8 +55,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        360,
-        640,
+        0,
+        0,
         0,
         0,
         0,
@@ -166,7 +163,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "6f473e6d-8acd-4695-a3e6-6e88ae0c04f2"
+      "__uuid__": "1362b685-4990-48e8-9447-f07164170efb"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -179,9 +176,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "c9400025-14a9-4b8c-a91d-fd40fa024db2"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -243,13 +238,7 @@
         "__id__": 23
       },
       {
-        "__id__": 29
-      },
-      {
-        "__id__": 37
-      },
-      {
-        "__id__": 45
+        "__id__": 28
       }
     ],
     "_active": true,
@@ -462,7 +451,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "6f473e6d-8acd-4695-a3e6-6e88ae0c04f2"
+      "__uuid__": "1362b685-4990-48e8-9447-f07164170efb"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -475,9 +464,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "c9400025-14a9-4b8c-a91d-fd40fa024db2"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -738,6 +725,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "好友排行榜",
     "_N$string": "好友排行榜",
@@ -845,6 +834,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "提示：排行榜每周一凌晨刷新",
     "_N$string": "提示：排行榜每周一凌晨刷新",
@@ -892,11 +883,11 @@
         "__id__": 25
       },
       {
-        "__id__": 27
+        "__id__": 26
       }
     ],
     "_prefab": {
-      "__id__": 28
+      "__id__": 27
     },
     "_opacity": 255,
     "_color": {
@@ -908,8 +899,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 88,
-      "height": 88
+      "width": 60,
+      "height": 60
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -929,7 +920,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -961,7 +952,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "b520cec3-d1ac-4c06-a21f-e0b23a4d86d8"
+      "__uuid__": "3a64c3ff-9661-4217-b20e-1ffb2b32f546"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -974,9 +965,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "2f9dd32a-a60f-4a1f-bb68-f9cbe0d8e0b8"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -991,11 +980,7 @@
     "_grayMaterial": null,
     "duration": 0.1,
     "zoomScale": 1.2,
-    "clickEvents": [
-      {
-        "__id__": 26
-      }
-    ],
+    "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 3,
@@ -1066,16 +1051,6 @@
     "_id": ""
   },
   {
-    "__type__": "cc.ClickEvent",
-    "target": {
-      "__id__": 1
-    },
-    "component": "",
-    "_componentId": "145952niYZBLJzijo0mGwwb",
-    "handler": "onClickClose",
-    "customEventData": ""
-  },
-  {
     "__type__": "cc.Widget",
     "_name": "",
     "_objFlags": 0,
@@ -1086,9 +1061,9 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 9,
-    "_left": 30,
+    "_left": 44,
     "_right": 0,
-    "_top": 30,
+    "_top": 44,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -1115,10 +1090,84 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_mode_star",
+    "_name": "navigation",
     "_objFlags": 0,
     "_parent": {
       "__id__": 6
+    },
+    "_children": [
+      {
+        "__id__": 29
+      },
+      {
+        "__id__": 36
+      },
+      {
+        "__id__": 43
+      }
+    ],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 51
+      }
+    ],
+    "_prefab": {
+      "__id__": 52
+    },
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        -360,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "btn_mode_star",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 28
     },
     "_children": [
       {
@@ -1132,13 +1181,10 @@
       },
       {
         "__id__": 34
-      },
-      {
-        "__id__": 35
       }
     ],
     "_prefab": {
-      "__id__": 36
+      "__id__": 35
     },
     "_opacity": 255,
     "_color": {
@@ -1162,7 +1208,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -260,
+        85,
         183,
         0,
         0,
@@ -1171,7 +1217,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1264,6 +1310,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "消灭星星玩法",
     "_N$string": "消灭星星玩法",
@@ -1291,7 +1339,7 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "5cRGwDM6lEFKXYvKPOCb9a",
+    "fileId": "cdd/7Pog1F5a8pV9RD7dJt",
     "sync": false
   },
   {
@@ -1310,7 +1358,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "140f3a0b-9f5b-4440-8d5f-705bd9aa71ef"
+      "__uuid__": "9bb3aefe-29fe-4aec-a7c4-4ac855e27cc5"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1323,9 +1371,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "c9400025-14a9-4b8c-a91d-fd40fa024db2"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -1411,33 +1457,6 @@
     "_id": ""
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 29
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 8,
-    "_left": 15,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 0,
-    "_id": ""
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
@@ -1445,7 +1464,7 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "85r+8jpORP4LgZlTkRfXTR",
+    "fileId": "436FYdyrNDXZOKwPg0e3lP",
     "sync": false
   },
   {
@@ -1453,27 +1472,24 @@
     "_name": "btn_mode_union",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 6
+      "__id__": 28
     },
     "_children": [
       {
-        "__id__": 38
+        "__id__": 37
       }
     ],
     "_active": true,
     "_components": [
       {
+        "__id__": 40
+      },
+      {
         "__id__": 41
-      },
-      {
-        "__id__": 42
-      },
-      {
-        "__id__": 43
       }
     ],
     "_prefab": {
-      "__id__": 44
+      "__id__": 42
     },
     "_opacity": 255,
     "_color": {
@@ -1497,7 +1513,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -260,
+        85,
         48,
         0,
         0,
@@ -1506,7 +1522,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1527,17 +1543,17 @@
     "_name": "Label",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 37
+      "__id__": 36
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 39
+        "__id__": 38
       }
     ],
     "_prefab": {
-      "__id__": 40
+      "__id__": 39
     },
     "_opacity": 255,
     "_color": {
@@ -1591,7 +1607,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 38
+      "__id__": 37
     },
     "_enabled": true,
     "_materials": [
@@ -1599,6 +1615,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "方块合并玩法",
     "_N$string": "方块合并玩法",
@@ -1626,7 +1644,7 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "5eYDh0E8hHnrHFIJ1CezQP",
+    "fileId": "83Ho8mdJJE77HlMAiZ4UKI",
     "sync": false
   },
   {
@@ -1634,7 +1652,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 37
+      "__id__": 36
     },
     "_enabled": true,
     "_materials": [
@@ -1645,7 +1663,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "140f3a0b-9f5b-4440-8d5f-705bd9aa71ef"
+      "__uuid__": "9bb3aefe-29fe-4aec-a7c4-4ac855e27cc5"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1658,9 +1676,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "c9400025-14a9-4b8c-a91d-fd40fa024db2"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -1668,7 +1684,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 37
+      "__id__": 36
     },
     "_enabled": true,
     "_normalMaterial": null,
@@ -1741,35 +1757,8 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 37
+      "__id__": 36
     },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 37
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 8,
-    "_left": 15,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 0,
     "_id": ""
   },
   {
@@ -1780,7 +1769,7 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "6aKUTVR3pBorfidBAzAMnp",
+    "fileId": "91+ucPfFRPk5NY/xVt7MVU",
     "sync": false
   },
   {
@@ -1788,27 +1777,27 @@
     "_name": "btn_mode_russia",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 6
+      "__id__": 28
     },
     "_children": [
       {
-        "__id__": 46
+        "__id__": 44
       }
     ],
     "_active": true,
     "_components": [
       {
+        "__id__": 47
+      },
+      {
+        "__id__": 48
+      },
+      {
         "__id__": 49
-      },
-      {
-        "__id__": 50
-      },
-      {
-        "__id__": 51
       }
     ],
     "_prefab": {
-      "__id__": 52
+      "__id__": 50
     },
     "_opacity": 255,
     "_color": {
@@ -1832,7 +1821,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -260,
+        85,
         -87,
         0,
         0,
@@ -1841,7 +1830,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1862,17 +1851,17 @@
     "_name": "Label",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 45
+      "__id__": 43
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 47
+        "__id__": 45
       }
     ],
     "_prefab": {
-      "__id__": 48
+      "__id__": 46
     },
     "_opacity": 255,
     "_color": {
@@ -1926,7 +1915,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 46
+      "__id__": 44
     },
     "_enabled": true,
     "_materials": [
@@ -1934,6 +1923,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "俄罗斯方块玩法",
     "_N$string": "俄罗斯方块玩法",
@@ -1961,7 +1952,7 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "6dkkg5nY9OrpvH0LmXVIpe",
+    "fileId": "1awuMXWbJCUbTYqKwsiEXL",
     "sync": false
   },
   {
@@ -1969,7 +1960,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 45
+      "__id__": 43
     },
     "_enabled": true,
     "_materials": [
@@ -1980,7 +1971,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "140f3a0b-9f5b-4440-8d5f-705bd9aa71ef"
+      "__uuid__": "9bb3aefe-29fe-4aec-a7c4-4ac855e27cc5"
     },
     "_type": 1,
     "_sizeMode": 0,
@@ -1993,9 +1984,7 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": {
-      "__uuid__": "c9400025-14a9-4b8c-a91d-fd40fa024db2"
-    },
+    "_atlas": null,
     "_id": ""
   },
   {
@@ -2003,7 +1992,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 45
+      "__id__": 43
     },
     "_enabled": true,
     "_normalMaterial": null,
@@ -2076,7 +2065,7 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 45
+      "__id__": 43
     },
     "_id": ""
   },
@@ -2085,13 +2074,13 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 45
+      "__id__": 43
     },
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 8,
-    "_left": 15,
+    "_left": 0,
     "_right": 0,
     "_top": 0,
     "_bottom": 0,
@@ -2115,7 +2104,45 @@
     "asset": {
       "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
     },
-    "fileId": "eeR/qtsq9CgKeI/UcuzJ+2",
+    "fileId": "9chXVy7MZLw6lQZg+NyV5U",
+    "sync": false
+  },
+  {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 28
+    },
+    "_enabled": true,
+    "alignMode": 1,
+    "_target": null,
+    "_alignFlags": 10,
+    "_left": 0,
+    "_right": 0,
+    "_top": 0,
+    "_bottom": 0,
+    "_verticalCenter": 0,
+    "_horizontalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 0,
+    "_originalHeight": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "2321566c-3e9a-49c3-96eb-ea579b24a3b0"
+    },
+    "fileId": "59iaFjDl5EtLaQd612+y7B",
     "sync": false
   },
   {
@@ -2157,33 +2184,6 @@
     "sync": false
   },
   {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 45,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
-    "_originalHeight": 0,
-    "_id": ""
-  },
-  {
     "__type__": "145952niYZBLJzijo0mGwwb",
     "_name": "",
     "_objFlags": 0,
@@ -2191,20 +2191,23 @@
       "__id__": 1
     },
     "_enabled": true,
-    "nd_rank": {
+    "ndRank": {
       "__id__": 7
     },
-    "img_rank": {
+    "imgRank": {
       "__id__": 12
     },
-    "btn_star": {
+    "btnClose": {
+      "__id__": 23
+    },
+    "btnStar": {
       "__id__": 29
     },
-    "btn_union": {
-      "__id__": 37
+    "btnUnion": {
+      "__id__": 36
     },
-    "btn_russia": {
-      "__id__": 45
+    "btnRussia": {
+      "__id__": 43
     },
     "_id": ""
   },

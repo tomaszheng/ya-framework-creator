@@ -1,5 +1,5 @@
-import { GameConstant } from "../../config/GameConstant";
 import {ya} from "../../framework/ya";
+import {GameConstant} from "../../config/GameConstant";
 
 const {ccclass, property} = cc._decorator;
 
@@ -7,24 +7,25 @@ const {ccclass, property} = cc._decorator;
 class RankView extends ya.View {
     @property(cc.Node) ndRank: cc.Node = null;
     @property(cc.Node) imgRank: cc.Node = null;
+    @property(cc.Node) btnClose: cc.Node = null;
     @property(cc.Node) btnStar: cc.Node = null;
     @property(cc.Node) btnUnion: cc.Node = null;
     @property(cc.Node) btnRussia: cc.Node = null;
 
-    mode = -1;
+    private mode = -1;
 
-    viewWidth = 500;
-    viewHeight = 790;
+    private viewWidth = 500;
+    private viewHeight = 790;
 
-    isSupportWx = false;
+    private isSupportWx = false;
 
-    wxTexture: cc.Texture2D = null;
-    wxSpriteFrame: cc.SpriteFrame = null;
+    private wxTexture: cc.Texture2D = null;
+    private wxSpriteFrame: cc.SpriteFrame = null;
 
     protected initData(data?: any) {
         super.initData(data);
 
-        this.mode = data.mode || GameConstant.GAME_MODE.STAR;
+        this.mode = data ? data.mode : GameConstant.GAME_MODE.STAR;
         const wx = 'wx';
         this.isSupportWx = cc.sys.platform === cc.sys.WECHAT_GAME && (!!(window[wx] && window[wx].getOpenDataContext));
     }
@@ -58,21 +59,25 @@ class RankView extends ya.View {
 
     protected initTouchEvent() {
         super.initTouchEvent();
+
         if (this.isSupportWx) {
             this.ndRank.on(cc.Node.EventType.TOUCH_MOVE, (event: cc.Event) => {
                 this.onMove(event);
             }, this);
         }
 
+        ya.button.addClick(this.btnClose, ()=>{
+            this.onClickClose();
+        }, this);
         ya.button.addClick(this.btnStar, ()=>{
             this.onClickStar();
-        });
+        }, this);
         ya.button.addClick(this.btnUnion, ()=>{
             this.onClickUnion();
-        });
+        }, this);
         ya.button.addClick(this.btnRussia, ()=>{
             this.onClickRussia();
-        });
+        }, this);
     }
 
     protected update(dt: number) {
@@ -99,8 +104,8 @@ class RankView extends ya.View {
         }
     }
 
-    onClickClose() {
-        ya.viewManager.show('main', null, true);
+    private onClickClose() {
+        ya.viewManager.remove('rank');
     }
 
     onClickStar () {

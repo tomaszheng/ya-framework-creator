@@ -1,8 +1,8 @@
 {
   "ver": "1.1.2",
   "uuid": "48bf96ab-d1a9-4859-9b29-4e7f9bf41a2c",
-  "isBundle": false,
-  "bundleName": "",
+  "isBundle": true,
+  "bundleName": "rankView",
   "priority": 1,
   "compressionType": {},
   "optimizeHotUpdate": {},

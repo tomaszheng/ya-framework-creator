@@ -69,7 +69,8 @@ class YaController {
 
     private createView(data: any): void {
         if (this.prefabPath) {
-            yaUIHelper.instantiatePath(this.prefabPath, data, this.root).then((node) => {
+            const promise = yaUIHelper.instantiatePath(this.prefabPath, data, this.root);
+            promise.then((node) => {
                 this.doCreateView(node, data);
             });
         } else {
