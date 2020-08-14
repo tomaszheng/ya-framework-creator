@@ -10,7 +10,7 @@
   "group-list": [
     "default"
   ],
-  "start-scene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
+  "start-scene": "c29c2d93-b51b-48a3-8a82-566de92379ac",
   "design-resolution-width": 720,
   "design-resolution-height": 1280,
   "fit-width": true,
@@ -36,5 +36,6 @@
   },
   "migrate-history": [
     "cloud-function"
-  ]
+  ],
+  "preview-port": 7456
 }
