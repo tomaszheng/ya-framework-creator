@@ -1,8 +1,8 @@
 import {ya} from "../framework/ya";
-import {LoadingController} from "../feature/loading/LoadingController";
-import {CommonController} from "../feature/common/CommonController";
-import {RankController} from "../feature/rank/RankController";
-import {MainController} from "../feature/main/MainController";
+import {LoadingController} from "../modules/loading/LoadingController";
+import {CommonController} from "../modules/common/CommonController";
+import {RankController} from "../modules/rank/RankController";
+import {MainController} from "../modules/main/MainController";
 
 class ControllerManager extends ya.Singleton<ControllerManager> {
     public init() {
