@@ -4,35 +4,6 @@
 */
 
 class YaUtils {
-
-    /**
-     * 深度拷贝
-     * @param object 要拷贝的数据
-     */
-    public static clone (object: any) {
-        if (!object || typeof (object) !== "object") {
-            return object;
-        }
-
-        const Constructor = object.constructor;
-        const ret = new Constructor();
-        for (const attr in object) {
-            if (object.hasOwnProperty(attr)) {
-                const value = object[attr];
-                if (value === object) {
-                    return;
-                }
-                if (typeof (value) === "object") {
-                    ret[attr] = this.clone(value);
-                }
-                else {
-                    ret[attr] = value;
-                }
-            }
-        }
-        return ret;
-    }
-
     public static doCallback (callback?: (...args)=>void, args?: any) {
         if (callback) callback(args);
     }

@@ -11,6 +11,14 @@ class YaBaseComponent extends cc.Component {
         return this._data;
     }
 
+    public get instantiatedPrefabPath() {
+        return this._instantiatedPrefabPath;
+    }
+
+    public set instantiatedPrefabPath(prefabPath) {
+        this._instantiatedPrefabPath = prefabPath;
+    }
+
     /**
      * override
      * 此组件对应的prefab路径，子类必须重载
@@ -21,6 +29,7 @@ class YaBaseComponent extends cc.Component {
 
     private _data: any = null;
     private _initialized = false;
+    private _instantiatedPrefabPath = '';
 
     /**
      * 初始化组件

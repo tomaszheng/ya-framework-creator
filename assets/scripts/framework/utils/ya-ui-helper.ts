@@ -17,7 +17,10 @@ class YaUIHelper {
             yaResourceManager.load(prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
                 const node = this.instantiate(prefab, data, parent);
                 const component = node.getComponent(YaBaseComponent);
-                if (component) component.addRef(prefabPath, cc.Prefab);
+                if (component) {
+                    component.instantiatedPrefabPath = prefabPath;
+                    component.addRef(prefabPath, cc.Prefab);
+                }
                 resolve(node);
             }).catch((err: Error) => {
                 reject(err);

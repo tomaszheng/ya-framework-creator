@@ -3,11 +3,10 @@
 统一处理视图、弹窗的生命周期：显示、关闭
 */
 
-import {YaDialogProperty} from "../mvc/ya-dialog-property";
 import {Singleton} from "../singleton/Singleton";
 import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "../mvc/ya-dialog";
 import {yaLayerManager} from "./ya-layer-manager";
-import getClassName = cc.js.getClassName;
+import {lodash} from "../libs/LibEntry";
 
 interface IOption {
     showType?: YaDialogShowTypes;
@@ -16,7 +15,7 @@ interface IOption {
 }
 
 interface IWaitingData {
-    id: number;
+    id: string;
     option: IOption;
     prefabPath?: string;
     classname?: string;
@@ -37,17 +36,11 @@ class YaDialogManager extends Singleton<YaDialogManager> {
         return this._zIndex++;
     }
 
-    private static _idSeed = 0;
-
     private _waitingList = [];
     private _dialogs = [];
 
     private _zIndex = 0;
     private _background: cc.Node = null;
-
-    public static nextId() {
-        return this._idSeed++;
-    }
 
     private static generateDefaultWaitingData(prefabOrClassname: string, data: any, option: IOption) {
         if (!option.showType) {
@@ -66,7 +59,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
             prefabPath = prefabOrClassname;
         }
 
-        const id = YaDialogManager.nextId();
+        const id = lodash.uniqueId();
         const waitingData: IWaitingData = {
             id,
             data,
@@ -119,7 +112,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
             if (!active) {
                 cc.Tween.stopAllByTarget(this._background);
                 this._background.opacity = 0;
-                cc.tween(this._background).to(0.2, {fade: 178});
+                cc.tween(this._background).to(0.2, {opacity: 178});
             }
             this._background.zIndex = this.getLastSiblingZIndex() - 1;
         }
