@@ -2,7 +2,7 @@
 视图的基础类
 */
 
-import {YaBaseComponent} from "../base/ya-base-component";
+import {YaBaseComponent} from "../base/YaBaseComponent";
 import {YaModel} from "./ya-model";
 
 const {ccclass} = cc._decorator;

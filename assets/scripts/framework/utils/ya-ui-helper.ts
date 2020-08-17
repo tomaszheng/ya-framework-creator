@@ -1,4 +1,4 @@
-import {YaBaseComponent} from "../base/ya-base-component";
+import {YaBaseComponent} from "../base/YaBaseComponent";
 import {yaResourceManager} from "../manager/ya-resource-manager";
 
 class YaUIHelper {

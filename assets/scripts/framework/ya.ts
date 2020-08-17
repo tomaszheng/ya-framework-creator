@@ -1,11 +1,11 @@
-import {YaBaseComponent} from "./base/ya-base-component";
+import {YaBaseComponent} from "./base/YaBaseComponent";
 import {YaController} from "./mvc/ya-controller";
 import {Singleton} from "./singleton/Singleton";
 import {YaView} from "./mvc/ya-view";
 import {YaModel} from "./mvc/ya-model";
 import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "./mvc/ya-dialog";
-import {YaStorageConfig} from "./config/ya-storage-config";
-import {yaEventDispatcher} from "./event/ya-event-dispatcher";
+import {YaStorageConfig} from "./config/YaStorageConfig";
+import {yaEventDispatcher} from "./event/YaEventDispatcher";
 import {yaLocalStorage} from "./storage/ya-local-storage";
 import {yaDialogManager} from "./manager/ya-dialog-manager";
 import {yaLayerManager} from "./manager/ya-layer-manager";

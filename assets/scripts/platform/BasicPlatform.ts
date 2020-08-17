@@ -2,7 +2,7 @@
 平台接口的基础类
 */
 
-import YAEventConfig from "../framework/config/ya-event-config";
+import YaEventConfig from "../framework/config/YaEventConfig";
 import ya from "../framework/ya";
 
 const {ccclass, property} = cc._decorator;
@@ -27,14 +27,14 @@ export default class BasicPlatform {
     //切后台
     onHide() {
         cc.game.on(cc.game.EVENT_HIDE, ()=>{
-            ya.eventDispatcher.emit(YAEventConfig.ON_HIDE);
+            ya.eventDispatcher.emit(YaEventConfig.ON_HIDE);
         }, this);
     }
 
     //切前台
     onShow() {
         cc.game.on(cc.game.EVENT_SHOW, (params:any) => {
-            ya.eventDispatcher.emit(YAEventConfig.ON_SHOW, params);
+            ya.eventDispatcher.emit(YaEventConfig.ON_SHOW, params);
         }, this);
     }
 

@@ -4,7 +4,7 @@
 
 import {yaLayerManager} from "../manager/ya-layer-manager";
 import {YaView} from "./ya-view";
-import {yaEventDispatcher} from "../event/ya-event-dispatcher";
+import {yaEventDispatcher} from "../event/YaEventDispatcher";
 import {yaResourceManager} from "../manager/ya-resource-manager";
 import {yaUIHelper} from "../utils/ya-ui-helper";
 import {YaModel} from "./ya-model";

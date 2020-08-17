@@ -5,7 +5,7 @@
 
 import {Singleton} from "../singleton/Singleton";
 import {yaLocalStorage} from "../storage/ya-local-storage";
-import {YaStorageConfig} from "../config/ya-storage-config";
+import {YaStorageConfig} from "../config/YaStorageConfig";
 import {yaResourceManager} from "./ya-resource-manager";
 import {yaUtils} from "../utils/ya-utils";
 
