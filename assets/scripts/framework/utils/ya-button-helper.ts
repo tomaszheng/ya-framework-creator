@@ -1,7 +1,7 @@
 class YaButtonHelper {
     public static addClick(node: cc.Node, endCallback: (event: cc.Event) => void, target: cc.Component) {
         node.on(cc.Node.EventType.TOUCH_END, (event: cc.Event) => {
-            endCallback(event);
+            endCallback.call(target);
             event.stopPropagation();
         }, target);
     }

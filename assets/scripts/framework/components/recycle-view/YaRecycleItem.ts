@@ -9,7 +9,7 @@ class YaRecycleItem extends YaBaseComponent {
     }
 
     public reuse(data?: any) {
-
+        this.updateData(data);
     }
 }
 

@@ -81,6 +81,10 @@ class YaBaseComponent extends cc.Component {
         return promise;
     }
 
+    public updateData(data?: any) {
+        this._data = data;
+    }
+
     public updateUI() {
 
     }

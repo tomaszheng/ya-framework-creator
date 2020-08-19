@@ -61,8 +61,8 @@ class YaResourceManager extends Singleton<YaResourceManager> {
         });
     }
 
-    public loadSpriteFrame(path: string, node: cc.Node | cc.Sprite) {
-        this.load(path, cc.SpriteFrame).then((spriteFrame: cc.SpriteFrame) => {
+    public async loadSpriteFrame(path: string, node: cc.Node | cc.Sprite) {
+        return this.load(path, cc.SpriteFrame).then((spriteFrame: cc.SpriteFrame) => {
             const sprite = node instanceof cc.Sprite ? node : node.getComponent(cc.Sprite);
             if (sprite) sprite.spriteFrame = spriteFrame;
         });
