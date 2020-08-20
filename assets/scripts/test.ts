@@ -30,13 +30,13 @@ export default class Test extends cc.Component {
     }
 
     private onClickPush() {
-        this.verticalRecycleView.updateItem(30, this._totalCount, true);
-        this.horizontalRecycleView.updateItem(30, this._totalCount++, true);
+        this.verticalRecycleView.updateItem(30, this._totalCount);
+        this.horizontalRecycleView.updateItem(30, this._totalCount++);
     }
 
     private onClickInsert() {
-        const i = lodash.random(1, 5);
-        this.verticalRecycleView.updateItem(i, this._totalCount, true);
-        this.horizontalRecycleView.updateItem(i, this._totalCount++, true);
+        const i = lodash.random(0, 5);
+        this.verticalRecycleView.updateItem(i, this._totalCount);
+        this.horizontalRecycleView.updateItem(i, this._totalCount++);
     }
 }

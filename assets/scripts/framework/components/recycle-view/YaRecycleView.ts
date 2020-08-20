@@ -2,7 +2,7 @@
  * 无限列表布局方式：
  * 1，支持竖向       √
  * 2，支持横向       √
- * 3，支持任意尺寸    x
+ * 3，支持任意尺寸    √
  * 4，支持Grid      x
  * 5，支持流式       x
  * Item数据更新方式：
@@ -56,7 +56,10 @@ class YaRecycleView extends cc.Component {
     private _needRecycle = false;
     private _size: cc.Size = null;
     private _totalSize: cc.Size = cc.size(0, 0);
-    private _preOffset: cc.Vec2 = cc.v2();
+    private _preScrollOffset: cc.Vec2 = cc.v2();
+    private _itemOffset: cc.Vec2 = cc.v2();
+    private _firstVisibleIndex = -1;
+    private _firstVisiblePosition = cc.v2();
     private _scrollDirection: ScrollDirection = ScrollDirection.NONE;
     private _pool: cc.NodePool = null;
     private _createItemListener: () => cc.Node = null;
@@ -78,42 +81,39 @@ class YaRecycleView extends cc.Component {
         this._needRecycle = this._data.length > this._defaultCount;
 
         this.initItems();
-        this.adjustContent();
         this.adjustItems();
+        this.adjustContent();
 
         this.node.on('scrolling', this.onScroll, this);
     }
 
-    public updateItem(index: number, itemData: any, needUpdate?: boolean) {
-        if (index < 0) {
-            index = this._data.length + index;
-        }
+    public updateItem(index: number, itemData: any) {
+        this.calculateFirstVisibleItem();
 
-        if (index >= this._data.length) {
+        if (index < 0 || index >= this._data.length) {
             this._data.push(itemData);
             if (this._data.length <= this._defaultCount) {
                 this.doReuseAt(this._tailIndex, ++this._tailIndex);
             }
         } else {
             this._data[index] = itemData;
-        }
-        this._needRecycle = this._data.length > this._defaultCount;
-
-        if (needUpdate) {
             if (index >= this._headIndex && index <= this._tailIndex) {
                 const item = this._records[index].item;
                 item.getComponent(YaRecycleItem).updateData(itemData);
                 if (index !== this._headIndex) {
                     item.position = this.calculateItemPosition(index - 1, index, item);
-                } else {
+                } else if (index !== this._tailIndex) {
                     item.position = this.calculateItemPosition(index + 1, index, item);
+                } else {
+                    item.position = this.calculateFirstItemPosition(item);
                 }
-                this.onItemChange(index, item, true);
+                this.onItemChange(index, item, index !== this._headIndex);
             }
         }
+        this._needRecycle = this._data.length > this._defaultCount;
 
-        this.adjustContent();
         this.adjustItems();
+        this.adjustContent();
     }
 
     public removeItem(index: number) {
@@ -244,13 +244,13 @@ class YaRecycleView extends cc.Component {
 
         this._middleIndex = this.getMiddleIndex();
 
+        this.calculateFirstVisibleItem();
         this.recycle();
-
         this.reuse();
-
+        this.adjustItems();
         this.adjustContent();
 
-        this._preOffset = this._scrollView.getScrollOffset();
+        this._preScrollOffset = this._scrollView.getScrollOffset();
     }
 
     private isStretching(): boolean {
@@ -270,16 +270,32 @@ class YaRecycleView extends cc.Component {
         this._scrollDirection = ScrollDirection.NONE;
         const offset = this._scrollView.getScrollOffset();
         if (this._scrollView.vertical) {
-            if (offset.y > this._preOffset.y) {
+            if (offset.y > this._preScrollOffset.y) {
                 this._scrollDirection = ScrollDirection.BOTTOM_TO_TOP;
-            } else if (offset.y < this._preOffset.y) {
+            } else if (offset.y < this._preScrollOffset.y) {
                 this._scrollDirection = ScrollDirection.TOP_TO_BOTTOM;
             }
         } else {
-            if (offset.x < this._preOffset.x) {
+            if (offset.x < this._preScrollOffset.x) {
                 this._scrollDirection = ScrollDirection.RIGHT_TO_LEFT;
             } else {
                 this._scrollDirection = ScrollDirection.LEFT_TO_RIGHT;
+            }
+        }
+    }
+
+    private calculateFirstVisibleItem() {
+        this._firstVisibleIndex = -1;
+        const offset = this._scrollView.getScrollOffset();
+        for (let i = this._headIndex; i <= this._tailIndex; i++) {
+            const record = this._records[i];
+            const x = record.x + record.size.width * (1 - record.item.anchorX) + offset.x;
+            const y = record.y - record.size.height * record.item.anchorY + offset.y;
+            if ((this._scrollView.vertical && y < 0) ||
+                (this._scrollView.horizontal && x > 0)) {
+                this._firstVisibleIndex = i;
+                this._firstVisiblePosition = cc.v2(record.x, record.y);
+                break;
             }
         }
     }
@@ -448,25 +464,55 @@ class YaRecycleView extends cc.Component {
     }
 
     private adjustContent() {
-        const middleItem = this._records[this._middleIndex];
-
         const width = Math.max(this._totalSize.width, this._size.width);
         const height = Math.max(this._totalSize.height, this._size.height);
         this._content.setContentSize(width, height);
+
+        const x = this._content.x + this._itemOffset.x;
+        const y = this._content.y + this._itemOffset.y;
+        this._scrollView.setContentPosition(cc.v2(x, y));
     }
 
     private adjustItems() {
+        this.adjustHeadItems();
+        this.adjustTailItems();
+
+        if (this._firstVisibleIndex !== -1) {
+            this._itemOffset.x = this._firstVisiblePosition.x - this._records[this._firstVisibleIndex].x;
+            this._itemOffset.y = this._firstVisiblePosition.y - this._records[this._firstVisibleIndex].y;
+        }
+    }
+
+    private adjustHeadItems() {
         const record = this._records[this._headIndex];
-        if (this._scrollView.vertical && record.y > 0) {
-            for (let i = this._headIndex; i <= this._tailIndex; i++) {
-                this._records[i].y -= record.y;
-                this._records[i].item.y -= record.y;
-            }
-        } else if(this._scrollView.horizontal && record.x < 0) {
-            for (let i = this._headIndex; i <= this._tailIndex; i++) {
-                this._records[i].x -= record.x;
-                this._records[i].item.x -= record.x;
-            }
+        const xOffset = record.x - record.size.width * record.item.anchorX;
+        const yOffset = record.y + record.size.height * (1 - record.item.anchorY);
+        if (this._scrollView.vertical && yOffset > 0) {
+            this.setItemsOffset(0, yOffset);
+        } else if (this._scrollView.horizontal && xOffset < 0) {
+            this.setItemsOffset(xOffset, 0);
+        }
+    }
+
+    private adjustTailItems() {
+        if (this._tailIndex !== this._data.length - 1) return;
+
+        const record = this._records[this._tailIndex];
+        const xOffset = record.x + record.size.width * (1 - record.item.anchorX) - this._totalSize.width;
+        const yOffset = -record.y + record.size.height * record.item.anchorY - this._totalSize.height;
+        if (this._scrollView.vertical && yOffset !== 0) {
+            this.setItemsOffset(0, yOffset);
+        } else if (this._scrollView.horizontal && xOffset !== 0) {
+            this.setItemsOffset(xOffset, 0);
+        }
+    }
+
+    private setItemsOffset(xOffset: number, yOffset: number) {
+        for (let i = this._headIndex; i <= this._tailIndex; i++) {
+            this._records[i].x -= xOffset;
+            this._records[i].item.x -= xOffset;
+            this._records[i].y -= yOffset;
+            this._records[i].item.y -= yOffset;
         }
     }
 
