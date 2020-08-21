@@ -10,6 +10,9 @@
  * 2，更新数据     √
  * 3，删除数据     ×
  * 4，中间插入数据  ×
+ * 操作方式：
+ * 1，正常滑动     √
+ * 2，scrollTo   ×
  */
 import {YaRecycleItem} from "./YaRecycleItem";
 import {lodash} from "../../libs/LibEntry";
@@ -36,33 +39,33 @@ const {ccclass, property} = cc._decorator;
 class YaRecycleView extends cc.Component {
     @property({type: cc.Integer, min: 1}) row = 1;
     @property({type: cc.Integer, min: 1}) column = 1;
-    @property({type: cc.Integer, min: 1}) extra = 2;
-    @property(cc.Integer) gapX = 10;
-    @property(cc.Integer) gapY = 10;
-    @property({tooltip: '是否是流式布局'}) flow = false;
+    @property({type: cc.Integer, min: 2}) extra = 2;
+    @property({type: cc.Integer, min: 0}) gapX = 10;
+    @property({type: cc.Integer, min: 0}) gapY = 10;
+    @property({type: cc.Integer, min: 0}) paddingHead = 0;
+    @property({type: cc.Integer, min: 0}) paddingTail = 0;
     @property(cc.Prefab) itemPrefab: cc.Prefab = null;
 
-    private _scrollView: cc.ScrollView = null;
-    private _content: cc.Node = null;
+    protected _scrollView: cc.ScrollView = null;
+    protected _content: cc.Node = null;
 
-    private _headIndex = -1;
-    private _tailIndex = -1;
-    private _middleIndex = -1;
-    private _defaultCount = 1;
+    protected _headIndex = -1;
+    protected _tailIndex = -1;
+    protected _defaultCount = 1;
 
-    private _data: any[] = [];
-    private _records: IItemRecord[] = [];
+    protected _data: any[] = [];
+    protected _records: IItemRecord[] = [];
 
-    private _needRecycle = false;
-    private _size: cc.Size = null;
-    private _totalSize: cc.Size = cc.size(0, 0);
-    private _preScrollOffset: cc.Vec2 = cc.v2();
-    private _itemOffset: cc.Vec2 = cc.v2();
-    private _firstVisibleIndex = -1;
-    private _firstVisiblePosition = cc.v2();
-    private _scrollDirection: ScrollDirection = ScrollDirection.NONE;
-    private _pool: cc.NodePool = null;
-    private _createItemListener: () => cc.Node = null;
+    protected _needRecycle = false;
+    protected _size: cc.Size = null;
+    protected _totalSize: cc.Size = cc.size(0, 0);
+    protected _preScrollOffset: cc.Vec2 = cc.v2();
+    protected _itemOffset: cc.Vec2 = cc.v2();
+    protected _firstVisibleIndex = -1;
+    protected _firstVisiblePosition = cc.v2();
+    protected _scrollDirection: ScrollDirection = ScrollDirection.NONE;
+    protected _pool: cc.NodePool = null;
+    protected _createItemListener: () => cc.Node = null;
 
     public bindCreateItemListener(listener: () => cc.Node) {
         this._createItemListener = listener;
@@ -92,8 +95,10 @@ class YaRecycleView extends cc.Component {
 
         if (index < 0 || index >= this._data.length) {
             this._data.push(itemData);
-            if (this._data.length <= this._defaultCount) {
-                this.doReuseAt(this._tailIndex, ++this._tailIndex);
+            if (this._scrollView.vertical) {
+                this.reuseVerticalTail();
+            } else if (this._scrollView.horizontal) {
+                this.reuseHorizontalTail();
             }
         } else {
             this._data[index] = itemData;
@@ -147,7 +152,6 @@ class YaRecycleView extends cc.Component {
     }
 
     private initItems() {
-        this._totalSize.height = 0;
         lodash.times(this._tailIndex + 1, (i) => {
             const node = this._pool.get(this._data[i]);
             let position;
@@ -160,12 +164,26 @@ class YaRecycleView extends cc.Component {
             node.position = position;
             const size = node.getContentSize();
             this.updateRecord(this._records.length, node, size, position.x, position.y);
-
-            this._totalSize.height += size.height;
-            this._totalSize.width += size.width;
         });
-        this._totalSize.width += (this._tailIndex - this._headIndex) * this.gapY;
-        this._totalSize.height += (this._tailIndex - this._headIndex) * this.gapX;
+
+        this.initTotalSize();
+    }
+
+    private initTotalSize() {
+        this._totalSize.height = this._totalSize.width = 0;
+        lodash.times(this._tailIndex + 1, (i) => {
+            const record = this._records[i];
+            if (this._scrollView.vertical) {
+                this._totalSize.height += record.size.height;
+            } else {
+                this._totalSize.width += record.size.width;
+            }
+        });
+        if (this._scrollView.vertical) {
+            this._totalSize.height += (this._tailIndex - this._headIndex) * this.gapX;
+        } else {
+            this._totalSize.width += (this._tailIndex - this._headIndex) * this.gapY;
+        }
     }
 
     private createItem() {
@@ -192,20 +210,22 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private calculateFirstItemPosition(node: cc.Node) {
+    private calculateFirstItemPosition(node: cc.Node): cc.Vec3 {
         const size = node.getContentSize();
         const anchor = node.getAnchorPoint();
 
         if (this._scrollView.vertical) {
             const x = size.width * anchor.x;
-            return cc.v3(x, size.height * (anchor.y - 1), 0);
+            const y = size.height * (anchor.y - 1) - this.paddingHead;
+            return cc.v3(x, y, 0);
         } else {
+            const x = size.width * anchor.x + this.paddingHead;
             const y = size.height * (anchor.y - 1);
-            return cc.v3(size.width * anchor.x, y, 0);
+            return cc.v3(x, y, 0);
         }
     }
 
-    private calculateItemPosition(preIndex: number, index: number, node: cc.Node) {
+    protected calculateItemPosition(preIndex: number, index: number, node: cc.Node): cc.Vec3 {
         const size = node.getContentSize();
         const anchor = node.getAnchorPoint();
         const record = this._records[preIndex];
@@ -231,18 +251,12 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private getMiddleIndex() {
-        return Math.floor((this._headIndex + this._tailIndex) / 2);
-    }
-
     private onScroll() {
         if (!this._needRecycle) return;
 
         this.calculateScrollDirection();
 
         if (this.isStretching()) return;
-
-        this._middleIndex = this.getMiddleIndex();
 
         this.calculateFirstVisibleItem();
         this.recycle();
@@ -321,48 +335,56 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private doRecycleAt(index) {
+    protected doRecycleAt(index) {
         const record = this._records[index];
         this._pool.put(record.item);
     }
 
-    private recycleVerticalHead() {
-        if (this._headIndex + 1 > this._tailIndex) return;
-
-        const record = this._records[this._headIndex + 1];
+    protected recycleVerticalHead() {
         const offset = this._scrollView.getScrollOffset();
-        if (record.size.height * (1 - record.item.anchorY) - record.y < offset.y) {
-            this.doRecycleAt(this._headIndex++);
+        while (true) {
+            const netherIndex = this._headIndex + this.column;
+            if (netherIndex > this._tailIndex) return;
+            const record = this._records[netherIndex];
+            if (record.size.height * (1 - record.item.anchorY) - record.y < offset.y) {
+                this.doRecycleAt(this._headIndex++);
+            } else return;
         }
     }
 
-    private recycleVerticalTail() {
-        if (this._tailIndex - 1 < this._headIndex) return;
-
-        const record = this._records[this._tailIndex - 1];
+    protected recycleVerticalTail() {
         const offset = this._scrollView.getScrollOffset();
-        if (-record.y - record.size.height * (1 - record.item.anchorY) - this._size.height > offset.y) {
-            this.doRecycleAt(this._tailIndex--);
+        while (true) {
+            const higherIndex = this._tailIndex - this.column;
+            if (higherIndex < this._headIndex) return;
+            const record = this._records[higherIndex];
+            if (-record.y - record.size.height * (1 - record.item.anchorY) - this._size.height > offset.y) {
+                this.doRecycleAt(this._tailIndex--);
+            } else return;
         }
     }
 
-    private recycleHorizontalHead() {
-        if (this._headIndex + 1 > this._tailIndex) return;
-
-        const record = this._records[this._headIndex + 1];
+    protected recycleHorizontalHead() {
         const offset = this._scrollView.getScrollOffset();
-        if (record.size.width * (1 - record.item.anchorX) + record.x < -offset.x) {
-            this.doRecycleAt(this._headIndex++);
+        while (true) {
+            const rightIndex = this._headIndex + this.row;
+            if (rightIndex > this._tailIndex) return;
+            const record = this._records[rightIndex];
+            if (record.size.width * (1 - record.item.anchorX) + record.x < -offset.x) {
+                this.doRecycleAt(this._headIndex++);
+            } else return;
         }
     }
 
-    private recycleHorizontalTail() {
-        if (this._tailIndex - 1 < this._headIndex) return;
-
-        const record = this._records[this._tailIndex - 1];
+    protected recycleHorizontalTail() {
         const offset = this._scrollView.getScrollOffset();
-        if (record.x - record.size.width * record.item.anchorX - this._size.width > -offset.x) {
-            this.doRecycleAt(this._tailIndex--);
+        while (true) {
+            const leftIndex = this._tailIndex - this.row;
+            if (leftIndex < this._headIndex) return;
+            const record = this._records[leftIndex];
+            if (record.x - record.size.width * record.item.anchorX - this._size.width > -offset.x) {
+                this.doRecycleAt(this._tailIndex--);
+            } else return;
         }
     }
 
@@ -415,57 +437,68 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private doReuseAt(preIndex: number, index: number) {
+    protected doReuseAt(preIndex: number, index: number) {
         const node = this._pool.get(this._data[index]);
         node.parent = this._content;
-        node.position = this.calculateItemPosition(preIndex, index, node);
+        if (preIndex === -1 && index === 0) {
+            node.position = this.calculateFirstItemPosition(node);
+        } else {
+            node.position = this.calculateItemPosition(preIndex, index, node);
+        }
 
         this.onItemChange(index, node, false);
     }
 
-    private reuseVerticalHead() {
-        if (this._headIndex <= 0) return;
-
-        const record = this._records[this._headIndex];
-        const offset = this._scrollView.getScrollOffset();
-        if (record.size.height - record.y > offset.y) {
-            this.doReuseAt(this._headIndex, --this._headIndex);
+    protected reuseVerticalHead() {
+        while (this._headIndex > 0) {
+            const record = this._records[this._headIndex];
+            const offset = this._scrollView.getScrollOffset();
+            if (record.size.height - record.y > offset.y) {
+                this.doReuseAt(this._headIndex, --this._headIndex);
+            } else return;
         }
     }
 
-    private reuseVerticalTail() {
-        if (this._tailIndex + 1 >= this._data.length) return;
-
-        const record = this._records[this._tailIndex];
-        const offset = this._scrollView.getScrollOffset();
-        if (-this._size.height - record.y < offset.y) {
-            this.doReuseAt(this._tailIndex, ++this._tailIndex);
+    protected reuseVerticalTail() {
+        while (this._tailIndex + 1 < this._data.length) {
+            const record = this._records[this._tailIndex];
+            const offset = this._scrollView.getScrollOffset();
+            if (-this._size.height - record.y < offset.y) {
+                this.doReuseAt(this._tailIndex, ++this._tailIndex);
+            } else return;
         }
     }
 
-    private reuseHorizontalHead() {
-        if (this._headIndex <= 0) return;
-
-        const record = this._records[this._headIndex];
-        const offset = this._scrollView.getScrollOffset();
-        if (record.size.width * (1 - record.item.anchorX) + record.x > -offset.x) {
-            this.doReuseAt(this._headIndex, --this._headIndex);
+    protected reuseHorizontalHead() {
+        while (this._headIndex > 0) {
+            const record = this._records[this._headIndex];
+            const offset = this._scrollView.getScrollOffset();
+            if (record.size.width * (1 - record.item.anchorX) + record.x > -offset.x) {
+                this.doReuseAt(this._headIndex, --this._headIndex);
+            } else return;
         }
     }
 
-    private reuseHorizontalTail() {
-        if (this._tailIndex + 1 >= this._data.length) return;
-
-        const record = this._records[this._tailIndex];
-        const offset = this._scrollView.getScrollOffset();
-        if (record.x - record.size.width * record.item.anchorX - this._size.width < -offset.x) {
-            this.doReuseAt(this._tailIndex, ++this._tailIndex);
+    protected reuseHorizontalTail() {
+        while (this._tailIndex + 1 < this._data.length) {
+            const record = this._records[this._tailIndex];
+            const offset = this._scrollView.getScrollOffset();
+            if (record.x - record.size.width * record.item.anchorX - this._size.width < -offset.x) {
+                this.doReuseAt(this._tailIndex, ++this._tailIndex);
+            } else return;
         }
     }
 
     private adjustContent() {
-        const width = Math.max(this._totalSize.width, this._size.width);
-        const height = Math.max(this._totalSize.height, this._size.height);
+        let width = 0;
+        let height = 0;
+        if (this._scrollView.vertical) {
+            height = this._totalSize.height + this.paddingHead + this.paddingTail;
+        } else {
+            width = this._totalSize.width + this.paddingHead + this.paddingTail;
+        }
+        width = Math.max(width, this._size.width);
+        height = Math.max(height, this._size.height);
         this._content.setContentSize(width, height);
 
         const x = this._content.x + this._itemOffset.x;
@@ -498,12 +531,18 @@ class YaRecycleView extends cc.Component {
         if (this._tailIndex !== this._data.length - 1) return;
 
         const record = this._records[this._tailIndex];
-        const xOffset = record.x + record.size.width * (1 - record.item.anchorX) - this._totalSize.width;
-        const yOffset = -record.y + record.size.height * record.item.anchorY - this._totalSize.height;
-        if (this._scrollView.vertical && yOffset !== 0) {
-            this.setItemsOffset(0, yOffset);
-        } else if (this._scrollView.horizontal && xOffset !== 0) {
-            this.setItemsOffset(xOffset, 0);
+        if (this._scrollView.vertical) {
+            const bottomY = -record.y + record.size.height * record.item.anchorY;
+            const yOffset = bottomY - this._totalSize.height - this.paddingHead;
+            if (yOffset !== 0) {
+                this.setItemsOffset(0, yOffset);
+            }
+        } else if (this._scrollView.horizontal) {
+            const rightX = record.x + record.size.width * (1 - record.item.anchorX);
+            const xOffset = rightX - this._totalSize.width - this.paddingHead;
+            if (xOffset !== 0) {
+                this.setItemsOffset(xOffset, 0);
+            }
         }
     }
 

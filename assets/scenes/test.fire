@@ -558,14 +558,14 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 1
     },
     "_trs": {
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
+        -120,
         250,
         0,
         0,
@@ -780,7 +780,8 @@
     "extra": 2,
     "gapX": 10,
     "gapY": 10,
-    "flow": false,
+    "paddingHead": 50,
+    "paddingTail": 50,
     "itemPrefab": {
       "__uuid__": "0d28a475-e874-4657-b5e0-60a79ffc3564"
     },
@@ -1324,7 +1325,8 @@
     "extra": 2,
     "gapX": 10,
     "gapY": 10,
-    "flow": false,
+    "paddingHead": 50,
+    "paddingTail": 50,
     "itemPrefab": {
       "__uuid__": "f76942da-50f6-42a1-b19f-5eb3aa749991"
     },
