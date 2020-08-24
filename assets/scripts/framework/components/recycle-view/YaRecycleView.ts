@@ -144,14 +144,14 @@ class YaRecycleView extends cc.Component {
         this.initPool();
     }
 
-    private initPool() {
+    protected initPool() {
         this._pool = new cc.NodePool(YaRecycleItem);
         lodash.times(this._defaultCount, () => {
             this._pool.put(this.createItem());
         });
     }
 
-    private initItems() {
+    protected initItems() {
         lodash.times(this._tailIndex + 1, (i) => {
             const node = this._pool.get(this._data[i]);
             let position;
@@ -169,7 +169,7 @@ class YaRecycleView extends cc.Component {
         this.initTotalSize();
     }
 
-    private initTotalSize() {
+    protected initTotalSize() {
         this._totalSize.height = this._totalSize.width = 0;
         lodash.times(this._tailIndex + 1, (i) => {
             const record = this._records[i];
@@ -186,7 +186,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private createItem() {
+    protected createItem() {
         let node;
         if (this._createItemListener) {
             node = this._createItemListener();
@@ -196,7 +196,7 @@ class YaRecycleView extends cc.Component {
         return node;
     }
 
-    private updateRecord(index: number, item: cc.Node, size: cc.Size, x: number, y: number) {
+    protected updateRecord(index: number, item: cc.Node, size: cc.Size, x: number, y: number) {
         const record = {
             item,
             size,
@@ -210,7 +210,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private calculateFirstItemPosition(node: cc.Node): cc.Vec3 {
+    protected calculateFirstItemPosition(node: cc.Node): cc.Vec3 {
         const size = node.getContentSize();
         const anchor = node.getAnchorPoint();
 
@@ -251,7 +251,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private onScroll() {
+    protected onScroll() {
         if (!this._needRecycle) return;
 
         this.calculateScrollDirection();
@@ -267,7 +267,7 @@ class YaRecycleView extends cc.Component {
         this._preScrollOffset = this._scrollView.getScrollOffset();
     }
 
-    private isStretching(): boolean {
+    protected isStretching(): boolean {
         switch (this._scrollDirection) {
             case ScrollDirection.BOTTOM_TO_TOP:
             case ScrollDirection.RIGHT_TO_LEFT: {
@@ -280,7 +280,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private calculateScrollDirection() {
+    protected calculateScrollDirection() {
         this._scrollDirection = ScrollDirection.NONE;
         const offset = this._scrollView.getScrollOffset();
         if (this._scrollView.vertical) {
@@ -298,7 +298,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private calculateFirstVisibleItem() {
+    protected calculateFirstVisibleItem() {
         this._firstVisibleIndex = -1;
         const offset = this._scrollView.getScrollOffset();
         for (let i = this._headIndex; i <= this._tailIndex; i++) {
@@ -314,7 +314,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private recycle() {
+    protected recycle() {
         switch (this._scrollDirection) {
             case ScrollDirection.BOTTOM_TO_TOP: {
                 this.recycleVerticalHead();
@@ -388,7 +388,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private onItemChange(index: number, node: cc.Node, needAdjust: boolean) {
+    protected onItemChange(index: number, node: cc.Node, needAdjust: boolean) {
         const size = node.getContentSize();
         const oldItem = this._records[index];
         const oldSize = !!oldItem ? oldItem.size.clone() : cc.size(-this.gapX, -this.gapY);
@@ -416,7 +416,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private reuse() {
+    protected reuse() {
         switch (this._scrollDirection) {
             case ScrollDirection.BOTTOM_TO_TOP: {
                 this.reuseVerticalTail();
@@ -489,7 +489,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private adjustContent() {
+    protected adjustContent() {
         let width = 0;
         let height = 0;
         if (this._scrollView.vertical) {
@@ -506,7 +506,7 @@ class YaRecycleView extends cc.Component {
         this._scrollView.setContentPosition(cc.v2(x, y));
     }
 
-    private adjustItems() {
+    protected adjustItems() {
         this.adjustHeadItems();
         this.adjustTailItems();
 
@@ -516,18 +516,19 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private adjustHeadItems() {
+    protected adjustHeadItems() {
         const record = this._records[this._headIndex];
         const xOffset = record.x - record.size.width * record.item.anchorX;
         const yOffset = record.y + record.size.height * (1 - record.item.anchorY);
         if (this._scrollView.vertical && yOffset > 0) {
+            cc.log("===x, y 1=");
             this.setItemsOffset(0, yOffset);
         } else if (this._scrollView.horizontal && xOffset < 0) {
             this.setItemsOffset(xOffset, 0);
         }
     }
 
-    private adjustTailItems() {
+    protected adjustTailItems() {
         if (this._tailIndex !== this._data.length - 1) return;
 
         const record = this._records[this._tailIndex];
@@ -535,6 +536,7 @@ class YaRecycleView extends cc.Component {
             const bottomY = -record.y + record.size.height * record.item.anchorY;
             const yOffset = bottomY - this._totalSize.height - this.paddingHead;
             if (yOffset !== 0) {
+                cc.log("===x, y 2=");
                 this.setItemsOffset(0, yOffset);
             }
         } else if (this._scrollView.horizontal) {
@@ -546,7 +548,7 @@ class YaRecycleView extends cc.Component {
         }
     }
 
-    private setItemsOffset(xOffset: number, yOffset: number) {
+    protected setItemsOffset(xOffset: number, yOffset: number) {
         for (let i = this._headIndex; i <= this._tailIndex; i++) {
             this._records[i].x -= xOffset;
             this._records[i].item.x -= xOffset;
