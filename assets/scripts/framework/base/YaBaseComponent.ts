@@ -89,6 +89,13 @@ class YaBaseComponent extends cc.Component {
 
     }
 
+    /**
+     * 操纵父类或节点必须激活的逻辑放在这里
+     */
+    protected start() {
+
+    }
+
     protected update(dt: number) {
 
     }

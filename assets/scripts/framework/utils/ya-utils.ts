@@ -1,10 +1,9 @@
-
 /*
 帮助类
 */
 
 class YaUtils {
-    public static doCallback (callback?: (...args)=>void, args?: any) {
+    public static doCallback(callback?: (...args) => void, args?: any) {
         if (callback) callback(args);
     }
 
@@ -20,7 +19,7 @@ class YaUtils {
      * IPhoneX 适配
      * @param node 需要适配的节点
      */
-    public static adjustIPhoneX (node: cc.Node) {
+    public static adjustIPhoneX(node: cc.Node) {
         const widget = node.getComponent(cc.Widget);
         if (!widget) return;
 
