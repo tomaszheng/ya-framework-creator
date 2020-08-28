@@ -3,12 +3,9 @@
 */
 
 import YaEventConfig from "../framework/config/YaEventConfig";
-import ya from "../framework/ya";
+import {ya} from "../framework/ya";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
-export default class BasicPlatform {
+class BasicPlatform {
     OS: string = "web";
 
     // 无需做适配的手机品牌
@@ -24,14 +21,14 @@ export default class BasicPlatform {
         this.listen();
     }
 
-    //切后台
+    // 切后台
     onHide() {
         cc.game.on(cc.game.EVENT_HIDE, ()=>{
-            ya.eventDispatcher.emit(YaEventConfig.ON_HIDE);
+            ya.eventDispatcher.emit(ya.EventConfig.ON_HIDE);
         }, this);
     }
 
-    //切前台
+    // 切前台
     onShow() {
         cc.game.on(cc.game.EVENT_SHOW, (params:any) => {
             ya.eventDispatcher.emit(YaEventConfig.ON_SHOW, params);
@@ -44,52 +41,44 @@ export default class BasicPlatform {
         };
     }
 
-    //上报数据
+    // 上报数据
     report(params:any) {
 
     }
 
-    //检查登录态是否有效
+    // 检查登录态是否有效
     checkSession(cb:Function|null) {
         if (cb) cb(0);
     }
 
-    //授权
     authorize(scope, cb) {
 
     }
 
-    //登录
     login(cb?: Function) {
 
     }
 
-    //分享
     share(params:any) {
         params && params.cb && (params.cb(0, {}));
     }
 
-    //保持屏幕常亮
     keepScreenOn() {
 
     }
 
-    //隐藏输入键盘
     hideKeyboard(scb, fcb, ccb) {
 
     }
 
-    //退出游戏
     exit() {
 
     }
 
-    //强制更新游戏
     forceUpdate() {
 
     }
 
-    //获取系统信息
     getSystemInfoSync() {
         return {
             statusBarHeight: 0,
@@ -98,86 +87,55 @@ export default class BasicPlatform {
         };
     }
 
-    //设置剪切板数据
     setClipboardData(content) {
 
     }
 
-    //是否支持跳转
     isSupportNavigate() {
         return false;
     }
 
-    //是否支持广告
     isSupportAd () {
         return false;
     }
 
-    //跳转到第三方程序
     navigateToProgram(appid, data, cb) {
 
     }
 
-    //预览图片
     previewImage(urls, cb) {
 
     }
 
-    //保存图片到相册
     saveImageToPhotosAlbum(filePath, cb) {
 
     }
 
-    //获取用户的设置信息
     getSetting(cb?: Function, scope?: string) {
 
     }
 
-    //打开用户的设置界面
     openSetting(cb?: Function, scope?: string) {
         cb && cb(0);
     }
 
-    //垃圾回收
     garbageCollect() {
         cc.sys.garbageCollect();
     }
 
-    //电池电量
     getBatteryLevel() {
         return "0";
     }
 
-    //平台名称
     getPlatformName() {
         return this.OS;
     }
 
-    //显示banner广告
-    showBannerAd() {
-
-    }
-
-    destoryBannerAd() {
-
-    }
-
-    //创建视频广告
-    createVideoAd(name?: string) {
-
-    }
-
-    //显示视频广告
-    showVideoAd(cb, name?: string) {
-
-    }
-
-    //游戏圈
     createGameClubButton(params) {
 
     }
 
-    destoryGameClubButton() {
+    destroyGameClubButton() {
 
     }
 
@@ -185,7 +143,6 @@ export default class BasicPlatform {
         return false;
     }
 
-    //客服
     openCustomerService() {
 
     }
@@ -194,7 +151,6 @@ export default class BasicPlatform {
         return false;
     }
 
-    //监听一些平台信息
     listen() {
         this.onShow();
 
@@ -219,7 +175,6 @@ export default class BasicPlatform {
         ];
     }
 
-    //手机品牌是否需要适配
     isAdaptedBrand (brand:string) {
         if (!brand) return false;
 
@@ -234,7 +189,6 @@ export default class BasicPlatform {
         return true;
     }
 
-    //手机型号是否需要适配
     isAdaptedMode (model) {
         if (!model) return false;
 
@@ -249,7 +203,6 @@ export default class BasicPlatform {
         return true;
     }
 
-    //获取刘海屏偏移量
     getIPhoneXOffsetHeight () {
         let t = cc.view.getFrameSize(), height = 0;
 
@@ -292,4 +245,6 @@ export default class BasicPlatform {
 
         return height;
     }
-};
+}
+
+export {BasicPlatform};

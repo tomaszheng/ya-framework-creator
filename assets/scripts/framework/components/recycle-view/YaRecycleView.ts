@@ -438,7 +438,11 @@ class YaRecycleView extends cc.Component {
     }
 
     protected doReuseAt(preIndex: number, index: number) {
-        const node = this._pool.get(this._data[index]);
+        let node = this._pool.get(this._data[index]);
+        if (!node) {
+            node = this.createItem();
+            node.getComponent(YaRecycleItem).reuse(this._data[index]);
+        }
         node.parent = this._content;
         if (preIndex === -1 && index === 0) {
             node.position = this.calculateFirstItemPosition(node);
@@ -521,7 +525,6 @@ class YaRecycleView extends cc.Component {
         const xOffset = record.x - record.size.width * record.item.anchorX;
         const yOffset = record.y + record.size.height * (1 - record.item.anchorY);
         if (this._scrollView.vertical && yOffset > 0) {
-            cc.log("===x, y 1=");
             this.setItemsOffset(0, yOffset);
         } else if (this._scrollView.horizontal && xOffset < 0) {
             this.setItemsOffset(xOffset, 0);
@@ -536,7 +539,6 @@ class YaRecycleView extends cc.Component {
             const bottomY = -record.y + record.size.height * record.item.anchorY;
             const yOffset = bottomY - this._totalSize.height - this.paddingHead;
             if (yOffset !== 0) {
-                cc.log("===x, y 2=");
                 this.setItemsOffset(0, yOffset);
             }
         } else if (this._scrollView.horizontal) {

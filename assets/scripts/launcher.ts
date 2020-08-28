@@ -4,7 +4,7 @@
 */
 
 // import BasicPlatform from "./Platform/BasicPlatform";
-// import WeChatPlatform from "./Platform/WeChatPlatform";
+// import WxPlatform from "./Platform/WxPlatform";
 import {ya} from "./framework/ya";
 import {modelManager} from "./manager/ModelManager";
 import {controllerManager} from "./manager/ControllerManager";

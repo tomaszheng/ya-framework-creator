@@ -1,5 +1,4 @@
 import {YaRecycleView} from "./YaRecycleView";
-import {lodash} from "../../libs/LibEntry";
 
 const {ccclass, property} = cc._decorator;
 
@@ -7,7 +6,6 @@ const {ccclass, property} = cc._decorator;
 class YaGridRecycleView extends YaRecycleView {
     @property({type: cc.Integer, min: 1}) gridWidth = 1;
     @property({type: cc.Integer, min: 1}) gridHeight = 1;
-    @property({tooltip: '是否是流式布局'}) flow = false;
 
     protected initTotalSize() {
         this._totalSize.height = this._totalSize.width = 0;

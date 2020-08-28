@@ -2,16 +2,15 @@
 微信小游戏平台接口类
 */
 
-import BasicPlatform from "./BasicPlatform";
-import {GameConstant} from "../config/GameConstant";
-import {EventConfig} from "../config/EventConfig";
-import {GameText} from "../config/GameText";
-import ya from "../framework/ya";
+import BasicPlatform from "../BasicPlatform";
+import {GameConstant} from "../../config/GameConstant";
+import {EventConfig} from "../../config/EventConfig";
+import {GameText} from "../../config/GameText";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class WeChatPlatform extends BasicPlatform {
+class WxPlatform extends BasicPlatform {
     systemInfo:any = null;
     btnUserInfo:any = null;
     btnGameClub:any = null;
@@ -26,14 +25,8 @@ class WeChatPlatform extends BasicPlatform {
         this._isAuthorized = authorized;
     }
 
-    videoIds:any = {};
-    videoHandlers:any = {};
-    videoCloses:any = {};
-    videoLoaded:any = {};   // 视频广告是否加载成功
-
     loc_login_data: any = {};
 
-    bannerHandler:any = null;
     shareCallback:Function = null;
 
     onShow() {
@@ -295,101 +288,6 @@ class WeChatPlatform extends BasicPlatform {
         });
     }
 
-    isSupportAd() {
-        // let system_info = this.getSystemInfoSync();
-        // return system_info.SDKVersion >= "2.0.4";
-        return false;
-    }
-
-    createVideoAd(name?: string) {
-        if (!this.isSupportAd()) return;
-
-        let adid = this.videoIds[name];
-        let handler = this.videoHandlers[name];
-        if (!handler) {
-            handler = window['wx'].createRewardedVideoAd({
-                adUnitId: adid
-            });
-
-            handler.onError((err) => {
-                setTimeout(() => {
-                    this.loadVideoAd(name);
-                }, 500);
-                if (err.errCode) {
-                    ya.eventDispatcher.emit(EventConfig.SHOW_TOAST, { txt: cc.js.formatStr(GameText.ad_err_tips, err.errCode.toString()) });
-                }
-            });
-
-            handler.onLoad(()=>{
-                this.videoLoaded[name] = true;
-            });
-
-            // 用户点击了[关闭广告]按钮
-            handler.onClose((res) => {
-                // 小于 2.1.0 的基础库版本，res 是一个 undefined
-                let is_ended = (res && res.isEnded) || (res === undefined) || false;
-                this.videoCloses[name] && this.videoCloses[name](is_ended);
-
-                this.loadVideoAd(name);
-            });
-            this.videoHandlers[name] = handler;
-
-            this.loadVideoAd(name);
-        }
-    }
-
-    loadVideoAd(name) {
-        this.videoLoaded[name] = false;
-        this.videoHandlers[name].load();
-    }
-
-    showVideoAd(cb, name: string) {
-        let handler = this.videoHandlers[name];
-        if (handler) {
-            this.videoCloses[name] = cb;
-            if (this.videoLoaded[name]) {
-                handler.load();
-                handler.show();
-            }
-            else {
-                handler.show();
-            }
-        }
-    }
-
-    showBannerAd() {
-        if (!this.isSupportAd()) return;
-
-        this.destoryBannerAd();
-
-        let frame_size = cc.view.getFrameSize();
-        this.bannerHandler = window['wx'].createBannerAd({
-            adUnitId: 'adunit-bc4c247f8cbd5fce',
-            style: {
-                left: 0,
-                top: frame_size.height,
-                width: 315,
-            }
-        });
-
-        this.bannerHandler.onResize((res)=>{
-            this.bannerHandler.style.top = frame_size.height - res.height;
-            this.bannerHandler.style.left = (frame_size.width - res.width) * 0.5;
-        });
-
-        this.bannerHandler.show();
-
-        return this.bannerHandler
-    }
-
-    destoryBannerAd() {
-        if (this.bannerHandler) {
-            this.bannerHandler.offError();
-            this.bannerHandler.offResize();
-            this.bannerHandler.destory();
-            this.bannerHandler = null;
-        }
-    }
 
     createGameClubButton(params) {
         if (!this.isSupportGameClub()) return;
@@ -417,11 +315,11 @@ class WeChatPlatform extends BasicPlatform {
         }
 
         this.btnGameClub.show();
-        
+
         return this.btnGameClub;
     }
 
-    destoryGameClubButton() {
+    destroyGameClubButton() {
         if (this.btnGameClub) {
             this.btnGameClub.hide();
         }
@@ -551,4 +449,4 @@ class WeChatPlatform extends BasicPlatform {
     }
 }
 
-export { WeChatPlatform }
+export { WxPlatform }
