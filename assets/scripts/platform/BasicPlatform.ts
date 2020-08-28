@@ -2,36 +2,25 @@
 平台接口的基础类
 */
 
-import YaEventConfig from "../framework/config/YaEventConfig";
 import {ya} from "../framework/ya";
+import {EventConfig} from "../config/EventConfig";
+
+type ResultCallback = (code: number, res?: any) => void;
 
 class BasicPlatform {
-    OS: string = "web";
-
-    // 无需做适配的手机品牌
-    notAdaptedBrans = [];
-
-    // 需要适配的品牌中为全面屏但是无刘海的手机型号（无需适配）
-    // 型号统一用小写
-    notAdaptedModes = [];
-
     constructor() {
-        this.initIPhoneXConfig();
-
         this.listen();
     }
 
-    // 切后台
-    onHide() {
+    protected onHide() {
         cc.game.on(cc.game.EVENT_HIDE, ()=>{
-            ya.eventDispatcher.emit(ya.EventConfig.ON_HIDE);
+            ya.eventDispatcher.dispatch(EventConfig.ON_HIDE);
         }, this);
     }
 
-    // 切前台
-    onShow() {
+    protected onShow() {
         cc.game.on(cc.game.EVENT_SHOW, (params:any) => {
-            ya.eventDispatcher.emit(YaEventConfig.ON_SHOW, params);
+            ya.eventDispatcher.dispatch(EventConfig.ON_SHOW, params);
         }, this);
     }
 
@@ -41,45 +30,43 @@ class BasicPlatform {
         };
     }
 
-    // 上报数据
-    report(params:any) {
+    public report(data: any) {
 
     }
 
-    // 检查登录态是否有效
-    checkSession(cb:Function|null) {
+    public checkSession(cb?: ResultCallback) {
         if (cb) cb(0);
     }
 
-    authorize(scope, cb) {
+    public authorize(scope, cb) {
 
     }
 
-    login(cb?: Function) {
+    public login(cb?: ResultCallback) {
 
     }
 
-    share(params:any) {
-        params && params.cb && (params.cb(0, {}));
+    public share(title: string, imageUrl: string, query: string, cb: ResultCallback) {
+        cb(0);
     }
 
-    keepScreenOn() {
-
-    }
-
-    hideKeyboard(scb, fcb, ccb) {
+    public keepScreenOn() {
 
     }
 
-    exit() {
+    public hideKeyboard(cb?: ResultCallback) {
 
     }
 
-    forceUpdate() {
+    public exit() {
 
     }
 
-    getSystemInfoSync() {
+    public forceUpdate() {
+
+    }
+
+    public getSystemInfoSync() {
         return {
             statusBarHeight: 0,
             brand: "",
@@ -87,164 +74,47 @@ class BasicPlatform {
         };
     }
 
-    setClipboardData(content) {
+    public setClipboardData(data: string) {
 
     }
 
-    isSupportNavigate() {
-        return false;
-    }
-
-    isSupportAd () {
-        return false;
-    }
-
-    navigateToProgram(appid, data, cb) {
+    public navigateToProgram(appId: string, data: { path?: string, extraData?: string, envVersion?: string }, cb?: ResultCallback) {
 
     }
 
-    previewImage(urls, cb) {
+    public previewImage(urls: string[], cb?: ResultCallback) {
 
     }
 
-    saveImageToPhotosAlbum(filePath, cb) {
+    public saveImageToPhotosAlbum(filePath: string, cb?: ResultCallback) {
 
     }
 
-    getSetting(cb?: Function, scope?: string) {
+    public getSetting(scope: string, cb?: ResultCallback) {
 
     }
 
-    openSetting(cb?: Function, scope?: string) {
-        cb && cb(0);
+    public openSetting(scope?: string, cb?: ResultCallback) {
+        if (cb) cb(0);
     }
 
-    garbageCollect() {
+    public garbageCollect() {
         cc.sys.garbageCollect();
     }
 
-    getBatteryLevel() {
+    public getBatteryLevel() {
         return "0";
     }
 
-    getPlatformName() {
-        return this.OS;
+    public getPlatformName() {
+        return 'web';
     }
 
-    createGameClubButton(params) {
-
-    }
-
-    destroyGameClubButton() {
-
-    }
-
-    isSupportGameClub() {
-        return false;
-    }
-
-    openCustomerService() {
-
-    }
-
-    isSupportCustomerService() {
-        return false;
-    }
-
-    listen() {
+    protected listen() {
         this.onShow();
 
         this.onHide();
     }
-
-    initIPhoneXConfig() {
-        this.notAdaptedBrans = [
-            // "HUAWEI",
-            "xiaomi",
-            "samsung",
-            "oneplus",
-            "meizu",
-            "honor"
-        ];
-
-        this.notAdaptedBrans = [
-            "vivo nex",
-            "oppo r17",
-            "oppo find",
-            "vivo x23",
-        ];
-    }
-
-    isAdaptedBrand (brand:string) {
-        if (!brand) return false;
-
-        brand = brand.toLowerCase();
-
-        for (let i = 0; i < this.notAdaptedBrans.length; i++) {
-            if (brand === this.notAdaptedBrans[i]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    isAdaptedMode (model) {
-        if (!model) return false;
-
-        model = model.toLowerCase();
-
-        for (let i = 0; i < this.notAdaptedModes.length; i++) {
-            if (model.indexOf(this.notAdaptedModes[i]) !== -1) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    getIPhoneXOffsetHeight () {
-        let t = cc.view.getFrameSize(), height = 0;
-
-        if ((t.width === 1125 && t.height === 2436) || //iPhoneX
-            (t.width === 1242 && t.height === 2688)) //iphone XS max
-        {
-            height = 189;
-        }
-        else if ((t.width === 375 && t.height === 812) || //iPhoneX
-            (t.width === 414 && t.height === 896)) //iphone XS/XS max/XR
-        {
-            height = 63;
-        }
-        else if (t.width === 828 && t.height === 1792) { //iphone XR
-            height = 126;
-        }
-        else if (t.width === 1080 && t.height === 2208) { //vivo Y85A
-            height = 171;
-        }
-        else if (t.width === 360 && t.height === 736) { //vivo Y85A
-            height = 57;
-        }
-        else {
-            let systemInfo = this.getSystemInfoSync();
-            let status_height = systemInfo.statusBarHeight || 0;
-            if (status_height < 28) {
-                height = 0;
-            }
-            else {
-                let model = systemInfo.model;
-                let brand = systemInfo.brand;
-                if (!brand || !this.isAdaptedBrand(brand) || !model || !this.isAdaptedMode(model)) {
-                    // 无需做适配
-                }
-                else if (t.width < t.height) { // 未知分辨率机型统一按iphoneX适配
-                    height = 63;
-                }
-            }
-        }
-
-        return height;
-    }
 }
 
-export {BasicPlatform};
+export {BasicPlatform, ResultCallback};

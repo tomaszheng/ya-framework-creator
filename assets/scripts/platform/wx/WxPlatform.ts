@@ -2,213 +2,151 @@
 微信小游戏平台接口类
 */
 
-import BasicPlatform from "../BasicPlatform";
 import {GameConstant} from "../../config/GameConstant";
 import {EventConfig} from "../../config/EventConfig";
 import {GameText} from "../../config/GameText";
+import {BasicPlatform, ResultCallback} from "../BasicPlatform";
 
-const {ccclass, property} = cc._decorator;
-
-@ccclass
 class WxPlatform extends BasicPlatform {
-    systemInfo:any = null;
-    btnUserInfo:any = null;
-    btnGameClub:any = null;
+    systemInfo: wx.systemInfo = null;
+    btnUserInfo: wx.UserInfoButton = null;
+    btnGameClub: wx.GameClubButton = null;
 
-    launchData:any = null;
-
-    private _isAuthorized:boolean = false;   // 用户是否授权
-    get isAuthorized() {
+    private _isAuthorized = false;
+    public get isAuthorized() {
         return this._isAuthorized;
     }
-    set isAuthorized(authorized:boolean) {
-        this._isAuthorized = authorized;
+
+    loginCode = '';
+
+    timeOnHide = -1;
+    shareCallback: (code: number) => void = null;
+
+    protected onShow() {
+        this.checkShareResult();
     }
 
-    loc_login_data: any = {};
-
-    shareCallback:Function = null;
-
-    onShow() {
-        //切前台后延长0.2s把分享回调置空
-        let greater230 = (this.getSystemInfoSync().SDKVersion || "0") >= "2.3.0";
-        if (greater230) {
-            setTimeout(()=>{
-                this.shareCallback = null;
-            }, 200);
-        }
+    protected onHide() {
+        this.timeOnHide = new Date().getTime();
     }
 
-    onError() {
-        window['wx'].onError((res) => {
+    public onError() {
+        wx.onError((res) => {
 
         });
     }
 
-    report(params) {
-        if (typeof params !== "object") return;
-
-        let data_list = [];
-        for (let key in params) {
-            data_list.push({ key: key, value: params[key].toString() });
-        }
-
-        let context = window['wx'].getOpenDataContext();
-        context.postMessage({ action: GameConstant.WX.AC_STORAGE, kvlist: data_list });
+    public report(data: {key: string, value: string}[]) {
+        const context = wx.getOpenDataContext();
+        context.postMessage({action: GameConstant.WX.AC_STORAGE, kvlist: data});
     }
 
-    authorize(scope, cb) {
-        if (!window['wx'].authorize) return;
+    public authorize(cb: ResultCallback, scope?: string) {
+        scope = scope || 'scope.userInfo';
 
-        !cb && (cb = scope, scope = "scope.userInfo");
-
-        window['wx'].authorize({
-            scope: scope,
+        wx.authorize({
+            scope,
             success: () => {
                 if (scope === "scope.userInfo") {
-                    this.isAuthorized = true;
+                    this._isAuthorized = true;
                 }
-                cb && cb(0);
+                if (cb) cb(0);
             },
             fail: (res) => {
-                cb && cb(-1);
+                if (cb) cb(-1, res);
             }
         });
     }
 
-    _callSetting(code, settings?: any, scope?: string, cb?: Function) {
-        let callback = (code) => {
-            cb && (cb(code), cb = null);
-        };
-
-        if (code === -1) {
-            callback(-1);
-        }
-        else {
-            settings = settings || {};
-
-            if (settings["scope.userInfo"]) {
-                this.isAuthorized = true;
-            }
-
-            if (settings[scope]) {
-                callback(0);
-            }
-            else {
-                callback(-1);
-            }
-        }
-    }
-
-    getSetting(callback, scope) {
-        !scope && (scope = "scope.userInfo");
-
-        if (!window['wx'].getSetting) {
-            callback(-1);
-            return;
-        }
-
-        window['wx'].getSetting({
-            success: (res) => {
-                this._callSetting(0, res.authSetting, scope, callback);
-            },
-            fail: () => {
-                this._callSetting(-1);
-            }
-        });
-    }
-
-    openSetting(cb, scope) {
-        !scope && (scope = "scope.userInfo");
-
-        if (!window['wx'].openSetting) return;
-
-        window['wx'].openSetting({
-            success: (res) => {
-                this._callSetting(0, res.authSetting, scope, cb);
-            },
-            fail: () => {
-                this._callSetting(-1);
-            }
-        });
-    }
-
-    getUserInfo(cb) {
-        if (!window['wx'].getUserInfo) {
-            cb && cb(-1);
-            return;
-        }
-
-        window['wx'].getUserInfo({
+    public getUserInfo(cb: ResultCallback) {
+        wx.getUserInfo({
             withCredentials: true,
             success: (res) => {
-                cb && cb(0, res);
+                if (cb) cb(0, res);
             },
             fail: () => {
-                cb && cb(-1);
+                if (cb) cb(-1);
             }
         });
     }
 
-    login(cb:Function) {
-        if (!window['wx'].login) return;
-
-        window['wx'].login({
+    public login(cb: ResultCallback) {
+        wx.login({
             success: (res) => {
-                this.loc_login_data = this.loc_login_data || {};
-                this.loc_login_data.code = res.code;
-                this.getSetting((ret) => {
-                    if (ret === 0) {
-                        // this.getUserInfoWithOutButton(cb);
-                    } else {
-                        if (cb) cb(0);
-                    }
-                }, "scope.userInfo")
+                this.loginCode = res.code;
             },
             fail: () => {
-                if (cb) cb(0);
+                if (cb) cb(-1);
             }
         });
     }
 
-    checkSession(cb) {
-        if (!window['wx'].checkSession) return;
-
-        window['wx'].checkSession({
+    public checkSession(cb: ResultCallback) {
+        wx.checkSession({
             success: () => {
-                cb && cb(0);
+                if (cb) cb(0);
             },
             fail: () => {
-                cb && cb(-1);
+                if (cb) cb(-1);
             }
         });
     }
 
-    getSystemInfoSync() {
+    private callSetting(code: number, settings: wx.AuthSetting, scope: string, cb: ResultCallback) {
+        if (code === -1) {
+            if (cb) cb(-1);
+        } else {
+            if (settings["scope.userInfo"]) {
+                this._isAuthorized = true;
+            }
+            if (cb) cb(settings[scope] ? 0 : -1);
+        }
+    }
+
+    public getSetting(scope: string, cb?: ResultCallback) {
+        wx.getSetting({
+            success: (res) => {
+                this.callSetting(0, res.authSetting, scope, cb);
+            },
+            fail: () => {
+                this.callSetting(-1, null, scope, cb);
+            }
+        });
+    }
+
+    public openSetting(scope?: string, cb?: ResultCallback) {
+        scope = scope || "scope.userInfo";
+        wx.openSetting({
+            success: (res) => {
+                this.callSetting(0, res.authSetting, scope, cb);
+            },
+            fail: () => {
+                this.callSetting(-1, null, scope, cb);
+            }
+        });
+    }
+
+    public getSystemInfoSync() {
         if (!this.systemInfo) {
-            this.systemInfo = window['wx'].getSystemInfoSync();
+            this.systemInfo = wx.getSystemInfoSync();
         }
         return this.systemInfo;
     }
 
-    //获取平台类别，默认ios
-    getPlatformName() {
-        let systemInfo = this.getSystemInfoSync();
+    public getPlatformName() {
+        const systemInfo = this.getSystemInfoSync();
         return systemInfo.platform || "ios";
     }
 
-    createUserInfoButton(cb):boolean {
-        let systemInfo = this.getSystemInfoSync();
-        let version = systemInfo.version;
-
-        if (!window['wx'].createUserInfoButton || version === "6.6.6") return false;
+    public createUserInfoButton(cb: ResultCallback) {
+        const systemInfo = this.getSystemInfoSync();
 
         if (this.btnUserInfo) {
             this.btnUserInfo.destroy();
             this.btnUserInfo = null;
         }
 
-        this.btnUserInfo = window['wx'].createUserInfoButton({
+        this.btnUserInfo = wx.createUserInfoButton({
             type: "image",
             image: "images/img_pure.png",
             style: {
@@ -223,77 +161,62 @@ class WxPlatform extends BasicPlatform {
             this.btnUserInfo.destroy();
             this.btnUserInfo = null;
             if (res && res.userInfo) {
-                this.isAuthorized = true;
+                this._isAuthorized = true;
             }
-            cb && cb(res);
+            cb(0, res);
         });
-
-        return true;
     }
 
-    saveImageToPhotosAlbum(filePath, cb) {
-        if (window['wx'].saveImageToPhotosAlbum) {
-            window['wx'].saveImageToPhotosAlbum({
-                filePath: filePath,
-                success: () => {
-                    cb && cb(0);
-                },
-                fail: () => {
-                    cb && cb(-1);
-                }
-            });
-        }
-        else {
-            cb && cb(-1);
-        }
-    }
-
-    /*
-    appid: 要打开的小程序appid
-    data: 要传递的数据
-    completeCb: 调用接口后的回调
-    */
-    navigateToProgram(appid, data, cb) {
-        if (window['wx'].navigateToMiniProgram) {
-            window['wx'].navigateToMiniProgram({
-                appId: appid,
-                path: data.path,
-                extraData: data.extra,
-                envVersion: data.env,
-                success: () => {
-                    cb && cb(0);
-                },
-                fail: () => {
-                    cb && cb(-1);
-                }
-            });
-        }
-        else {
-            cb && cb(-1);
-        }
-    }
-
-    //预览图片
-    previewImage(urls, cb) {
-        if (!urls || urls.length < 1 || !window['wx'].previewImage) return;
-
-        window['wx'].previewImage({
-            urls: urls,
+    public saveImageToPhotosAlbum(filePath: string, cb?: ResultCallback) {
+        wx.saveImageToPhotosAlbum({
+            filePath,
             success: () => {
-                cb && cb(0);
+                if (cb) cb(0);
             },
             fail: () => {
-                cb && cb(-1);
+                if (cb) cb(-1);
             }
         });
     }
 
+    /**
+     * 打开指定的小程序
+     * @param appId 要打开的小程序appId
+     * @param data 传递的数据
+     * @param cb 调用接口后的回调
+     */
+    public navigateToProgram(appId: string, data: { path?: string, extraData?: string, envVersion?: string }, cb?: ResultCallback) {
+        wx.navigateToMiniProgram({
+            appId,
+            path: data.path,
+            extraData: data.extraData,
+            envVersion: data.envVersion,
+            success: () => {
+                if (cb) cb(0);
+            },
+            fail: () => {
+                if (cb) cb(-1);
+            }
+        });
+    }
 
-    createGameClubButton(params) {
-        if (!this.isSupportGameClub()) return;
+    public previewImage(urls: string[], cb?: (code: number) => void) {
+        if (!urls || urls.length < 1) return;
 
+        wx.previewImage({
+            urls,
+            success: () => {
+                if (cb) cb(0);
+            },
+            fail: () => {
+                if (cb) cb(-1);
+            }
+        });
+    }
+
+    public createGameClubButton(params: any) {
         if (!this.btnGameClub) {
-            this.btnGameClub = window['wx'].createGameClubButton({
+            this.btnGameClub = wx.createGameClubButton({
                 type: "image",
                 icon: "white",
                 image: "images/img_pure.png",
@@ -305,148 +228,102 @@ class WxPlatform extends BasicPlatform {
                 }
             });
             this.btnGameClub.image = "images/img_pure.png";
-        }
-        else {
-            let style = this.btnGameClub.style;
+        } else {
+            const style = this.btnGameClub.style;
             style.top = params.top;
             style.left = params.left;
             style.width = params.width;
             style.height = params.height;
         }
-
         this.btnGameClub.show();
 
         return this.btnGameClub;
     }
 
-    destroyGameClubButton() {
+    public destroyGameClubButton() {
         if (this.btnGameClub) {
             this.btnGameClub.hide();
         }
     }
 
-    isSupportGameClub() {
-        let system_info = this.getSystemInfoSync();
-        return system_info.SDKVersion >= "2.0.3";
-    }
-
-    openCustomerService() {
-        if (!this.isSupportCustomerService()) return;
-
-        window['wx'].openCustomerServiceConversation({
+    public openCustomerService() {
+        wx.openCustomerServiceConversation({
             showMessageCard: false,
         });
     }
 
-    isSupportCustomerService() {
-        let system_info = this.getSystemInfoSync();
-        return system_info.SDKVersion >= "2.0.3";
-    }
-
-    setClipboardData(content) {
-        !content && (content = "");
-
-        window['wx'].setClipboardData({
-            data: String(content)
+    public setClipboardData(data: string) {
+        wx.setClipboardData({
+            data
         });
     }
 
-    listen() {
+    protected listen() {
         super.listen();
 
-        //菜单栏转发
-        window['wx'].showShareMenu({
+        wx.showShareMenu({
             withShareTicket: true
         });
 
-        window['wx'].onShareAppMessage(() => {
+        wx.onShareAppMessage(() => {
             return {
                 title: GameText.share_title_common,
                 imageUrl: GameText.share_common_img,
             };
         });
-
-        if (window['wx'] && window['wx'].getOpenDataContext) {
-            window['wx'].getOpenDataContext().postMessage({ action: GameConstant.WX.AC_INIT });
-        }
     }
 
-    exit() {
-        window['wx'].exitMiniProgram();
+    public exit() {
+        wx.exitMiniProgram({});
     }
 
-    hideKeyboard(scb, fcb, ccb) {
-        if (window['wx'].hideKeyboard) {
-            window['wx'].hideKeyboard({
-                success: () => {
-                    scb && scb();
-                },
-                fail: () => {
-                    fcb && fcb();
-                },
-                complete: () => {
-                    ccb && ccb();
-                }
-            });
-        }
-        if (window['wx'].offKeyboardConfirm) {
-            window['wx'].offKeyboardConfirm();
-        }
-        if (window['wx'].offKeyboardInput) {
-            window['wx'].offKeyboardInput();
-        }
-        if (window['wx'].offKeyboardComplete) {
-            window['wx'].offKeyboardComplete();
-        }
+    public hideKeyboard(cb: ResultCallback) {
+        wx.hideKeyboard({
+            success: () => {
+                if (cb) cb(0);
+            },
+            fail: () => {
+                if (cb) cb(-1);
+            },
+            complete: () => {
+                if (cb) cb(1);
+            }
+        });
     }
 
-    garbageCollect() {
-        window['wx'].triggerGC();
+    public garbageCollect() {
+        wx.triggerGC();
     }
 
-    keepScreenOn() {
-        window['wx'].setKeepScreenOn({
+    public keepScreenOn() {
+        wx.setKeepScreenOn({
             keepScreenOn: true
         });
     }
 
-    share(params) {
-        !params && (params = {});
+    public share(title: string, imageUrl: string, query: string, cb: ResultCallback) {
+        this.shareCallback = cb;
 
-        this.shareCallback = params.cb;
-
-        let greater230 = (this.getSystemInfoSync().SDKVersion || "0") >= "2.3.0";
-
-        let query = params.query || "";
-        let title = params.title || GameText.share_title_common;
-        let imageUrl = params.imageUrl || "images/common_share_img.jpg";
-
-        window['wx'].shareAppMessage({
-            title: title,
-            imageUrl: imageUrl,
-            query: query, //透传参数"key1=1&key2=2"格式
-
-            success: (res) => {
-                //基础库版本小于2.3.0有回调
-                if (!greater230) {
-                    this.shareCallback && (this.shareCallback(0, res), this.shareCallback = null);
-                }
-            },
-            fail: () => {
-                //基础库版本小于2.3.0有回调
-                if (!greater230) {
-                    this.shareCallback && (this.shareCallback(-1), this.shareCallback = null);
-                }
-            },
+        wx.shareAppMessage({
+            title,
+            imageUrl,
+            query,
         });
+    }
 
-        //3s之后自动调用
+    private checkShareResult() {
+        if (!this.shareCallback) return;
+
         setTimeout(() => {
-            if (greater230) {
-                this.shareCallback && (this.shareCallback(0, {}), this.shareCallback = null);
+            const curTime = new Date().getTime();
+            if (this.timeOnHide + 3000 < curTime) {
+                this.shareCallback(0);
+            } else {
+                this.shareCallback(-1);
             }
-        }, 3200);
+            this.shareCallback = null;
+        }, 200);
     }
 }
 
-export { WxPlatform }
+export {WxPlatform};

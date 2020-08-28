@@ -26,7 +26,7 @@ class CommonController extends ya.Controller {
 
         ya.eventDispatcher.add(EventConfig.SHOW_TOAST,       this.onShowToast, this);        // 显示toast
         ya.eventDispatcher.add(EventConfig.SHOW_WAITING,     this.onShowWaiting, this);     // 显示等待界面
-        ya.eventDispatcher.add(EventConfig.REMOVE_WAITTING,  this.onRemoveWaiting, this);   // 移除等待界面
+        ya.eventDispatcher.add(EventConfig.REMOVE_WAITING,  this.onRemoveWaiting, this);   // 移除等待界面
     }
 
     onShow (params: any) {

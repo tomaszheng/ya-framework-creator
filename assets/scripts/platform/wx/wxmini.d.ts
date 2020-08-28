@@ -1884,7 +1884,11 @@ declare namespace wx {
             fontSize: number,
             lineHeight: number
         },
-        icon: 'green' | 'white' | 'dark' | 'light'
+        icon: 'green' | 'white' | 'dark' | 'light';
+
+        show(): void;
+
+        hide(): void;
     }
 
     /** 创建游戏圈按钮。游戏圈按钮被点击后会跳转到小游戏的游戏圈。更多关于游戏圈的信息见 游戏圈使用指南*/
@@ -1897,13 +1901,13 @@ declare namespace wx {
             top: number,
             width: number,
             height: number,
-            backgroundColor: string,
-            borderColor: string,
-            borderWidth: number,
-            borderRadius: number,
-            textAlign: 'left' | 'center' | 'right',
-            fontSize: number,
-            lineHeight: number
+            backgroundColor?: string,
+            borderColor?: string,
+            borderWidth?: number,
+            borderRadius?: number,
+            textAlign?: 'left' | 'center' | 'right',
+            fontSize?: number,
+            lineHeight?: number
         },
         icon: 'green' | 'white' | 'dark' | 'light'
     }): GameClubButton;

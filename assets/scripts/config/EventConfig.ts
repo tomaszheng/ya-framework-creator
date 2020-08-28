@@ -5,18 +5,18 @@
 
 let __uuid = 0;
 let uuid = () => {
-    return "ekey" + (__uuid++).toString();
-}
+    return "eKey" + (__uuid++).toString();
+};
 
 const EventConfig = {
-    NET_CONNECTED: uuid(), //网络链接成功
+    NET_CONNECTED: uuid(), // 网络链接成功
 
     ON_SHOW: uuid(), // 切前台
     ON_HIDE: uuid(), // 切后台
 
     SHOW_TOAST: uuid(),         // 显示toast
     SHOW_WAITING: uuid(),       // 显示等待
-    REMOVE_WAITTING: uuid(),    // 移除等待
+    REMOVE_WAITING: uuid(),    // 移除等待
     SHOW_PROMPT_DIALOG: uuid(), // 显示通用提示弹窗
 
     EVT_SHOW_REVIVE: uuid(),
