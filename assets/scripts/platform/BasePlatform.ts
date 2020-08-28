@@ -7,7 +7,7 @@ import {EventConfig} from "../config/EventConfig";
 
 type ResultCallback = (code: number, res?: any) => void;
 
-class BasicPlatform {
+class BasePlatform {
     constructor() {
         this.listen();
     }
@@ -117,4 +117,4 @@ class BasicPlatform {
     }
 }
 
-export {BasicPlatform, ResultCallback};
+export {BasePlatform, ResultCallback};

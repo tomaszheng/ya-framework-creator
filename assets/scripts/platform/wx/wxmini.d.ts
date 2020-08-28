@@ -11,11 +11,17 @@ declare function requestAnimationFrame(callback: () => void): number;
 /** 输出日志*/
 interface Console {
     debug(message?: any, ...optionalParams: any[]): void;
+
     error(message?: any, ...optionalParams: any[]): void;
+
     group(groupTitle?: string, ...optionalParams: any[]): void;
+
     groupEnd(): void;
+
     info(message?: any, ...optionalParams: any[]): void;
+
     log(message?: any, ...optionalParams: any[]): void;
+
     warn(message?: any, ...optionalParams: any[]): void;
 }
 
@@ -26,6 +32,7 @@ declare var Console: {
 };
 
 declare var console: Console;
+
 /**
  * 可取消由 setTimeout() 方法设置的定时器。
  */
@@ -70,7 +77,7 @@ declare namespace wx {
         brand: string;
         /** 手机型号*/
         model: string;
-        /**	设备像素比 */
+        /**    设备像素比 */
         pixelRatio: number;
         /** 屏幕宽度*/
         screenWidth: number;
@@ -101,7 +108,7 @@ declare namespace wx {
     type launchOption = {
         /** 启动小游戏的场景值*/
         scene: number;
-        /** 启动小游戏的 query 参数	*/
+        /** 启动小游戏的 query 参数    */
         query: Object;
         /** 当前小游戏是否被显示在聊天顶部*/
         referrerInfo: ReferrerInfo
@@ -110,7 +117,7 @@ declare namespace wx {
     }
 
     type ReferrerInfo = {
-        /** 来源小程序或公众号或App的 appId	*/
+        /** 来源小程序或公众号或App的 appId    */
         appId: string,
         /**  来源小程序传过来的数据，scene=1037或1038时支持*/
         extraData: any
@@ -174,7 +181,7 @@ declare namespace wx {
         onProgressUpdate(callback: (res: {
             /** 分包下载进度百分比*/
             progress: number
-            /** 已经下载的数据长度，单位 Bytes	*/
+            /** 已经下载的数据长度，单位 Bytes    */
             totalBytesWritten: number
             /** 预期需要下载的数据总长度，单位 Bytes*/
             totalBytesExpectedToWrite: number
@@ -200,7 +207,8 @@ declare namespace wx {
      * getExtension
      * getSupportedExtensions
      */
-    interface RenderingContext { }
+    interface RenderingContext {
+    }
 
     interface Canvas {
         /** 画布的宽度*/
@@ -212,14 +220,17 @@ declare namespace wx {
          * 获取画布对象的绘图上下文
          */
         getContext(contextType: '2d' | 'webgl', contextAttributes: { antialias?: boolean, preserveDrawingBuffer?: boolean, antialiasSamples?: 2 }): RenderingContext;
+
         /**
          * 将当前 Canvas 保存为一个临时文件，并生成相应的临时文件路径。
          */
         toTempFilePath(object: { x?: number, y?: number, width?: number, height?: number, destWidth?: number, destHeight?: number, fileType?: 'jpg' | 'png', quality?: number, success?: (res?: any) => void, fail?: (err?: any) => void, complete?: (res?: any) => void }): string;
+
         /**
          * 把画布上的绘制内容以一个 data URI 的格式返回
          */
         toDataURL(): string;
+
         /**
          * Canvas.toTempFilePath 的同步版本
          */
@@ -247,17 +258,20 @@ declare namespace wx {
     function exitMiniProgram(object: { success?: () => void, fail?: () => void, complete?: () => void }): void;
 
     /**
-    * 返回小程序启动参数
-    */
+     * 返回小程序启动参数
+     */
     function getLaunchOptionsSync(): launchOption;
+
     /**
      * 监听小游戏隐藏到后台事件。锁屏、按 HOME 键退到桌面、显示在聊天顶部等操作会触发此事件。
      */
     function onHide(callback: () => void): void;
+
     /**
      * 取消监听小游戏隐藏到后台事件。锁屏、按 HOME 键退到桌面、显示在聊天顶部等操作会触发此事件。
      */
     function offHide(callback: () => void): void;
+
     /**
      * 监听小游戏回到前台的事件
      */
@@ -271,27 +285,32 @@ declare namespace wx {
         /** 当场景为由从另一个小程序或公众号或App打开时，返回此字段*/
         referrerInfo: ReferrerInfo
     }) => void): void;
+
     /**
      * 取消监听小游戏回到前台的事件
      */
     function offShow(callback: () => void): void;
 
     /**
-    * 监听音频中断结束，在收到 onAudioInterruptionBegin 事件之后，小程序内所有音频会暂停，收到此事件之后才可再次播放成功
-    */
+     * 监听音频中断结束，在收到 onAudioInterruptionBegin 事件之后，小程序内所有音频会暂停，收到此事件之后才可再次播放成功
+     */
     function onAudioInterruptionEnd(callback: () => void): void;
+
     /**
      * 取消监听音频中断结束，在收到 onAudioInterruptionBegin 事件之后，小程序内所有音频会暂停，收到此事件之后才可再次播放成功
      */
     function offAudioInterruptionEnd(callback: () => void): void;
+
     /**
      * 监听音频因为受到系统占用而被中断开始，以下场景会触发此事件：闹钟、电话、FaceTime 通话、微信语音聊天、微信视频聊天。此事件触发后，小程序内所有音频会暂停。
      */
     function onAudioInterruptionBegin(callback: () => void): void;
+
     /**
      * 取消监听音频因为受到系统占用而被中断开始，以下场景会触发此事件：闹钟、电话、FaceTime 通话、微信语音聊天、微信视频聊天。此事件触发后，小程序内所有音频会暂停。
      */
     function offAudioInterruptionBegin(callback: () => void): void;
+
     /**
      * 监听全局错误事件
      */
@@ -301,6 +320,7 @@ declare namespace wx {
         /** 错误调用堆栈*/
         stack: string
     }) => void): void;
+
     /**
      * 取消监听全局错误事件
      */
@@ -317,10 +337,12 @@ declare namespace wx {
         /** 事件触发时的时间戳*/
         timeStamp: number
     }) => void): void;
+
     /**
      * 取消监听开始触摸事件
      */
     function offTouchStart(callback: () => void): void;
+
     /**
      * 监听触点移动事件
      */
@@ -332,10 +354,12 @@ declare namespace wx {
         /** 事件触发时的时间戳*/
         timeStamp: number
     }) => void): void;
+
     /**
      * 取消监听触点移动事件
      */
     function offTouchMove(callback: () => void): void;
+
     /**
      * 监听触摸结束事件
      */
@@ -347,10 +371,12 @@ declare namespace wx {
         /** 事件触发时的时间戳*/
         timeStamp: number
     }) => void): void;
+
     /**
      * 取消监听触摸结束事件
      */
     function offTouchEnd(callback: () => void): void;
+
     /**
      * 监听触点失效事件
      */
@@ -362,15 +388,17 @@ declare namespace wx {
         /** 事件触发时的时间戳*/
         timeStamp: number
     }) => void): void;
+
     /**
      * 取消监听触点失效事件
      */
     function offTouchCancel(callback: () => void): void;
 
     /**
-    * 获取性能管理器
-    */
+     * 获取性能管理器
+     */
     function getPerformance(): Performance;
+
     /**
      * 加快触发 JavaScrpitCore Garbage Collection（垃圾回收），GC 时机是由 JavaScrpitCore 来控制的，并不能保证调用后马上触发 GC。
      */
@@ -421,6 +449,7 @@ declare namespace wx {
      * @returns number 文本的行高
      */
     function getTextLineHeight(object: { fontStyle?: 'normal' | 'italic', fontWeight?: 'normal' | 'bold', fontSize?: 16, fontFamily: string, text: string, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): number;
+
     /**
      * 加载自定义字体文件
      * @returns string 如果加载字体成功，则返回字体 family 值，否则返回 null。
@@ -434,12 +463,12 @@ declare namespace wx {
          */
         src: string;
         /**
-        * 图片的真实宽度
-        */
+         * 图片的真实宽度
+         */
         width: number;
         /**
-        * 图片的真实高度
-        */
+         * 图片的真实高度
+         */
         height: number;
         /**
          * 图片的加载完成
@@ -480,20 +509,28 @@ declare namespace wx {
 
         /** 显示 banner 广告。*/
         show(): Promise<any>;
+
         /** 隐藏 banner 广告*/
         hide(): void;
+
         /** 销毁 banner 广告*/
         destroy(): void;
+
         /** 监听 banner 广告尺寸变化事件*/
         onResize(callback: (res: { width: number, height: number }) => void): void;
+
         /** 取消监听 banner 广告尺寸变化事件*/
         offResize(callback: () => void): void;
+
         /** 监听 banner 广告加载事件*/
         onLoad(callback: () => void): void;
+
         /** 取消监听 banner 广告加载事件*/
         offLoad(callback: () => void): void;
+
         /** 监听 banner 广告错误事件*/
         onError(callback: (res: { errMsg: string, errCode: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 }) => void): void;
+
         /** 取消监听 banner 广告错误事件*/
         offError(callback: () => void): void;
     }
@@ -504,24 +541,34 @@ declare namespace wx {
     interface RewardedVideoAd {
         /** 隐藏激励视频广告*/
         load(): Promise<any>;
+
         /** 显示激励视频广告。激励视频广告将从屏幕下方推入。*/
         show(): Promise<any>;
+
         /** 销毁 banner 广告*/
         destroy(): void;
+
         /** 监听 banner 广告尺寸变化事件*/
         onResize(callback: (res: { width: number, height: number }) => void): void;
+
         /** 取消监听 banner 广告尺寸变化事件*/
         offResize(callback: () => void): void;
+
         /** 监听激励视频广告加载事件*/
         onLoad(callback: () => void): void;
+
         /** 取消监听激励视频广告加载事件*/
         offLoad(callback: () => void): void;
+
         /** 监听激励视频错误事件*/
         onError(callback: (res: { errMsg: string, errCode: 1000 | 1001 | 1002 | 1003 | 1004 | 1005 | 1006 | 1007 | 1008 }) => void): void;
+
         /** 取消监听激励视频错误事件*/
         offError(callback: () => void): void;
+
         /** 监听用户点击 关闭广告 按钮的事件*/
         onClose(callback: (res: { isEnded: boolean }) => void);
+
         /** 取消监听用户点击 关闭广告 按钮的事件*/
         offClose(callback: () => void);
     }
@@ -529,7 +576,7 @@ declare namespace wx {
     /**
      * 创建激励视频广告组件。请通过 wx.getSystemInfoSync() 返回对象的 SDKVersion 判断基础库版本号 >= 2.0.4 后再使用该 API。同时，开发者工具上暂不支持调试该 API，请直接在真机上进行调试。
      */
-    function createRewardedVideoAd(res: { adUnitId: string }): RewardedVideoAd;
+    function createRewardedVideoAd(res: { adUnitId: string, multiton?: boolean }): RewardedVideoAd;
 
     /**
      * 创建 banner 广告组件。请通过 wx.getSystemInfoSync() 返回对象的 SDKVersion 判断基础库版本号 >= 2.0.4 后再使用该 API。同时，开发者工具上暂不支持调试该 API，请直接在真机上进行调试。
@@ -544,6 +591,24 @@ declare namespace wx {
         adIntervals?: number,
     }): BannerAd;
 
+    interface InterstitialAd {
+        load(): Promise<any>;
+
+        show(): Promise<any>;
+
+        /** SDKVersion >= 2.8.0*/
+        destroy(): void;
+
+        onClose(callback: () => void): void;
+    }
+
+    /**
+     * 创建 插屏 广告组件。请通过 wx.getSystemInfoSync() 返回对象的 SDKVersion 判断基础库版本号 >= 2.6.0 后再使用该 API。同时，开发者工具上暂不支持调试该 API，请直接在真机上进行调试。
+     */
+    function createInterstitialAd(res: {
+        adUnitId: string
+    });
+
     /**
      * 显示操作菜单
      */
@@ -551,6 +616,7 @@ declare namespace wx {
 
     /** 隐藏 loading 提示框*/
     function hideLoading(object: { success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+
     /** 显示 loading 提示框。需主动调用 wx.hideLoading 才能关闭提示框*/
     function showLoading(object: { title: string, mask?: boolean, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
 
@@ -592,29 +658,35 @@ declare namespace wx {
     function hideKeyboard(object: { success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
 
     /**
-    * 显示键盘
-    */
+     * 显示键盘
+     */
     function showKeyboard(object: { defaultValue: string, maxLength: number, multiple: boolean, confirmHold: boolean, confirmType: 'done' | 'next' | 'search' | 'go' | 'send', success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+
     /**
      * 监听键盘输入事件
      */
     function onKeyboardInput(callback: (res: { value: string }) => void): void;
+
     /**
      * 取消监听键盘输入事件
      */
     function offKeyboardInput(callback: () => void): void;
+
     /**
      * 监听用户点击键盘 Confirm 按钮时的事件
      */
     function onKeyboardConfirm(callback: (res: { value: string }) => void): void;
+
     /**
      * 取消监听用户点击键盘 Confirm 按钮时的事件
      */
     function offKeyboardConfirm(callback: () => void): void;
+
     /**
      * 监听监听键盘收起的事件
      */
     function onKeyboardComplete(callback: (res: { value: string }) => void): void;
+
     /**
      * 取消监听监听键盘收起的事件
      */
@@ -640,6 +712,7 @@ declare namespace wx {
      * 监听窗口尺寸变化事件
      */
     function onWindowResize(callback: (res: { windowWidth: number, windowHeight: number }) => void): void;
+
     /**
      * 取消监听窗口尺寸变化事件
      */
@@ -647,8 +720,10 @@ declare namespace wx {
 
     interface RequestTask {
         abort(): void;
+
         /** 监听 HTTP Response Header 事件。会比请求完成事件更早*/
         onHeadersReceived(callback: (res: { header: Object }) => void): void;
+
         /** 取消监听 HTTP Response Header 事件*/
         offHeadersReceived(callback: () => void): void;
     }
@@ -685,8 +760,10 @@ declare namespace wx {
 
         /** 取消监听下载进度变化事件*/
         offProgressUpdate(callback: () => void): void;
+
         /** 监听 HTTP Response Header 事件。会比请求完成事件更早*/
         onHeadersReceived(callback: (res: { header: Object }) => void): void;
+
         /** 取消监听 HTTP Response Header 事件*/
         offHeadersReceived(callback: () => void): void;
     }
@@ -709,16 +786,20 @@ declare namespace wx {
     interface UploadTask {
         /** 中断上传任务*/
         abort(): void;
+
         /** 监听上传进度变化事件*/
         onProgressUpdate(callback: (res: {
             progress: number,
             totalBytesSent: number,
             totalBytesExpectedToSend: number
         }) => void): void;
+
         /** 取消监听上传进度变化事件*/
         offProgressUpdate(callback: () => void): void;
+
         /** 监听 HTTP Response Header 事件。会比请求完成事件更早*/
         onHeadersReceived(callback: (res: { header: Object }) => void): void;
+
         /** 取消监听 HTTP Response Header 事件*/
         offHeadersReceived(callback: () => void): void;
     }
@@ -745,22 +826,27 @@ declare namespace wx {
          * 关闭 WebSocket 连接
          */
         close(object: { code?: 1000, reason?: string, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+
         /**
          * 监听WebSocket 连接打开事件
          */
         onOpen(callback: (res: { header: Object }) => void): void;
+
         /**
          * 监听WebSocket 连接关闭事件
          */
         onClose(callback: () => void): void;
+
         /**
          * 监听WebSocket 错误事件
          */
         onError(callback: (res: { errMsg: string }) => void): void;
+
         /**
          * 监听WebSocket 接受到服务器的消息事件
          */
         onMessage(callback: (res: { data: string | ArrayBuffer }) => void): void;
+
         /**
          * 通过 WebSocket 连接发送数据
          */
@@ -776,22 +862,27 @@ declare namespace wx {
      * 创建一个 WebSocket 连接。
      */
     function connectSocket(object: { url: string, header?: {}, protocols: Array<string>, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): SocketTask;
+
     /**
      * 关闭 WeSocket 连接
      */
     function closeSocket(object: { code?: 1000, reason?: string, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+
     /**
      * 监听WebSocket 连接打开事件
      */
     function onSocketOpen(callback: (res: { header: {} }) => void): void;
+
     /**
      * 监听WebSocket 连接关闭事件
      */
     function onSocketClose(callback: () => void): void;
+
     /**
      * 监听WebSocket 接受到服务器的消息事件
      */
     function onSocketMessage(callback: (res: { data: string | ArrayBuffer }) => void): void;
+
     /**
      * 通过 WebSocket 连接发送数据，需要先 wx.connectSocket，并在 wx.onSocketOpen 回调之后才能发送。
      */
@@ -804,24 +895,34 @@ declare namespace wx {
     interface UDPSocket {
         /** 绑定一个系统随机分配的可用端口，或绑定一个指定的端口号*/
         bind(port: number): number;
+
         /** 关闭 UDP Socket 实例，相当于销毁。 在关闭之后，UDP Socket 实例不能再发送消息，每次调用 UDPSocket.send 将会触发错误事件，并且 message 事件回调函数也不会再也执行。在 UDPSocket 实例被创建后将被 Native 强引用，保证其不被 GC。在 UDPSocket.close 后将解除对其的强引用，让 UDPSocket 实例遵从 GC。*/
         close(): void;
+
         /** 取消监听关闭事件*/
         offClose(callback: () => void): void;
+
         /** 取消监听错误事件*/
         offError(callback: () => void): void;
+
         /** 取消监听开始监听数据包消息的事件*/
         offListening(callback: () => void): void;
+
         /** 取消监听收到消息的事件*/
         offMessage(callback: () => void): void;
+
         /** 监听关闭事件*/
         onClose(callback: () => void): void;
+
         /** 监听错误事件*/
         onError(callback: () => void): void;
+
         /** 监听开始监听数据包消息的事件*/
         onListening(callback: () => void): void;
+
         /** 监听收到消息的事件*/
         onMessage(callback: () => void): void;
+
         /** 向指定的 IP 和 port 发送消息*/
         send(obj: { address: string, port: number, message: string | ArrayBuffer, offset?: number, length?: number }): void;
     }
@@ -880,8 +981,8 @@ declare namespace wx {
 
 
     /**
-    * 发起米大师支付
-    */
+     * 发起米大师支付
+     */
     function requestMidasPayment(object: {
         mode: string,
         env?: 0 | 1,
@@ -977,103 +1078,128 @@ declare namespace wx {
         paused: boolean;
         /** 音频缓冲的时间点，仅保证当前播放时间点到此时间点内容已缓冲（只读）*/
         buffered: number;
+
         /**
          * 销毁当前实例
          */
         destroy(): void;
+
         /**
          * 取消监听音频进入可以播放状态的事件
          */
         offCanplay(callback: () => void): void;
+
         /**
          * 监听音频暂停事件
          */
         onPause(callback: () => void): void;
+
         /**
          * 监听音频停止事件
          */
         onStop(callback: () => void): void;
+
         /**
          * 取消监听音频停止事件
          */
         offStop(callback: () => void): void;
+
         /**
          * 监听音频自然播放至结束的事件
          */
         onEnded(callback: () => void): void;
+
         /**
          * 取消监听音频自然播放至结束的事件
          */
         offEnded(callback: () => void): void;
+
         /**
          * 监听音频播放进度更新事件
          */
         onTimeUpdate(callback: () => void): void;
+
         /**
          * 监听音频播放事件
          */
         onPlay(callback: () => void): void;
+
         /**
          * 监听音频播放错误事件
          */
         onError(callback: (res: { errCode: 10001 | 10002 | 10003 | 10004 | -1 }) => void): void;
+
         /**
          * 取消监听音频暂停事件
          */
         offPause(callback: () => void): void;
+
         /**
          * 监听音频加载中事件，当音频因为数据不足，需要停下来加载时会触发
          */
         onWaiting(callback: () => void): void;
+
         /**
          * 取消监听音频加载中事件，当音频因为数据不足，需要停下来加载时会触发
          */
         offWaiting(callback: () => void): void;
+
         /**
          * 监听音频进行跳转操作的事件
          */
         onSeeking(callback: () => void): void;
+
         /**
          * 取消监听音频进行跳转操作的事件
          */
         offSeeking(callback: () => void): void;
+
         /**
          * 监听音频完成跳转操作的事件
          */
         onSeeked(callback: () => void): void;
+
         /**
          * 取消监听音频完成跳转操作的事件
          */
         offSeeked(callback: () => void): void;
+
         /**
          * 取消监听音频播放事件
          */
         offPlay(callback: () => void): void;
+
         /**
          * 取消监听音频播放进度更新事件
          */
         offTimeUpdate(callback: () => void): void;
+
         /**
          * 监听音频进入可以播放状态的事件
          */
         onCanplay(callback: () => void): void;
+
         /**
          * 取消监听音频播放错误事件
          */
         offError(callback: () => void): void;
+
         /**
          * 停止。停止后的音频再播放会从头开始播放。
          */
         pause(): void;
+
         /**
          * 播放
          */
         play(): void;
+
         /**
          * 跳转到指定位置，单位 s
          */
         seek(position: number): void;
     }
+
     /**
      * 创建内部 audio 上下文 InnerAudioContext 对象。
      */
@@ -1098,6 +1224,7 @@ declare namespace wx {
      * 预览图片
      */
     function previewImage(object: { urls: string[], current?: string, success?: (res?: any) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+
     /**
      * 保存图片到系统相册。
      */
@@ -1109,46 +1236,57 @@ declare namespace wx {
          * 监听录音暂停事件
          */
         onPause(callback: () => void): void;
+
         /**
          * 监听录音结束事件
          */
         onStop(callback: (res: { tempFilePath: string }) => void): void;
+
         /**
          * 监听已录制完指定帧大小的文件事件。如果设置了 frameSize，则会回调此事件。
          */
         onFrameRecorded(callback: (res: { frameBuffer: ArrayBuffer, isLastFrame: boolean }) => void): void;
+
         /**
          * 监听录音错误事件
          */
         onError(callback: (res: { errMsg: string }) => void): void;
+
         /**
          * 监听录音开始事件
          */
         onStart(callback: () => void): void;
+
         /**
          * 监听录音因为受到系统占用而被中断开始事件。以下场景会触发此事件：微信语音聊天、微信视频聊天。此事件触发后，录音会被暂停。pause 事件在此事件后触发
          */
         onInterruptionBegin(callback: () => void): void;
+
         /**
          * 监听录音中断结束事件。在收到 interruptionBegin 事件之后，小程序内所有录音会暂停，收到此事件之后才可再次录音成功。
          */
         onInterruptionEnd(callback: () => void): void;
+
         /**
          * 监听录音继续事件
          */
         onResume(callback: () => void): void;
+
         /**
          * 暂停录音
          */
         pause(): void;
+
         /**
          * 继续录音
          */
         resume(): void;
+
         /**
          * 停止录音
          */
         stop(): void;
+
         /**
          * 开始录音
          */
@@ -1217,70 +1355,87 @@ declare namespace wx {
          * 视频退出全屏
          */
         exitFullScreen(): Promise<Object>;
+
         /**
          * 取消监听视频暂停事件
          */
         offPause(callback: () => void): void;
+
         /**
          * 监听视频播放到末尾事件
          */
         onEnded(callback: () => void): void;
+
         /**
          * 取消监听视频播放到末尾事件
          */
         offEnded(callback: () => void): void;
+
         /**
          * 监听视频播放进度更新事件
          */
         onTimeUpdate(callback: (res: { position: number, duration: number }) => void): void;
+
         /**
          * 取消监听视频播放进度更新事件
          */
         offTimeUpdate(callback: () => void): void;
+
         /**
          * 监听视频错误事件
          */
         onError(callback: (res: { errMsg: string }) => void): void;
+
         /**
          * 取消监听视频错误事件
          */
         offError(callback: () => void): void;
+
         /**
          * 监听视频播放事件
          */
         onPlay(callback: () => void): void;
+
         /**
          * 监听视频暂停事件
          */
         onPause(callback: () => void): void;
+
         /**
          * 取消监听视频缓冲事件
          */
         offWaiting(callback: () => void): void;
+
         /**
          * 监听视频缓冲事件
          */
         onWaiting(callback: () => void): void;
+
         /**
          * 取消监听视频播放事件
          */
         offPlay(callback: () => void): void;
+
         /**
          * 暂停视频
          */
         pause(): Promise<any>;
+
         /**
          * 播放视频
          */
         play(): Promise<any>;
+
         /**
          * 视频全屏
          */
         requestFullScreen(): Promise<any>;
+
         /**
          * 视频跳转
          */
         seek(time: number): Promise<any>;
+
         /**
          * 停止视频
          */
@@ -1331,6 +1486,7 @@ declare namespace wx {
             fail?: (res?: { errMsg: string }) => void,
             complete?: (res?: any) => void
         }): void;
+
         /**
          * FileSystemManager.access 的同步版本
          */
@@ -1338,23 +1494,23 @@ declare namespace wx {
 
         /** 在文件结尾追加内容*/
         appendFile(filePath: string,
-            data: string | ArrayBuffer,
-            encoding: string,
-            success?: (res?: any) => void,
-            fail?: (res: { errMsg: string }) => void,
-            complete?: (res?: any) => void): void;
+                   data: string | ArrayBuffer,
+                   encoding: string,
+                   success?: (res?: any) => void,
+                   fail?: (res: { errMsg: string }) => void,
+                   complete?: (res?: any) => void): void;
 
         /** appendFile同步版本*/
         appendFileSync(filePath: string, data: string | ArrayBuffer, encoding: string): void;
 
         /**
-        * 保存临时文件到本地。此接口会移动临时文件，因此调用成功后，tempFilePath 将不可用。
-        */
+         * 保存临时文件到本地。此接口会移动临时文件，因此调用成功后，tempFilePath 将不可用。
+         */
         saveFile(object: { tempFilePath: string, filePath?: string, success?: (res: { savedFilePath: number }) => void, fail?: (res: { errMsg: string }) => void, complete?: (res?: any) => void }): void;
 
         /**
-        * FileSystemManager.saveFile 的同步版本
-        */
+         * FileSystemManager.saveFile 的同步版本
+         */
         saveFileSync(tempFilePath: string, filePath: string): number;
 
         /**
@@ -1406,6 +1562,7 @@ declare namespace wx {
          * 读取目录内文件列表
          */
         readdir(object: { dirPath: string, success?: (res: { files: Array<string> }) => void, fail?: (res: { errMsg: string }) => void, complete?: (res?: any) => void }): void;
+
         /**
          * FileSystemManager.readdir 的同步版本
          */
@@ -1417,8 +1574,8 @@ declare namespace wx {
         rename(object: { oldPath: string, newPath: string, success?: (res?: any) => void, fail?: (res: { errMsg: string }) => void, complete?: (res?: any) => void }): void;
 
         /**
-        * FileSystemManager.rename 的同步版本
-        */
+         * FileSystemManager.rename 的同步版本
+         */
         renameSync(oldPath: string, newPath: string): void;
 
         /**
@@ -1482,13 +1639,15 @@ declare namespace wx {
          */
         lastAccessedTime: number;
         /**
-        * 文件最后一次被修改的时间，UNIX 时间戳，对应 POSIX stat.st_mtime
-        */
+         * 文件最后一次被修改的时间，UNIX 时间戳，对应 POSIX stat.st_mtime
+         */
         lastModifiedTime: number;
+
         /**
          * 判断当前文件是否一个目录
          */
         isDirectory(): boolean;
+
         /**
          * 判断当前文件是否一个普通文件
          */
@@ -1566,6 +1725,7 @@ declare namespace wx {
             fontSize: number,
             lineHeight: number
         },
+
         /** 显示用户信息按钮*/
         show();
 
@@ -1703,6 +1863,7 @@ declare namespace wx {
     interface OpenDataContext {
         /** 开放数据域和主域共享的 sharedCanvas*/
         canvas: Canvas;
+
         /**
          * 向开放数据域发送消息
          * @param message {} 要发送的消息，message 中及嵌套对象中 key 的 value 只能是 primitive value。即 number、string、boolean、null、undefined。
@@ -1759,6 +1920,7 @@ declare namespace wx {
         /** 取消监听意见反馈按钮的点击事件*/
         offTap(callback: () => void): void;
     }
+
     /**
      * 创建打开意见反馈页面的按钮
      */
@@ -2098,10 +2260,12 @@ declare namespace wx {
          * 监听接收主线程/Worker 线程向当前线程发送的消息
          */
         onMessage(callback: (res: { message: Object }) => void): void;
+
         /**
          * 向主线程/Worker 线程发送的消息。
          */
         postMessage(message: {}): void;
+
         /**
          * 结束当前 worker 线程，仅限在主线程 worker 对象上调用。
          */
@@ -2165,10 +2329,14 @@ type cloudEmptyFunction = () => void;
 
 interface Database {
     command: Command;
+
     serverDate(options?: object): ServerDate;
+
     Geo: Geo;
     createCollection: Promise<CreateCollectionSuccess>;
+
     collection(name: string): Collection;
+
     RegExp(options: RegExpOptions): DBRegExp;
 }
 
@@ -2183,18 +2351,27 @@ interface RegExpOptions {
 
 interface Query {
     get(): Promise<GetCollectionResult>;
+
     update(options: CommonOption): Promise<UpateCollectionResult>;
+
     remove(): Promise<RemoveCollectionResult>;
+
     count(): Promise<CountCollectionResult>;
+
     orderBy(fieldName: string, order: "asc" | "desc"): Collection | Query;
+
     limit(max: number): Collection | Query;
+
     skip(offset: number): Collection | Query;
+
     field(definition: object): Collection | Query | Document;
 }
 
 interface Collection extends Query {
     doc(id: string | number): Document;
+
     add(options: CommonOption): Promise<AddCollectionResult>;
+
     where(rule: object): Query;
 
     aggregate(): Aggregate;
@@ -2232,41 +2409,65 @@ interface CountCollectionResult {
 
 interface Document {
     get(): Promise<{ data: any }>;
+
     update(options: CommonOption): Promise<{ stats: { updated: 0 | 1 } }>;
+
     set(
         options: CommonOption
     ): Promise<{
         _id: string | number;
         stats: { updated: 0 | 1; created: 0 | 1 };
     }>;
+
     remove(): Promise<{ stats: { removed: 0 | 1 } }>;
 }
 
 // collection(name: string): Collection
 interface Command {
     eq(value: any): Command;
+
     neq(value: any): Command;
+
     lt(value: number): Command;
+
     lte(value: number): Command;
+
     gt(value: number): Command;
+
     gte(value: number): Command;
+
     in(values: any[]): Command;
+
     nin(values: any[]): Command;
+
     and(command: Command): Command;
+
     and(...commands: Command[]): Command;
+
     or(command: Command | CrosFieldCommand[]): Command;
+
     or(...commands: Command[]): Command;
+
     set(value: any): Command;
+
     remove(): Command;
+
     inc(value: number): Command;
+
     mul(value: number): Command;
+
     push(values: any[]): Command;
+
     pop(): Command;
+
     shift(): Command;
+
     unshift(values: any[]): Command;
 
     geoNear(options: GeoNearOptions): Command;
+
     geoWithin(options: GeoWithinOptions): Command;
+
     geoIntersects(options: GeoIntersectsOptions): Command;
 
     // aggregate: AggregationOperators
@@ -2289,12 +2490,12 @@ interface GeoWithinOptions {
 
 interface GeoIntersectsOptions {
     geometry:
-    | Point
-    | LineString
-    | MultiPoint
-    | MultiLineString
-    | Polygon
-    | MultiPolygon; // 地理位置
+        | Point
+        | LineString
+        | MultiPoint
+        | MultiLineString
+        | Polygon
+        | MultiPolygon; // 地理位置
 }
 
 interface Geo {
@@ -2370,19 +2571,23 @@ interface CreateCollectionSuccess {
 
 interface Aggregate {
     addFields(fieldObj: { [fieldName: string]: any }): Aggregate;
+
     bucket(bucketObj: {
         groupBy: any;
         boundaries: any[];
         default?: any;
         output?: object;
     }): Aggregate;
+
     bucketAuto(bucketObj: {
         groupBy: any;
         buckets: number;
         granularity?: any;
         output?: object;
     }): Aggregate;
+
     count(expr: string): any;
+
     geoNear(geoNearObj: {
         near: Point;
         spherical: true;
@@ -2395,35 +2600,56 @@ interface Aggregate {
         includeLocs?: string;
         key?: string;
     }): Aggregate;
-    group(groupObj: { _id: any;[fieldName: string]: any }): Aggregate;
+
+    group(groupObj: { _id: any; [fieldName: string]: any }): Aggregate;
+
     limit(limitRecords: number): any;
+
     match(matchObj: { [fieldName: string]: any }): Aggregate;
+
     project(projectObj: { [fieldName: string]: any }): Aggregate;
+
     replaceRoot(replaceRootObj: { newRoot: any }): Aggregate;
+
     sample(replaceRootObj: { size: number }): Aggregate;
+
     skip(skipNum: number): any;
+
     sort(replaceRootObj: { [fieldName: string]: 1 | -1 }): Aggregate;
+
     sortByCount(fieldName: string): Aggregate;
+
     unwind(unwindObj: {
         path: string;
         includeArrayIndex?: string;
         preserveNullAndEmptyArrays?: boolean;
     }): Aggregate;
+
     end(): void;
 }
 
 // type
 interface AggregationOperators {
     abs(operand: number): number;
+
     add(...operand: any[]): any;
+
     addToSet(expression: string): any;
+
     allElementsTrue(expression: [string]): boolean;
+
     and(expression: boolean[]): boolean;
+
     lt(expression: string, value: number): boolean;
+
     lte(expression: string, value: number): boolean;
+
     anyElementTrue(expression: [string]): boolean;
+
     arrayElemAt(expression: [string, number]): any;
+
     arrayToObject(expression: string): object;
+
     // arrayToObject(expression: [string, any][]): object
     // arrayToObject(expression: {k: string; v: any}[]): object
     avg(expression: string): number;

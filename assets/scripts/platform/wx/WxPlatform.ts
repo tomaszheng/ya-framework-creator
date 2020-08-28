@@ -5,9 +5,9 @@
 import {GameConstant} from "../../config/GameConstant";
 import {EventConfig} from "../../config/EventConfig";
 import {GameText} from "../../config/GameText";
-import {BasicPlatform, ResultCallback} from "../BasicPlatform";
+import {BasePlatform, ResultCallback} from "../BasePlatform";
 
-class WxPlatform extends BasicPlatform {
+class WxPlatform extends BasePlatform {
     systemInfo: wx.systemInfo = null;
     btnUserInfo: wx.UserInfoButton = null;
     btnGameClub: wx.GameClubButton = null;

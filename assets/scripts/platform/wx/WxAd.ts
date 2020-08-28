@@ -1,77 +1,105 @@
 import {EventConfig} from "../../config/EventConfig";
 import {GameText} from "../../config/GameText";
 import {ya} from "../../framework/ya";
+import {BaseAd} from "../BaseAd";
 
-class WxAd {
-    videoIds: any = {};
-    videoHandlers: any = {};
-    videoCloses: any = {};
-    videoLoaded: any = {};   // 视频广告是否加载成功
+const rewardedVideoAdUnits = {
+    general: 'ad-unit-bc4c247f8cbd5fce',
+};
 
-    bannerHandler: any = null;
+const bannerAdUnits = {
+    general: 'ad-unit-bc4c247f8cbd5fce',
+};
 
-    createVideoAd(name?: string) {
-        const adId = this.videoIds[name];
-        let handler = this.videoHandlers[name];
-        if (!handler) {
-            handler = wx.createRewardedVideoAd({
-                adUnitId: adId
+const interstitialAdUnits = {
+    general: 'ad-unit-bc4c247f8cbd5fce',
+};
+
+interface IRewardVideoAdRecord {
+    adName: string;
+    handler: wx.RewardedVideoAd;
+    loaded: boolean;
+    closeCallback?: (isEnded: boolean) => void;
+}
+
+class WxAd extends BaseAd {
+    bannerHandler: wx.BannerAd = null;
+    rewardedVideoHandlers: Map<string, IRewardVideoAdRecord> = null;
+
+    protected init() {
+        super.init();
+        this.rewardedVideoHandlers = new Map<string, IRewardVideoAdRecord>();
+    }
+
+    public createRewardedVideoAd(adName?: string) {
+        adName = adName || 'general';
+        if (!rewardedVideoAdUnits[adName]) return;
+
+        if (!this.rewardedVideoHandlers.has(adName)) {
+            const rewardedVideoHandler = wx.createRewardedVideoAd({
+                adUnitId: rewardedVideoAdUnits[adName],
+                multiton: true,
             });
-
-            handler.onError((err) => {
+            this.rewardedVideoHandlers.set(adName, {
+                adName,
+                handler: rewardedVideoHandler,
+                loaded: false,
+            });
+            rewardedVideoHandler.onError((res) => {
                 setTimeout(() => {
-                    this.loadVideoAd(name);
-                }, 500);
-                if (err.errCode) {
+                    this.loadRewardedVideoAd(adName);
+                }, 1000);
+                if (res.errCode) {
                     ya.eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {
-                        txt: cc.js.formatStr(GameText.ad_err_tips, err.errCode.toString())
+                        txt: cc.js.formatStr(GameText.ad_err_tips, res.errCode.toString())
                     });
                 }
             });
-
-            handler.onLoad(() => {
-                this.videoLoaded[name] = true;
+            rewardedVideoHandler.onLoad(() => {
+                this.rewardedVideoHandlers.get(adName).loaded = true;
             });
-
-            // 用户点击了[关闭广告]按钮
-            handler.onClose((res) => {
-                // 小于 2.1.0 的基础库版本，res 是一个 undefined
-                const isEnded = res && res.isEnded || false;
-                if (this.videoCloses[name]) this.videoCloses[name](isEnded);
-
-                this.loadVideoAd(name);
+            rewardedVideoHandler.onClose((res) => {
+                this.rewardedVideoHandlers.get(adName).closeCallback?.call(this, res.isEnded);
+                this.loadRewardedVideoAd(adName);
             });
-            this.videoHandlers[name] = handler;
+        }
 
-            this.loadVideoAd(name);
+        this.loadRewardedVideoAd(adName);
+    }
+
+    private loadRewardedVideoAd(adName: string) {
+        if (!this.rewardedVideoHandlers.has(adName)) return;
+
+        const rewardedVideoRecord = this.rewardedVideoHandlers.get(adName);
+        rewardedVideoRecord.loaded = false;
+        rewardedVideoRecord.handler.load().then();
+    }
+
+    public showRewardedVideoAd(adName: string, cb: (isEnded: boolean) => void) {
+        if (!this.rewardedVideoHandlers.has(adName)) return;
+
+        const rewardedVideoRecord = this.rewardedVideoHandlers.get(adName);
+        rewardedVideoRecord.closeCallback = cb;
+
+        if (rewardedVideoRecord.loaded) {
+            rewardedVideoRecord.handler.load().then(() => {
+                rewardedVideoRecord.handler.show().then();
+            });
+        } else {
+            rewardedVideoRecord.handler.show().then();
         }
     }
 
-    loadVideoAd(name) {
-        this.videoLoaded[name] = false;
-        this.videoHandlers[name].load();
-    }
+    public showBannerAd(adName?: string) {
+        adName = adName || 'general';
+        if (!bannerAdUnits[adName]) return;
 
-    showVideoAd(cb, name: string) {
-        const handler = this.videoHandlers[name];
-        if (handler) {
-            this.videoCloses[name] = cb;
-            if (this.videoLoaded[name]) {
-                handler.load();
-                handler.show();
-            } else {
-                handler.show();
-            }
-        }
-    }
-
-    showBannerAd() {
         this.destroyBannerAd();
 
         const frameSize = cc.view.getFrameSize();
         this.bannerHandler = wx.createBannerAd({
-            adUnitId: 'adunit-bc4c247f8cbd5fce',
-            adIntervals: 30,
+            adUnitId: bannerAdUnits[adName],
+            adIntervals: 40,
             style: {
                 left: 0,
                 top: frameSize.height,
@@ -85,18 +113,26 @@ class WxAd {
             this.bannerHandler.style.left = (frameSize.width - res.width) * 0.5;
         });
 
-        this.bannerHandler.show();
-
-        return this.bannerHandler;
+        this.bannerHandler.show().then();
     }
 
-    destroyBannerAd() {
-        if (this.bannerHandler) {
-            this.bannerHandler.offError();
-            this.bannerHandler.offResize();
-            this.bannerHandler.destory();
-            this.bannerHandler = null;
-        }
+    public destroyBannerAd() {
+        if (!this.bannerHandler) return;
+
+        this.bannerHandler.destroy();
+        this.bannerHandler = null;
+    }
+
+    public showInterstitialAd(adName?: string) {
+        adName = adName || 'general';
+        if (!interstitialAdUnits[adName]) return;
+
+        const interstitialAd = wx.createInterstitialAd({
+            adUnitId: interstitialAdUnits[adName]
+        });
+        interstitialAd.load().then(() => {
+            interstitialAd.show().then();
+        });
     }
 }
 
