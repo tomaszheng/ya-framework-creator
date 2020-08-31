@@ -56,7 +56,6 @@ class YaRecycleView extends cc.Component {
     protected _data: any[] = [];
     protected _records: IItemRecord[] = [];
 
-    protected _needRecycle = false;
     protected _size: cc.Size = null;
     protected _totalSize: cc.Size = cc.size(0, 0);
     protected _preScrollOffset: cc.Vec2 = cc.v2();
@@ -81,7 +80,6 @@ class YaRecycleView extends cc.Component {
         this._records = [];
         this._headIndex = 0;
         this._tailIndex = (this._defaultCount >= this._data.length ? this._data.length : this._defaultCount) - 1;
-        this._needRecycle = this._data.length > this._defaultCount;
 
         this.initItems();
         this.adjustItems();
@@ -115,7 +113,6 @@ class YaRecycleView extends cc.Component {
                 this.onItemChange(index, item, index !== this._headIndex);
             }
         }
-        this._needRecycle = this._data.length > this._defaultCount;
 
         this.adjustItems();
         this.adjustContent();
@@ -252,8 +249,6 @@ class YaRecycleView extends cc.Component {
     }
 
     protected onScroll() {
-        if (!this._needRecycle) return;
-
         this.calculateScrollDirection();
 
         if (this.isStretching()) return;
@@ -457,7 +452,8 @@ class YaRecycleView extends cc.Component {
         while (this._headIndex > 0) {
             const record = this._records[this._headIndex];
             const offset = this._scrollView.getScrollOffset();
-            if (record.size.height - record.y > offset.y) {
+            const h = record.size.height * (1 - record.item.anchorY);
+            if (-record.y + h > offset.y) {
                 this.doReuseAt(this._headIndex, --this._headIndex);
             } else return;
         }
@@ -467,7 +463,8 @@ class YaRecycleView extends cc.Component {
         while (this._tailIndex + 1 < this._data.length) {
             const record = this._records[this._tailIndex];
             const offset = this._scrollView.getScrollOffset();
-            if (-this._size.height - record.y < offset.y) {
+            const h = record.size.height * (1 - record.item.anchorY);
+            if (-this._size.height - record.y - h < offset.y) {
                 this.doReuseAt(this._tailIndex, ++this._tailIndex);
             } else return;
         }

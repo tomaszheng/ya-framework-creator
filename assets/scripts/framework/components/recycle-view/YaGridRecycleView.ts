@@ -1,4 +1,5 @@
 import {YaRecycleView} from "./YaRecycleView";
+import {lodash} from "../../libs/LibEntry";
 
 const {ccclass, property} = cc._decorator;
 
@@ -15,8 +16,8 @@ class YaGridRecycleView extends YaRecycleView {
             r = Math.floor(this._tailIndex / this.column) + 1;
             c = this._tailIndex + 1 >= this.column ? this.column : this._tailIndex + 1;
         } else {
-            r = Math.floor(this._tailIndex / this.row) + 1;
-            c = this._tailIndex + 1 >= this.row ? this.row : this._tailIndex + 1;
+            r = this._tailIndex + 1 >= this.row ? this.row : this._tailIndex + 1;
+            c = Math.floor(this._tailIndex / this.row) + 1;
         }
         this._totalSize.height += r * this.gridHeight + (r - 1) * this.gapY;
         this._totalSize.width += c * this.gridWidth + (c - 1) * this.gapX;
@@ -87,6 +88,89 @@ class YaGridRecycleView extends YaRecycleView {
             }
         }
         this.updateRecord(index, node, size, node.x, node.y);
+    }
+
+    protected doReuseRangeTail(startIndex: number, endIndex: number) {
+        let i = startIndex <= this._tailIndex ? this._tailIndex + 1 : startIndex;
+        for (; i < endIndex && i < this._data.length; i++) {
+            this.doReuseAt(i - 1, i);
+            this._tailIndex = i;
+        }
+    }
+
+    protected reuseVerticalHead() {
+        super.reuseVerticalHead();
+
+        const r = Math.floor(this._headIndex / this.column);
+        const startIndex = r * this.column;
+        for (let i = this._headIndex - 1; i >= startIndex; i--) {
+            this.doReuseAt(i + 1, i);
+            this._headIndex = i;
+        }
+    }
+
+    protected reuseVerticalTail() {
+        const curRow = Math.floor(this._tailIndex / this.column);
+        if (this.checkReuseVerticalTail(curRow)) {
+            this.doReuseVerticalTail(curRow);
+            this.doReuseVerticalTail(curRow + 1);
+        } else if (curRow > 0) {
+            const preRow = curRow - 1;
+            if (this.checkReuseVerticalTail(preRow)) {
+                this.doReuseVerticalTail(curRow);
+            }
+        }
+    }
+
+    protected checkReuseVerticalTail(rowIndex: number) {
+        const startIndex = rowIndex * this.column;
+        const record = this._records[startIndex];
+        const offset = this._scrollView.getScrollOffset();
+        const h = record.size.height * (1 - record.item.anchorY);
+        return -this._size.height - record.y - h < offset.y;
+    }
+
+    protected doReuseVerticalTail(rowIndex: number) {
+        const startIndex = rowIndex * this.column;
+        const endIndex = (rowIndex + 1) * this.column;
+        this.doReuseRangeTail(startIndex, endIndex);
+    }
+
+    protected reuseHorizontalHead() {
+        super.reuseHorizontalHead();
+
+        const c = Math.floor(this._headIndex / this.row);
+        const startIndex = c * this.row;
+        for (let i = this._headIndex - 1; i >= startIndex; i--) {
+            this.doReuseAt(i + 1, i);
+            this._headIndex = i;
+        }
+    }
+
+    protected reuseHorizontalTail() {
+        const curColumn = Math.floor(this._tailIndex / this.row);
+        if (this.checkReuseHorizontalTail(curColumn)) {
+            this.doReuseHorizontalTail(curColumn);
+            this.doReuseHorizontalTail(curColumn + 1);
+        } else if (curColumn > 0) {
+            const preColumn = curColumn - 1;
+            if (this.checkReuseHorizontalTail(preColumn)) {
+                this.doReuseHorizontalTail(curColumn);
+            }
+        }
+    }
+
+    protected checkReuseHorizontalTail(rowIndex: number) {
+        const startIndex = rowIndex * this.row;
+        const record = this._records[startIndex];
+        const offset = this._scrollView.getScrollOffset();
+        return record.x - record.size.width * record.item.anchorX - this._size.width < -offset.x;
+    }
+
+    protected doReuseHorizontalTail(rowIndex: number) {
+        const startIndex = rowIndex * this.row;
+        const endIndex = (rowIndex + 1) * this.row;
+        this.doReuseRangeTail(startIndex, endIndex);
     }
 }
 

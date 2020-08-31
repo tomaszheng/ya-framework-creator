@@ -10,6 +10,7 @@ export default class Test extends cc.Component {
     @property(YaRecycleView) verticalRecycleView: YaRecycleView = null;
     @property(YaRecycleView) horizontalRecycleView: YaRecycleView = null;
     @property(YaGridRecycleView) gridRecycleView: YaGridRecycleView = null;
+    @property(YaGridRecycleView) hGridRecycleView: YaGridRecycleView = null;
     @property(cc.Button) btnVerticalPush: cc.Button = null;
     @property(cc.Button) btnVerticalInsert: cc.Button = null;
 
@@ -25,6 +26,7 @@ export default class Test extends cc.Component {
         });
 
         this.gridRecycleView.bindData(lodash.clone(data));
+        this.hGridRecycleView.bindData(lodash.clone(data));
         this.verticalRecycleView.bindData(lodash.clone(data));
         this.horizontalRecycleView.bindData(lodash.clone(data));
 
@@ -34,6 +36,7 @@ export default class Test extends cc.Component {
 
     private onClickPush() {
         this.gridRecycleView.updateItem(30, this._totalCount);
+        this.hGridRecycleView.updateItem(30, this._totalCount);
         this.verticalRecycleView.updateItem(30, this._totalCount);
         this.horizontalRecycleView.updateItem(30, this._totalCount++);
     }
@@ -41,6 +44,7 @@ export default class Test extends cc.Component {
     private onClickInsert() {
         const i = lodash.random(0, 5);
         this.gridRecycleView.updateItem(i, this._totalCount);
+        this.hGridRecycleView.updateItem(i, this._totalCount);
         this.verticalRecycleView.updateItem(i, this._totalCount);
         this.horizontalRecycleView.updateItem(i, this._totalCount++);
     }
