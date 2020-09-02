@@ -1,9 +1,15 @@
+/**
+ * Grid无限列表
+ * 1，支持横向；
+ * 2，支持竖向；
+ * 3，每个Grid大小必须固定；
+ */
 import {YaRecycleView} from "./YaRecycleView";
-import {lodash} from "../../libs/LibEntry";
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, menu} = cc._decorator;
 
 @ccclass
+@menu('Recycle View/Grid')
 class YaGridRecycleView extends YaRecycleView {
     @property({type: cc.Integer, min: 1}) gridWidth = 1;
     @property({type: cc.Integer, min: 1}) gridHeight = 1;

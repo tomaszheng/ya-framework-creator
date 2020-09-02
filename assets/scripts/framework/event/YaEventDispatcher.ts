@@ -6,7 +6,6 @@
 import {Singleton} from "../singleton/Singleton";
 
 class YaEventDispatcher extends Singleton<YaEventDispatcher> {
-
     private _dispatcher: cc.EventTarget = null;
 
     public init() {

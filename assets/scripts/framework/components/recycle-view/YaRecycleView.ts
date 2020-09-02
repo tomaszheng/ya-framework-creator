@@ -3,7 +3,7 @@
  * 1，支持竖向       √
  * 2，支持横向       √
  * 3，支持任意尺寸    √
- * 4，支持Grid      x
+ * 4，支持Grid      √
  * 5，支持流式       x
  * Item数据更新方式：
  * 1，尾部追加数据  √
@@ -33,9 +33,12 @@ enum ScrollDirection {
     RIGHT_TO_LEFT,
 }
 
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, requireComponent, menu, disallowMultiple} = cc._decorator;
 
 @ccclass
+@requireComponent(cc.ScrollView)
+@menu('Recycle View/General')
+@disallowMultiple
 class YaRecycleView extends cc.Component {
     @property({type: cc.Integer, min: 1}) row = 1;
     @property({type: cc.Integer, min: 1}) column = 1;
