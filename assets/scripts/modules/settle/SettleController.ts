@@ -1,8 +1,10 @@
-import {ya} from "../../framework/ya";
 import {EventConfig} from "../../config/EventConfig";
-import ResourceConfig from "../../config/resource/ResourceConfig";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {dialogManager} from "../../framework/manager/DialogManager";
+import {DialogShowTypes} from "../../framework/mvc/BaseDialog";
+import {resourceManager} from "../../framework/manager/ResourceManager";
 
-class SettleController extends ya.Controller {
+class SettleController extends BaseController {
     protected initGlobalListener() {
         super.initGlobalListener();
         this.addGlobalListener(EventConfig.EVT_SHOW_SETTLE, this.onShowSettle, this);
@@ -10,9 +12,9 @@ class SettleController extends ya.Controller {
 
     onShowSettle (data: any) {
         const prefabPath = 'resources/prefab/dialog_settle';
-        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=> {
-            ya.dialogManager.show(prefabPath, data, {
-                showType: ya.DialogShowTypes.SCALE,
+        resourceManager.load(prefabPath, cc.Prefab).then(()=> {
+            dialogManager.show(prefabPath, data, {
+                showType: DialogShowTypes.SCALE,
                 dataLoaded: true,
             });
         });

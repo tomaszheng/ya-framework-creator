@@ -1,10 +1,10 @@
-import {ya} from "../../framework/ya";
 import {Toast} from "./sub-view/Toast";
+import {BaseView} from "../../framework/mvc/BaseView";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class CommonView extends ya.View {
+class CommonView extends BaseView {
 
     poolToasts: cc.NodePool = null;
 

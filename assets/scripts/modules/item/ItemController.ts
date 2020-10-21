@@ -1,14 +1,16 @@
-import {ya} from "../../framework/ya";
 import {EventConfig} from "../../config/EventConfig";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {dialogManager} from "../../framework/manager/DialogManager";
+import {DialogShowTypes} from "../../framework/mvc/BaseDialog";
 
-class ItemController extends ya.Controller {
+class ItemController extends BaseController {
     initGlobalListener () {
         this.addGlobalListener(EventConfig.EVT_SHOW_ITEM, this.onShowItem, this);
     }
 
     onShowItem (data: any) {
-        ya.dialogManager.show('Prefab/dialog_item', data, {
-            showType: ya.DialogShowTypes.SCALE,
+        dialogManager.show('Prefab/dialog_item', data, {
+            showType: DialogShowTypes.SCALE,
             dataLoaded: true,
         });
     }

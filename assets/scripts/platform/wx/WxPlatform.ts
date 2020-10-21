@@ -3,7 +3,6 @@
 */
 
 import {GameConstant} from "../../config/GameConstant";
-import {EventConfig} from "../../config/EventConfig";
 import {GameText} from "../../config/GameText";
 import {BasePlatform, ResultCallback} from "../BasePlatform";
 
@@ -12,10 +11,11 @@ class WxPlatform extends BasePlatform {
     btnUserInfo: wx.UserInfoButton = null;
     btnGameClub: wx.GameClubButton = null;
 
-    private _isAuthorized = false;
     public get isAuthorized() {
         return this._isAuthorized;
     }
+
+    private _isAuthorized = false;
 
     loginCode = '';
 

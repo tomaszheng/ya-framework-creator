@@ -3,11 +3,13 @@
 任何通用的、全局性的东西都可以放到这里
 */
 
-import {ya} from "../../framework/ya";
 import {EventConfig} from "../../config/EventConfig";
 import {CommonView} from "./CommonView";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {layerManager} from "../../framework/manager/LayerManager";
+import {eventDispatcher} from "../../framework/event/EventDispatcher";
 
-class CommonController extends ya.Controller {
+class CommonController extends BaseController {
     public get view(): CommonView {
         return this._view as CommonView;
     }
@@ -17,16 +19,16 @@ class CommonController extends ya.Controller {
     }
 
     public get root () {
-        return ya.layerManager.top;
+        return layerManager.top;
     }
 
-    initGlobalListener() {
+    protected initGlobalListener() {
         cc.game.on(cc.game.EVENT_SHOW, this.onShow, this);
         cc.game.on(cc.game.EVENT_HIDE, this.onHide, this);
 
-        ya.eventDispatcher.add(EventConfig.SHOW_TOAST,       this.onShowToast, this);        // 显示toast
-        ya.eventDispatcher.add(EventConfig.SHOW_WAITING,     this.onShowWaiting, this);     // 显示等待界面
-        ya.eventDispatcher.add(EventConfig.REMOVE_WAITING,  this.onRemoveWaiting, this);   // 移除等待界面
+        eventDispatcher.add(EventConfig.SHOW_TOAST,       this.onShowToast,     this);  // 显示toast
+        eventDispatcher.add(EventConfig.SHOW_WAITING,     this.onShowWaiting,   this);  // 显示等待界面
+        eventDispatcher.add(EventConfig.REMOVE_WAITING,   this.onRemoveWaiting, this);  // 移除等待界面
     }
 
     onShow (params: any) {

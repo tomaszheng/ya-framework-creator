@@ -1,11 +1,16 @@
-import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
 import {EventConfig} from "../../config/EventConfig";
+import {BaseView} from "../../framework/mvc/BaseView";
+import {SoundManager, soundManager} from "../../framework/manager/SoundManager";
+import {buttonHelper} from "../../framework/utils/ButtonHelper";
+import {eventDispatcher} from "../../framework/event/EventDispatcher";
+import {viewManager} from "../../framework/manager/ViewManager";
+import {storageManager} from "../../framework/manager/StorageManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class MainView extends ya.View {
+class MainView extends BaseView {
     @property(cc.Node) imgBg: cc.Node = null;
     @property(cc.Node) btnSound: cc.Node = null;
     @property(cc.Node) btnCustomerService: cc.Node = null;
@@ -45,7 +50,7 @@ class MainView extends ya.View {
             )
             .start();
 
-        const enabled = ya.soundManager.music;
+        const enabled = soundManager.music;
         this.btnSound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
 
         this.scheduleOnce(()=>{
@@ -56,31 +61,31 @@ class MainView extends ya.View {
     protected initTouchEvent() {
         super.initTouchEvent();
 
-        ya.button.addClick(this.btnSound, ()=>{
+        buttonHelper.addClick(this.btnSound, ()=>{
             this.onClickSound();
         }, this);
-        ya.button.addClick(this.btnCustomerService, ()=>{
+        buttonHelper.addClick(this.btnCustomerService, ()=>{
             this.onClickCustomerService();
         }, this);
-        ya.button.addClick(this.btnGameClub, ()=>{
+        buttonHelper.addClick(this.btnGameClub, ()=>{
             this.onClickGameClub();
         }, this);
-        ya.button.addClick(this.btnShare, ()=>{
+        buttonHelper.addClick(this.btnShare, ()=>{
             this.onClickShare();
         }, this);
-        ya.button.addClick(this.btnRank, ()=>{
+        buttonHelper.addClick(this.btnRank, ()=>{
             this.onClickRank();
         }, this);
-        ya.button.addClick(this.btnMore, ()=>{
+        buttonHelper.addClick(this.btnMore, ()=>{
             this.onClickMoreGame();
         }, this);
-        ya.button.addClick(this.btnRecommend, ()=>{
+        buttonHelper.addClick(this.btnRecommend, ()=>{
             this.onClickRecommend();
         }, this);
-        ya.button.addClick(this.btnHot, ()=>{
+        buttonHelper.addClick(this.btnHot, ()=>{
             this.onClickHot();
         }, this);
-        ya.button.addClick(this.btnPlayed, ()=>{
+        buttonHelper.addClick(this.btnPlayed, ()=>{
             this.onClickPlayed();
         }, this);
     }
@@ -153,11 +158,11 @@ class MainView extends ya.View {
     }
 
     onClickMoreGame() {
-        ya.eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
+        eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
     }
 
     onClickRank() {
-        ya.viewManager.show('rank');
+        viewManager.show('rank');
     }
 
     onClickShare() {
@@ -205,18 +210,18 @@ class MainView extends ya.View {
     }
 
     onClickSound () {
-        const enabled = !ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
+        const enabled = !storageManager.getBool(SoundManager.EFFECT_ENABLED, true);
         if (enabled) {
-            ya.soundManager.playMusic('Sound/bmg', true);
+            soundManager.playMusic('Sound/bmg', true);
         }
         else {
-            ya.soundManager.stopMusic();
+            soundManager.stopMusic();
         }
 
         this.btnSound.getChildByName("Label").getComponent(cc.Label).string = enabled ? GameText.str_005 : GameText.str_006;
 
-        ya.soundManager.music = enabled;
-        ya.soundManager.effect = enabled;
+        soundManager.music = enabled;
+        soundManager.effect = enabled;
     }
 
     runRelativeAction () {

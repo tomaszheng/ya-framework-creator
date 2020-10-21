@@ -1,9 +1,11 @@
-import {ya} from "../../../framework/ya";
+import {BaseDialog} from "../../../framework/mvc/BaseDialog";
+import {buttonHelper} from "../../../framework/utils/ButtonHelper";
+import {utils} from "../../../framework/utils/Utils";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class ArchiveView extends ya.Dialog {
+export default class ArchiveView extends BaseDialog {
     @property(cc.Node) btnClose: cc.Node = null;
     @property(cc.Node) btnContinue: cc.Node = null;
     @property(cc.Node) btnRestart: cc.Node = null;
@@ -21,15 +23,15 @@ export default class ArchiveView extends ya.Dialog {
     protected initTouchEvent() {
         super.initTouchEvent();
 
-        ya.button.addClick(this.btnClose, () => {
+        buttonHelper.addClick(this.btnClose, () => {
             this.onClickClose();
-        });
-        ya.button.addClick(this.btnContinue, () => {
+        }, this);
+        buttonHelper.addClick(this.btnContinue, () => {
             this.onClickContinue();
-        });
-        ya.button.addClick(this.btnRestart, () => {
+        }, this);
+        buttonHelper.addClick(this.btnRestart, () => {
             this.onClickRestart();
-        });
+        }, this);
     }
 
     onClickClose() {
@@ -39,12 +41,12 @@ export default class ArchiveView extends ya.Dialog {
     onClickContinue() {
         this.removeSelf();
 
-        ya.utils.doCallback(this.continueCallback);
+        utils.doCallback(this.continueCallback);
     }
 
     onClickRestart() {
         this.removeSelf();
 
-        ya.utils.doCallback(this.restartCallback);
+        utils.doCallback(this.restartCallback);
     }
 }

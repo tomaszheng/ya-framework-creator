@@ -1,8 +1,4 @@
-/*
-帮助类
-*/
-
-class YaUtils {
+class Utils {
     public static doCallback(callback?: (...args) => void, args?: any) {
         if (callback) callback(args);
     }
@@ -31,5 +27,5 @@ class YaUtils {
     }
 }
 
-const yaUtils = YaUtils;
-export {yaUtils};
+const utils = Utils;
+export {utils};

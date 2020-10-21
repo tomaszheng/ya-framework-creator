@@ -1,7 +1,7 @@
-import {YaBaseComponent} from "../base/YaBaseComponent";
-import {yaResourceManager} from "../manager/ya-resource-manager";
+import {BaseComponent} from "../base/BaseComponent";
+import {resourceManager} from "../manager/ResourceManager";
 
-class YaUIHelper {
+class UIUtils {
     public static getCanvasSize() {
         return cc.find('Canvas').getContentSize();
     }
@@ -14,9 +14,9 @@ class YaUIHelper {
      */
     public static async instantiatePath(prefabPath: string, data?: any, parent?: cc.Node) {
         return new Promise<cc.Node>((resolve, reject) => {
-            yaResourceManager.load(prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
+            resourceManager.load(prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
                 const node = this.instantiate(prefab, data, parent);
-                const component = node.getComponent(YaBaseComponent);
+                const component = node.getComponent(BaseComponent);
                 if (component) {
                     component.instantiatedPrefabPath = prefabPath;
                     component.addRef(prefabPath, cc.Prefab);
@@ -31,11 +31,11 @@ class YaUIHelper {
     public static instantiate(prefab: cc.Prefab, data?: any, parent?: cc.Node): cc.Node {
         const node: cc.Node = cc.instantiate(prefab);
         node.parent = parent;
-        const component = node.getComponent(YaBaseComponent);
+        const component = node.getComponent(BaseComponent);
         if (component) component.init(data);
         return node;
     }
 }
 
-const yaUIHelper = YaUIHelper;
-export {yaUIHelper};
+const uiUtils = UIUtils;
+export {uiUtils};

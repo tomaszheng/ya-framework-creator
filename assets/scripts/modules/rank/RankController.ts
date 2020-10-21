@@ -1,10 +1,8 @@
-import {ya} from "../../framework/ya";
 import {RankView} from "./RankView";
+import {BaseController} from "../../framework/mvc/BaseController";
 
-class RankController extends ya.Controller {
-    public get view(): RankView {
-        return this._view as RankView;
-    }
+class RankController extends BaseController {
+    protected _view: RankView;
 
     public get prefabPath(): string {
         return 'rankView/prefabs/rank';

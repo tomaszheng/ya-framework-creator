@@ -4,12 +4,12 @@
 */
 
 import {Singleton} from "../singleton/Singleton";
-import {YaDialog, YaDialogCharacter, YaDialogShowTypes} from "../mvc/ya-dialog";
-import {yaLayerManager} from "./ya-layer-manager";
-import {lodash} from "../libs/LibEntry";
+import {BaseDialog, DialogCharacter, DialogShowTypes} from "../mvc/BaseDialog";
+import {layerManager} from "./LayerManager";
+import {lodash} from "../libs/lib";
 
 interface IOption {
-    showType?: YaDialogShowTypes;
+    showType?: DialogShowTypes;
     character?: number;
     dataLoaded?: boolean;
 }
@@ -22,10 +22,10 @@ interface IWaitingData {
     data?: any;
 }
 
-class YaDialogManager extends Singleton<YaDialogManager> {
+class DialogManager extends Singleton<DialogManager> {
 
     public get root() {
-        return yaLayerManager.dialog;
+        return layerManager.dialog;
     }
 
     public set zIndex(zIndex: number) {
@@ -44,10 +44,10 @@ class YaDialogManager extends Singleton<YaDialogManager> {
 
     private static generateDefaultWaitingData(prefabOrClassname: string, data: any, option: IOption) {
         if (!option.showType) {
-            option.showType = YaDialogShowTypes.SCALE;
+            option.showType = DialogShowTypes.SCALE;
         }
         if (!option.character) {
-            option.character = YaDialogCharacter.UNIQUE;
+            option.character = DialogCharacter.UNIQUE;
         }
         option.dataLoaded = !!option.dataLoaded;
 
@@ -70,7 +70,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
         return waitingData;
     }
 
-    private static isSameClass(waitingData: IWaitingData, dialog: YaDialog) {
+    private static isSameClass(waitingData: IWaitingData, dialog: BaseDialog) {
         if (waitingData.classname && cc.js.getClassName(dialog) === waitingData.classname) return true;
         return waitingData.prefabPath && dialog.instantiatedPrefabPath === waitingData.prefabPath;
     }
@@ -133,7 +133,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
      * @param option
      */
     public push(prefabOrClassname: string, data: any, option: IOption) {
-        const waitingData = YaDialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
+        const waitingData = DialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
         this._waitingList.splice(0, 0, waitingData);
     }
 
@@ -142,8 +142,8 @@ class YaDialogManager extends Singleton<YaDialogManager> {
 
         if (this._dialogs.length > 0) {
             const dialog = this._dialogs[this._dialogs.length - 1];
-            if (dialog.node.active && (dialog.character & YaDialogCharacter.TOP) > 0) {
-                if ((this._waitingList[0].character & YaDialogCharacter.TOP) > 0) {
+            if (dialog.node.active && (dialog.character & DialogCharacter.TOP) > 0) {
+                if ((this._waitingList[0].character & DialogCharacter.TOP) > 0) {
                     return;
                 }
             }
@@ -165,7 +165,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
     private _hide() {
         if (this._dialogs.length > 0) {
             const dialog = this._dialogs[this._dialogs.length - 1];
-            if ((dialog.character & YaDialogCharacter.RESIDENT) > 0) {
+            if ((dialog.character & DialogCharacter.RESIDENT) > 0) {
                 dialog.hide();
             }
         }
@@ -175,7 +175,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
         if (this._dialogs.length <= 0) return;
 
         this._dialogs.some((dialog, i) => {
-            if (YaDialogManager.isSameClass(waitingData, dialog) && (dialog.character & YaDialogCharacter.UNIQUE) > 0) {
+            if (DialogManager.isSameClass(waitingData, dialog) && (dialog.character & DialogCharacter.UNIQUE) > 0) {
                 dialog.node.destroy();
                 this._dialogs.splice(i, 1);
             }
@@ -186,7 +186,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
         // 打开一个界面之前先检查弹窗层状态
         // this.reset();
 
-        const waitingData = YaDialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
+        const waitingData = DialogManager.generateDefaultWaitingData(prefabOrClassname, data, option);
 
         this._hide();
         this._unique(waitingData);
@@ -198,7 +198,7 @@ class YaDialogManager extends Singleton<YaDialogManager> {
 
     private _show(waitingData: IWaitingData) {
         const handler = cc.instantiate(cc.loader.getRes(waitingData.prefabPath));
-        const dialog = handler.getComponent(YaDialog);
+        const dialog = handler.getComponent(BaseDialog);
 
         this._dialogs.push(dialog);
 
@@ -261,5 +261,5 @@ class YaDialogManager extends Singleton<YaDialogManager> {
     }
 }
 
-const yaDialogManager = YaDialogManager.instance(YaDialogManager);
-export {yaDialogManager};
+const dialogManager = DialogManager.instance(DialogManager);
+export {dialogManager};

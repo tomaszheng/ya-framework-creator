@@ -2,10 +2,16 @@
 平台接口的基础类
 */
 
-import {ya} from "../framework/ya";
 import {EventConfig} from "../config/EventConfig";
+import {eventDispatcher} from "../framework/event/EventDispatcher";
 
 type ResultCallback = (code: number, res?: any) => void;
+
+interface NavigateToProgram {
+    path?: string;
+    extraData?: string;
+    envVersion?: string;
+}
 
 class BasePlatform {
     constructor() {
@@ -14,13 +20,13 @@ class BasePlatform {
 
     protected onHide() {
         cc.game.on(cc.game.EVENT_HIDE, ()=>{
-            ya.eventDispatcher.dispatch(EventConfig.ON_HIDE);
+            eventDispatcher.dispatch(EventConfig.ON_HIDE);
         }, this);
     }
 
     protected onShow() {
         cc.game.on(cc.game.EVENT_SHOW, (params:any) => {
-            ya.eventDispatcher.dispatch(EventConfig.ON_SHOW, params);
+            eventDispatcher.dispatch(EventConfig.ON_SHOW, params);
         }, this);
     }
 
@@ -78,7 +84,7 @@ class BasePlatform {
 
     }
 
-    public navigateToProgram(appId: string, data: { path?: string, extraData?: string, envVersion?: string }, cb?: ResultCallback) {
+    public navigateToProgram(appId: string, data: NavigateToProgram, cb?: ResultCallback) {
 
     }
 

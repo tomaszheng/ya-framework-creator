@@ -39,8 +39,8 @@ C.GAME_MODE.STAR = 0;
 C.GAME_MODE.RUSSIA = 1;
 C.GAME_MODE.HAUL = 2;
 C.GAME_MODE.UNION = 3;
-C.GAME_MODE.DIGIT = 4; //数字三消
-C.GAME_MODE.POP = 5; //开心消消乐模式
+C.GAME_MODE.DIGIT = 4; // 数字三消
+C.GAME_MODE.POP = 5; // 开心消消乐模式
 
 C.ITEM_MODE = {};
 C.ITEM_MODE.MIX = 0;
@@ -58,4 +58,4 @@ C.LIKE.UNION_SUPERSTAR = 20;
 
 
 const GameConstant = C;
-export { GameConstant }
+export { GameConstant };

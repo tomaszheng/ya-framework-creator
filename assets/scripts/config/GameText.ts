@@ -47,4 +47,4 @@ T.item_dye = "换色";
 
 
 const GameText = T;
-export { GameText }
+export { GameText };

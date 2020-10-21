@@ -1,6 +1,6 @@
-import {lodash} from "../libs/LibEntry";
+import {lodash} from "../libs/lib";
 
-class YaFunctions {
+class Functions {
     /**
      * 打乱一个数组
      */
@@ -60,5 +60,5 @@ class YaFunctions {
     }
 }
 
-const yaFunctions = YaFunctions;
-export {yaFunctions};
+const functions = Functions;
+export {functions};

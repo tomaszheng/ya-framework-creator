@@ -35,12 +35,12 @@ UC.WIDTH = 105;
 UC.MAX_NUM = 50;
 
 UC.REVIVE_NUM = 2;
-UC.REVIVE_MAX_SHARE = 6; //最多分享复活几次
+UC.REVIVE_MAX_SHARE = 6; // 最多分享复活几次
 UC.ITEM_NUM = 2;
 UC.ITEM_MAX_SHARE = 10;
 
 UC.GOAL_AWARD_SCORE = 2e4;
 UC.GOAL_AWARD_SCORE_INC = 1e4;
 
-let UnionConfig = UC;
-export default UnionConfig;
+const UnionConfig = UC;
+export default {UnionConfig};

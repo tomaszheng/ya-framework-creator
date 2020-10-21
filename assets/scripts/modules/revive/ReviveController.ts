@@ -1,9 +1,10 @@
-import ResourceConfig from "../../config/resource/ResourceConfig";
-import {ya} from "../../framework/ya";
 import {EventConfig} from "../../config/EventConfig";
-import {ReviveView} from "./ReviveView";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {dialogManager} from "../../framework/manager/DialogManager";
+import {DialogShowTypes} from "../../framework/mvc/BaseDialog";
+import {resourceManager} from "../../framework/manager/ResourceManager";
 
-class ReviveController extends ya.Controller {
+class ReviveController extends BaseController {
     protected initGlobalListener() {
         super.initGlobalListener();
 
@@ -12,9 +13,9 @@ class ReviveController extends ya.Controller {
 
     onShowRevive (data: any) {
         const prefabPath = 'prefab/dialog_revive';
-        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=>{
-            ya.dialogManager.show(prefabPath, data, {
-                showType: ya.DialogShowTypes.SCALE,
+        resourceManager.load(prefabPath, cc.Prefab).then(()=>{
+            dialogManager.show(prefabPath, data, {
+                showType: DialogShowTypes.SCALE,
                 dataLoaded: true,
             });
         });

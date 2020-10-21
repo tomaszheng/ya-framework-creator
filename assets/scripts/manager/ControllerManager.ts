@@ -1,15 +1,16 @@
-import {ya} from "../framework/ya";
 import {LoadingController} from "../modules/loading/LoadingController";
 import {CommonController} from "../modules/common/CommonController";
 import {RankController} from "../modules/rank/RankController";
 import {MainController} from "../modules/main/MainController";
+import {Singleton} from "../framework/singleton/Singleton";
+import {viewManager} from "../framework/manager/ViewManager";
 
-class ControllerManager extends ya.Singleton<ControllerManager> {
+class ControllerManager extends Singleton<ControllerManager> {
     public init() {
-        ya.viewManager.register("common",   new CommonController());
-        ya.viewManager.register("loading",  new LoadingController());
-        ya.viewManager.register("main",     new MainController());
-        ya.viewManager.register("rank",     new RankController());
+        viewManager.register("common",   new CommonController());
+        viewManager.register("loading",  new LoadingController());
+        viewManager.register("main",     new MainController());
+        viewManager.register("rank",     new RankController());
     }
 }
 

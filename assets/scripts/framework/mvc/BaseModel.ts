@@ -2,8 +2,8 @@
 缓存基类
 */
 
-class YaModel extends cc.EventTarget {
+class BaseModel extends cc.EventTarget {
     public EVENT_SERVER_LOADED = 'eventServerLoaded';
 }
 
-export {YaModel};
+export {BaseModel};

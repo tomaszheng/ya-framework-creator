@@ -1,9 +1,9 @@
-import {YaRecycleItem} from "../../framework/components/recycle-view/YaRecycleItem";
+import {RecycleItem} from "../../framework/components/recycle-view/RecycleItem";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class TestHorizontalItem extends YaRecycleItem {
+class TestHorizontalItem extends RecycleItem {
     @property(cc.Sprite) imgBg: cc.Sprite = null;
     @property(cc.Label) lblContent: cc.Label = null;
 

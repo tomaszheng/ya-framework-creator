@@ -1,11 +1,15 @@
 import {GameConstant} from "../../config/GameConstant";
 import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
+import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {buttonHelper} from "../../framework/utils/ButtonHelper";
+import {utils} from "../../framework/utils/Utils";
+import {viewManager} from "../../framework/manager/ViewManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class SettleView extends ya.Dialog {
+class SettleView extends BaseDialog {
     @property(cc.Label) lblCurScore: cc.Label = null;
     @property(cc.Node) imgRank: cc.Node = null;
     @property(cc.Node) btnClose: cc.Node = null;
@@ -70,21 +74,21 @@ class SettleView extends ya.Dialog {
 
     protected initTouchEvent() {
         super.initTouchEvent();
-        ya.button.addClick(this.btnClose, ()=>{
+        buttonHelper.addClick(this.btnClose, ()=>{
             this.onClickClose();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnShare, ()=>{
+        buttonHelper.addClick(this.btnShare, ()=>{
             this.onClickShare();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnMain, ()=>{
+        buttonHelper.addClick(this.btnMain, ()=>{
             this.onClickMain();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnRestart, ()=>{
+        buttonHelper.addClick(this.btnRestart, ()=>{
             this.onClickRestart();
-        });
+        }, this);
     }
 
     protected update(dt: number) {
@@ -92,7 +96,7 @@ class SettleView extends ya.Dialog {
 
         const wx = 'wx';
         if (this.isSupportWx) {
-            this._wxTex.initWithElement(window[wx].getOpenDataContext().canvas);
+            // this._wxTex.initWithElement(window[wx].getOpenDataContext().canvas);
             this._wxTex.handleLoadedTexture();
             this._wxSpriteFrame.setTexture(this._wxTex);
             this.imgRank.getComponent(cc.Sprite).spriteFrame = this._wxSpriteFrame;
@@ -106,7 +110,7 @@ class SettleView extends ya.Dialog {
     onClickClose () {
         this.removeSelf();
 
-        ya.viewManager.show("main", null, true);
+        viewManager.show("main", null, true);
     }
 
     onClickShare () {
@@ -131,13 +135,13 @@ class SettleView extends ya.Dialog {
     onClickRestart () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.restartCb);
+        utils.doCallback(this.restartCb);
     }
 
     onClickMain () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.mainCb);
+        utils.doCallback(this.mainCb);
     }
 }
 

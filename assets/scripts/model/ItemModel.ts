@@ -1,14 +1,10 @@
-
-/*
-道具
-*/
-
-import {ya} from "../framework/ya";
 import {StorageConfig} from "../config/StorageConfig";
 import {GameConstant} from "../config/GameConstant";
 import {EventConfig} from "../config/EventConfig";
+import {BaseModel} from "../framework/mvc/BaseModel";
+import {storageManager} from "../framework/manager/StorageManager";
 
-class ItemModel extends ya.Model {
+class ItemModel extends BaseModel {
 
     itemDyeNum = 0;
     itemMixNum = 0;
@@ -17,9 +13,9 @@ class ItemModel extends ya.Model {
     constructor () {
         super();
 
-        this.itemDyeNum = ya.localStorage.getInt(StorageConfig.ITEM_DYE_NUM, 0);
-        this.itemMixNum = ya.localStorage.getInt(StorageConfig.ITEM_MIX_NUM, 0);
-        this.itemBombNum = ya.localStorage.getInt(StorageConfig.ITEM_BOMB_NUM, 0);
+        this.itemDyeNum = localStorage.getInt(StorageConfig.ITEM_DYE_NUM, 0);
+        this.itemMixNum = localStorage.getInt(StorageConfig.ITEM_MIX_NUM, 0);
+        this.itemBombNum = localStorage.getInt(StorageConfig.ITEM_BOMB_NUM, 0);
     }
 
     getItemNum (mode: number): number {
@@ -36,21 +32,21 @@ class ItemModel extends ya.Model {
     }
 
     setItemNum (mode: number, n: number) {
-        let skey = "";
+        let sKey = "";
         switch(mode) {
             case GameConstant.ITEM_MODE.MIX:
-                skey = StorageConfig.ITEM_MIX_NUM;
+                sKey = StorageConfig.ITEM_MIX_NUM;
                 this.itemMixNum = n; break;
             case GameConstant.ITEM_MODE.DYE:
-                skey = StorageConfig.ITEM_DYE_NUM;
+                sKey = StorageConfig.ITEM_DYE_NUM;
                 this.itemDyeNum = n; break;
             case GameConstant.ITEM_MODE.BOMB:
-                skey = StorageConfig.ITEM_BOMB_NUM;
+                sKey = StorageConfig.ITEM_BOMB_NUM;
                 this.itemBombNum = n; break;
         }
 
-        if (skey !== "") {
-            ya.localStorage.setItem(skey, n);
+        if (sKey !== "") {
+            storageManager.setItem(sKey, n);
             this.emit(EventConfig.MD_ITEM_NUM_CHANGE, {mode, num: n});
         }
     }

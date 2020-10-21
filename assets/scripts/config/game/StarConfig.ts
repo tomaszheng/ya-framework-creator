@@ -42,12 +42,12 @@ SC.GOAL_INC = 3500;
 SC.AWARD = 2000;
 
 SC.REVIVE_NUM = 2;
-SC.REVIVE_MAX_SHARE = 6; //最多分享复活几次
+SC.REVIVE_MAX_SHARE = 6; // 最多分享复活几次
 SC.ITEM_NUM = 2;
 SC.ITEM_MAX_SHARE = 10;
 
 SC.GOAL_AWARD_SCORE = 2e4;
 SC.GOAL_AWARD_SCORE_INC = 1e4;
 
-let StarConfig = SC;
-export default StarConfig;
+const StarConfig = SC;
+export default {StarConfig};

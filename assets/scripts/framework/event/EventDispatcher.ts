@@ -5,7 +5,7 @@
 
 import {Singleton} from "../singleton/Singleton";
 
-class YaEventDispatcher extends Singleton<YaEventDispatcher> {
+class EventDispatcher extends Singleton<EventDispatcher> {
     private _dispatcher: cc.EventTarget = null;
 
     public init() {
@@ -37,5 +37,5 @@ class YaEventDispatcher extends Singleton<YaEventDispatcher> {
     }
 }
 
-const yaEventDispatcher = YaEventDispatcher.instance(YaEventDispatcher);
-export {yaEventDispatcher};
+const eventDispatcher = EventDispatcher.instance(EventDispatcher);
+export {eventDispatcher};

@@ -7,12 +7,12 @@
 【注意1】弹窗是特殊的视图，因此继承于YaView
 */
 
-import {yaDialogManager} from "../manager/ya-dialog-manager";
-import {YaView} from "./ya-view";
+import {dialogManager} from "../manager/DialogManager";
+import {BaseView} from "./BaseView";
 
 const {ccclass} = cc._decorator;
 
-enum YaDialogShowTypes {
+enum DialogShowTypes {
     NONE = 0,
 
     /**
@@ -36,7 +36,7 @@ enum YaDialogShowTypes {
     CUSTOM,
 }
 
-const YaDialogCharacter = {
+const DialogCharacter = {
     NONE: 0,
 
     /**
@@ -56,7 +56,7 @@ const YaDialogCharacter = {
 };
 
 @ccclass
-class YaDialog extends YaView {
+class BaseDialog extends BaseView {
     public set id(i) {
         this._id = i;
     }
@@ -92,8 +92,8 @@ class YaDialog extends YaView {
     private _actionEnter: cc.Tween<any>;
 
     protected _id = -1;
-    protected _showType = YaDialogShowTypes.NONE;
-    protected _character = YaDialogCharacter.NONE;
+    protected _showType = DialogShowTypes.NONE;
+    protected _character = DialogCharacter.NONE;
 
     protected initTouchEvent() {
         super.initTouchEvent();
@@ -130,18 +130,18 @@ class YaDialog extends YaView {
         this._oldOriginalPosition = this.node.position;
 
         switch (this._showType) {
-            case YaDialogShowTypes.NONE: {
+            case DialogShowTypes.NONE: {
                 this.node.active = true;
                 this.onEnterCompleted();
                 break;
             }
-            case YaDialogShowTypes.SCALE: {
+            case DialogShowTypes.SCALE: {
                 this.runEnterScaleAction(() => {
                     this.onEnterCompleted();
                 });
                 break;
             }
-            case YaDialogShowTypes.CUSTOM: {
+            case DialogShowTypes.CUSTOM: {
                 this.runEnterCustomAction(() => {
                     this.onEnterCompleted();
                 });
@@ -160,7 +160,7 @@ class YaDialog extends YaView {
 
     public close() {
         switch (this._showType) {
-            case YaDialogShowTypes.SCALE: {
+            case DialogShowTypes.SCALE: {
                 this.runExitScaleAction(() => {
                     this.onExitCompleted();
                 });
@@ -201,7 +201,7 @@ class YaDialog extends YaView {
     }
 
     public removeSelf() {
-        yaDialogManager.remove(this.id);
+        dialogManager.remove(this.id);
     }
 
     private runEnterScaleAction(callback: () => void) {
@@ -242,4 +242,4 @@ class YaDialog extends YaView {
     }
 }
 
-export {YaDialog, YaDialogShowTypes, YaDialogCharacter};
+export {BaseDialog, DialogShowTypes, DialogCharacter};

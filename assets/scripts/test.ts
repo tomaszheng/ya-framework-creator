@@ -1,16 +1,17 @@
-import {lodash} from "./framework/libs/LibEntry";
-import {YaRecycleView} from "./framework/components/recycle-view/YaRecycleView";
+import {lodash} from "./framework/libs/lib";
+import {RecycleView} from "./framework/components/recycle-view/RecycleView";
 import {ya} from "./framework/ya";
-import {YaGridRecycleView} from "./framework/components/recycle-view/YaGridRecycleView";
+import {GridRecycleView} from "./framework/components/recycle-view/GridRecycleView";
+import {buttonHelper} from "./framework/utils/ButtonHelper";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Test extends cc.Component {
-    @property(YaRecycleView) verticalRecycleView: YaRecycleView = null;
-    @property(YaRecycleView) horizontalRecycleView: YaRecycleView = null;
-    @property(YaGridRecycleView) gridRecycleView: YaGridRecycleView = null;
-    @property(YaGridRecycleView) hGridRecycleView: YaGridRecycleView = null;
+    @property(RecycleView) verticalRecycleView: RecycleView = null;
+    @property(RecycleView) horizontalRecycleView: RecycleView = null;
+    @property(GridRecycleView) gridRecycleView: GridRecycleView = null;
+    @property(GridRecycleView) hGridRecycleView: GridRecycleView = null;
     @property(cc.Button) btnVerticalPush: cc.Button = null;
     @property(cc.Button) btnVerticalInsert: cc.Button = null;
 
@@ -30,8 +31,8 @@ export default class Test extends cc.Component {
         this.verticalRecycleView.bindData(lodash.clone(data));
         this.horizontalRecycleView.bindData(lodash.clone(data));
 
-        ya.button.addClick(this.btnVerticalPush.node, this.onClickPush, this);
-        ya.button.addClick(this.btnVerticalInsert.node, this.onClickInsert, this);
+        buttonHelper.addClick(this.btnVerticalPush.node, this.onClickPush, this);
+        buttonHelper.addClick(this.btnVerticalInsert.node, this.onClickInsert, this);
     }
 
     private onClickPush() {

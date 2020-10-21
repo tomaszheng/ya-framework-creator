@@ -2,12 +2,9 @@ import {BasePlatform} from "../platform/BasePlatform";
 import {WxPlatform} from "../platform/wx/WxPlatform";
 import {BaseAd} from "../platform/BaseAd";
 import {WxAd} from "../platform/wx/WxAd";
-import {ya} from "../framework/ya";
+import {Singleton} from "../framework/singleton/Singleton";
 
-class PlatformManager extends ya.Singleton<PlatformManager> {
-    private _platform: BasePlatform = null;
-    private _ad: BaseAd = null;
-
+class PlatformManager extends Singleton<PlatformManager> {
     public get platform() {
         return this._platform;
     }
@@ -15,6 +12,9 @@ class PlatformManager extends ya.Singleton<PlatformManager> {
     public get ad() {
         return this._ad;
     }
+
+    private _ad: BaseAd = null;
+    private _platform: BasePlatform = null;
 
     public init() {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {

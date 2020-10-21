@@ -14,8 +14,8 @@
  * 1，正常滑动     √
  * 2，scrollTo   ×
  */
-import {YaRecycleItem} from "./YaRecycleItem";
-import {lodash} from "../../libs/LibEntry";
+import {RecycleItem} from "./RecycleItem";
+import {lodash} from "../../libs/lib";
 import {ya} from "../../ya";
 
 interface IItemRecord {
@@ -39,7 +39,7 @@ const {ccclass, property, requireComponent, menu, disallowMultiple} = cc._decora
 @requireComponent(cc.ScrollView)
 @menu('Recycle View/General')
 @disallowMultiple
-class YaRecycleView extends cc.Component {
+class RecycleView extends cc.Component {
     @property({type: cc.Integer, min: 1}) row = 1;
     @property({type: cc.Integer, min: 1}) column = 1;
     @property({type: cc.Integer, min: 2}) extra = 2;
@@ -105,7 +105,7 @@ class YaRecycleView extends cc.Component {
             this._data[index] = itemData;
             if (index >= this._headIndex && index <= this._tailIndex) {
                 const item = this._records[index].item;
-                item.getComponent(YaRecycleItem).updateData(itemData);
+                item.getComponent(RecycleItem).updateData(itemData);
                 if (index !== this._headIndex) {
                     item.position = this.calculateItemPosition(index - 1, index, item);
                 } else if (index !== this._tailIndex) {
@@ -145,7 +145,7 @@ class YaRecycleView extends cc.Component {
     }
 
     protected initPool() {
-        this._pool = new cc.NodePool(YaRecycleItem);
+        this._pool = new cc.NodePool(RecycleItem);
         lodash.times(this._defaultCount, () => {
             this._pool.put(this.createItem());
         });
@@ -439,7 +439,7 @@ class YaRecycleView extends cc.Component {
         let node = this._pool.get(this._data[index]);
         if (!node) {
             node = this.createItem();
-            node.getComponent(YaRecycleItem).reuse(this._data[index]);
+            node.getComponent(RecycleItem).reuse(this._data[index]);
         }
         node.parent = this._content;
         if (preIndex === -1 && index === 0) {
@@ -564,4 +564,4 @@ class YaRecycleView extends cc.Component {
     }
 }
 
-export {YaRecycleView};
+export {RecycleView};

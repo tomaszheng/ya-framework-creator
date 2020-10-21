@@ -1,9 +1,9 @@
-import {YaBaseComponent} from "../../base/YaBaseComponent";
+import {BaseComponent} from "../../base/BaseComponent";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class YaRecycleItem extends YaBaseComponent {
+class RecycleItem extends BaseComponent {
     public unuse() {
 
     }
@@ -13,4 +13,4 @@ class YaRecycleItem extends YaBaseComponent {
     }
 }
 
-export {YaRecycleItem};
+export {RecycleItem};

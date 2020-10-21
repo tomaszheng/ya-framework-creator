@@ -4,20 +4,24 @@
 */
 
 import {Singleton} from "../singleton/Singleton";
-import {yaLocalStorage} from "../storage/ya-local-storage";
-import {YaStorageConfig} from "../config/YaStorageConfig";
-import {yaResourceManager} from "./ya-resource-manager";
-import {yaUtils} from "../utils/ya-utils";
+import {storageManager} from "./StorageManager";
+import {resourceManager} from "./ResourceManager";
+import {utils} from "../utils/Utils";
 
 interface IAudioRecord {
     path: string;
     audioId: number;
 }
 
-class YaSoundManager extends Singleton<YaSoundManager> {
+class SoundManager extends Singleton<SoundManager> {
+    public static SOUND_MUTE = 'ya-sound_mute'; // 静音
+    public static MUSIC_ENABLED = 'ya-music_enabled'; // 背景音乐
+    public static EFFECT_ENABLED = 'ya-music_enabled'; // 音效是否可用
+    public static VIBRATION_ENABLED = 'ya-vibration_enabled'; // 震动是否可用
+
     public set music(musicEnabled: boolean) {
         this._musicEnabled = musicEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.MUSIC_ENABLED, this._musicEnabled);
+        storageManager.setItem(SoundManager.MUSIC_ENABLED, this._musicEnabled);
     }
 
     public get music() {
@@ -26,7 +30,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
 
     public set effect(effectEnabled: boolean) {
         this._effectEnabled = effectEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.EFFECT_ENABLED, this._effectEnabled);
+        storageManager.setItem(SoundManager.EFFECT_ENABLED, this._effectEnabled);
     }
 
     public get effect() {
@@ -35,7 +39,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
 
     public set mute(mute: boolean) {
         this._mute = mute;
-        yaLocalStorage.setItem(YaStorageConfig.SOUND_MUTE, this.mute);
+        storageManager.setItem(SoundManager.SOUND_MUTE, this.mute);
         cc.audioEngine.stopAllEffects();
         cc.audioEngine.stopMusic();
     }
@@ -46,7 +50,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
 
     public set vibration(vibrationEnabled: boolean) {
         this._vibrationEnabled = vibrationEnabled;
-        yaLocalStorage.setItem(YaStorageConfig.VIBRATION_ENABLED, this._vibrationEnabled);
+        storageManager.setItem(SoundManager.VIBRATION_ENABLED, this._vibrationEnabled);
     }
 
     public get vibration() {
@@ -72,9 +76,9 @@ class YaSoundManager extends Singleton<YaSoundManager> {
         this._audioRecords = new Map<number, IAudioRecord>();
         this._musicRecord = {path: '', localId: -1};
 
-        this._musicEnabled = yaLocalStorage.getBool(YaStorageConfig.MUSIC_ENABLED, true);
-        this._effectEnabled = yaLocalStorage.getBool(YaStorageConfig.EFFECT_ENABLED, true);
-        this._vibrationEnabled = yaLocalStorage.getBool(YaStorageConfig.VIBRATION_ENABLED, true);
+        this._musicEnabled = storageManager.getBool(SoundManager.MUSIC_ENABLED, true);
+        this._effectEnabled = storageManager.getBool(SoundManager.EFFECT_ENABLED, true);
+        this._vibrationEnabled = storageManager.getBool(SoundManager.VIBRATION_ENABLED, true);
     }
 
     private doPlay(localId: number, audioClip: cc.AudioClip, isLoop: boolean, volume: number, onComplete?: () => void) {
@@ -86,7 +90,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
 
         cc.audioEngine.setFinishCallback(audioId, () => {
             this.stop(localId);
-            yaUtils.doCallback(onComplete);
+            utils.doCallback(onComplete);
         });
     }
 
@@ -94,12 +98,12 @@ class YaSoundManager extends Singleton<YaSoundManager> {
         const localId = this.nextAudioId;
         this._audioRecords.set(localId, {audioId: -1, path});
 
-        if (yaResourceManager.isLoaded(path, cc.AudioClip)) {
-            const audioClip = yaResourceManager.getAsset(path, cc.AudioClip) as cc.AudioClip;
+        if (resourceManager.isLoaded(path, cc.AudioClip)) {
+            const audioClip = resourceManager.getAsset(path, cc.AudioClip) as cc.AudioClip;
             this.addRef(path);
             this.doPlay(localId, audioClip, isLoop, volume, onComplete);
         } else {
-            yaResourceManager.load(path, cc.AudioClip).then((audioClip: cc.AudioClip) => {
+            resourceManager.load(path, cc.AudioClip).then((audioClip: cc.AudioClip) => {
                 this.addRef(path);
                 this.doPlay(localId, audioClip, isLoop, volume, onComplete);
             });
@@ -175,7 +179,7 @@ class YaSoundManager extends Singleton<YaSoundManager> {
             this._refRecords.set(path, refCount + 1);
         } else {
             this._refRecords.set(path, 1);
-            yaResourceManager.addRef(path, cc.AudioClip);
+            resourceManager.addRef(path, cc.AudioClip);
         }
     }
 
@@ -185,11 +189,11 @@ class YaSoundManager extends Singleton<YaSoundManager> {
             this._refRecords.set(path, --refCount);
             if (refCount <= 0) {
                 this._refRecords.delete(path);
-                yaResourceManager.decRef(path, cc.AudioClip);
+                resourceManager.decRef(path, cc.AudioClip);
             }
         }
     }
 }
 
-const yaSoundManager = YaSoundManager.instance(YaSoundManager);
-export {yaSoundManager};
+const soundManager = SoundManager.instance(SoundManager);
+export {soundManager, SoundManager};

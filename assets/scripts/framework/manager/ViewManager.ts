@@ -3,15 +3,15 @@
 统一初始化Controller，并持有所有Controller的句柄
 */
 
-import {YaController} from "../mvc/ya-controller";
+import {BaseController} from "../mvc/BaseController";
 import {Singleton} from "../singleton/Singleton";
 
-class YaViewManager extends Singleton<YaViewManager> {
+class ViewManager extends Singleton<ViewManager> {
 
     views: string[] = [];
-    controllers: YaController[] = [];
+    controllers: BaseController[] = [];
 
-    public register(name: string, controller: YaController) {
+    public register(name: string, controller: BaseController) {
         if (!this.isViewExist(name)) {
             this.controllers[name] = controller;
         }
@@ -40,7 +40,7 @@ class YaViewManager extends Singleton<YaViewManager> {
     }
 
     public hide() {
-        let controller: YaController;
+        let controller: BaseController;
         for (let i = 0; i < this.views.length - 1; i++) {
             controller = this.controllers[this.views[i]];
             if (controller) controller.hide();
@@ -67,7 +67,7 @@ class YaViewManager extends Singleton<YaViewManager> {
 
     public clear() {
         let name: string;
-        let controller: YaController;
+        let controller: BaseController;
         while (this.views.length > 0) {
             name = this.views.pop();
             controller = this.get(name);
@@ -76,5 +76,5 @@ class YaViewManager extends Singleton<YaViewManager> {
     }
 }
 
-const yaViewManager = YaViewManager.instance(YaViewManager);
-export {yaViewManager};
+const viewManager = ViewManager.instance(ViewManager);
+export {viewManager};

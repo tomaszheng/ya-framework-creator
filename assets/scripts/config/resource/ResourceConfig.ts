@@ -3,7 +3,7 @@
 资源模块分类，用于模块资源加载
 */
 
-let C: any = {};
+const C: any = {};
 
 C.base64_cube_square = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEX///+nxBvIAAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
 
@@ -73,5 +73,5 @@ C.archive = [
     "prefab/dialog_archive",
 ];
 
-let ResourceConfig = C;
-export default ResourceConfig;
+const ResourceConfig = C;
+export default {ResourceConfig};

@@ -1,7 +1,7 @@
 import {EventConfig} from "../../config/EventConfig";
 import {GameText} from "../../config/GameText";
-import {ya} from "../../framework/ya";
 import {BaseAd} from "../BaseAd";
+import {eventDispatcher} from "../../framework/event/EventDispatcher";
 
 const rewardedVideoAdUnits = {
     general: 'ad-unit-bc4c247f8cbd5fce',
@@ -50,7 +50,7 @@ class WxAd extends BaseAd {
                     this.loadRewardedVideoAd(adName);
                 }, 1000);
                 if (res.errCode) {
-                    ya.eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {
+                    eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {
                         txt: cc.js.formatStr(GameText.ad_err_tips, res.errCode.toString())
                     });
                 }

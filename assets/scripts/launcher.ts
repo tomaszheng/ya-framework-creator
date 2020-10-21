@@ -8,6 +8,7 @@
 import {ya} from "./framework/ya";
 import {modelManager} from "./manager/ModelManager";
 import {controllerManager} from "./manager/ControllerManager";
+import {viewManager} from "./framework/manager/ViewManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -23,7 +24,7 @@ export default class Launcher extends cc.Component {
     }
 
     private launch() {
-        ya.viewManager.show("common");
-        ya.viewManager.show("loading");
+        viewManager.show("common");
+        viewManager.show("loading");
     }
 }

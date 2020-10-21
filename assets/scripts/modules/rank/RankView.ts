@@ -1,10 +1,13 @@
 import {ya} from "../../framework/ya";
 import {GameConstant} from "../../config/GameConstant";
+import {BaseView} from "../../framework/mvc/BaseView";
+import {buttonHelper} from "../../framework/utils/ButtonHelper";
+import {viewManager} from "../../framework/manager/ViewManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class RankView extends ya.View {
+class RankView extends BaseView {
     @property(cc.Node) ndRank: cc.Node = null;
     @property(cc.Node) imgRank: cc.Node = null;
     @property(cc.Node) btnClose: cc.Node = null;
@@ -66,16 +69,16 @@ class RankView extends ya.View {
             }, this);
         }
 
-        ya.button.addClick(this.btnClose, ()=>{
+        buttonHelper.addClick(this.btnClose, ()=>{
             this.onClickClose();
         }, this);
-        ya.button.addClick(this.btnStar, ()=>{
+        buttonHelper.addClick(this.btnStar, ()=>{
             this.onClickStar();
         }, this);
-        ya.button.addClick(this.btnUnion, ()=>{
+        buttonHelper.addClick(this.btnUnion, ()=>{
             this.onClickUnion();
         }, this);
-        ya.button.addClick(this.btnRussia, ()=>{
+        buttonHelper.addClick(this.btnRussia, ()=>{
             this.onClickRussia();
         }, this);
     }
@@ -85,7 +88,7 @@ class RankView extends ya.View {
 
         const wx = 'wx';
         if (this.isSupportWx) {
-            this.wxTexture.initWithElement(window[wx].getOpenDataContext().canvas);
+            // this.wxTexture.initWithElement(window[wx].getOpenDataContext().canvas);
             this.wxTexture.handleLoadedTexture();
             this.wxSpriteFrame.setTexture(this.wxTexture);
             this.imgRank.getComponent(cc.Sprite).spriteFrame = this.wxSpriteFrame;
@@ -105,7 +108,7 @@ class RankView extends ya.View {
     }
 
     private onClickClose() {
-        ya.viewManager.remove('rank');
+        viewManager.remove('rank');
     }
 
     onClickStar () {

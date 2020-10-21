@@ -1,19 +1,16 @@
-
-/*
-加载界面
-*/
-
-import {ya} from "../../framework/ya";
+import {BaseView} from "../../framework/mvc/BaseView";
+import {soundManager} from "../../framework/manager/SoundManager";
+import {viewManager} from "../../framework/manager/ViewManager";
 
 const {ccclass} = cc._decorator;
 
 @ccclass
-class LoadingView extends ya.View {
+class LoadingView extends BaseView {
     protected initUI() {
         super.initUI();
 
-        ya.viewManager.show('main');
-        ya.soundManager.playMusic('common/sounds/bgm');
+        viewManager.show('main');
+        soundManager.playMusic('common/sounds/bgm');
     }
 }
 

@@ -15,7 +15,7 @@ interface IRefRecord {
     refCount: number;
 }
 
-class YaResourceManager extends Singleton<YaResourceManager> {
+class ResourceManager extends Singleton<ResourceManager> {
     private _refRecords: Map<string, Map<string, IRefRecord>>;
 
     public static loadBundle(nameOrUrl: string, onComplete: (bundle: cc.AssetManager.Bundle) => void) {
@@ -40,15 +40,15 @@ class YaResourceManager extends Singleton<YaResourceManager> {
     }
 
     public isLoaded(path: string, type: typeof cc.Asset): boolean {
-        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const {bundleName, resPath} = ResourceManager.parsePath(path);
         const bundle = cc.assetManager.getBundle(bundleName);
         return bundle && !!bundle.get(resPath, type);
     }
 
     public async load(path: string, type: typeof cc.Asset) {
         return new Promise<cc.Asset>((resolve, reject) => {
-            const {bundleName, resPath} = YaResourceManager.parsePath(path);
-            YaResourceManager.loadBundle(bundleName, (bundle => {
+            const {bundleName, resPath} = ResourceManager.parsePath(path);
+            ResourceManager.loadBundle(bundleName, (bundle => {
                 bundle.load(resPath, type, (err: Error, asset: cc.Asset) => {
                     if (!err) {
                         resolve(asset);
@@ -79,13 +79,13 @@ class YaResourceManager extends Singleton<YaResourceManager> {
      * @param type 资源类型
      */
     public getAsset(path: string, type: typeof cc.Asset): cc.Asset {
-        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const {bundleName, resPath} = ResourceManager.parsePath(path);
         const bundle = cc.assetManager.getBundle(bundleName);
         return bundle && bundle.get(resPath, type);
     }
 
     public addRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const {bundleName, resPath} = ResourceManager.parsePath(path);
 
         if (!this._refRecords.has(bundleName)) {
             this._refRecords.set(bundleName, new Map<string, IRefRecord>());
@@ -105,7 +105,7 @@ class YaResourceManager extends Singleton<YaResourceManager> {
     }
 
     public recordRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const {bundleName, resPath} = ResourceManager.parsePath(path);
 
         if (!this._refRecords.has(bundleName)) {
             this._refRecords.set(bundleName, new Map<string, IRefRecord>());
@@ -122,7 +122,7 @@ class YaResourceManager extends Singleton<YaResourceManager> {
     }
 
     public decRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = YaResourceManager.parsePath(path);
+        const {bundleName, resPath} = ResourceManager.parsePath(path);
 
         if (!this._refRecords.has(bundleName)) return;
 
@@ -184,5 +184,5 @@ class YaResourceManager extends Singleton<YaResourceManager> {
     }
 }
 
-const yaResourceManager = YaResourceManager.instance(YaResourceManager);
-export {yaResourceManager, IRefRecord};
+const resourceManager = ResourceManager.instance(ResourceManager);
+export {resourceManager, IRefRecord};

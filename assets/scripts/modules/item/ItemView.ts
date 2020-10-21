@@ -1,18 +1,16 @@
 import Item from "../../widget/Item";
 import {GameConstant} from "../../config/GameConstant";
-import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
+import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {buttonHelper} from "../../framework/utils/ButtonHelper";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class ItemView extends ya.Dialog {
+export default class ItemView extends BaseDialog {
     @property(cc.Node) ndItem: cc.Node = null;
-
     @property(cc.Node) lblContent: cc.Node = null;
-
     @property(cc.Node) btnNormal: cc.Node = null;
-
     @property(cc.Node) btnDouble: cc.Node = null;
 
     gotMode = -1;
@@ -45,16 +43,16 @@ export default class ItemView extends ya.Dialog {
 
         this.btnNormal.active = false;
 
-        let dobuleStr = "";
+        let doubleStr = "";
         if (this.gotMode === GameConstant.REVIVE_MODE.NONE ||
             this.gotMode === GameConstant.REVIVE_MODE.FREE) {
-            dobuleStr = GameText.str_019;
+            doubleStr = GameText.str_019;
         } else if (this.gotMode === GameConstant.REVIVE_MODE.SHARE) {
-            dobuleStr = GameText.str_022;
+            doubleStr = GameText.str_022;
         } else if (this.gotMode === GameConstant.REVIVE_MODE.VIDEO) {
-            dobuleStr = GameText.str_023;
+            doubleStr = GameText.str_023;
         }
-        this.btnDouble.getChildByName("Label").getComponent(cc.Label).string = dobuleStr;
+        this.btnDouble.getChildByName("Label").getComponent(cc.Label).string = doubleStr;
 
         this.lblContent.getComponent(cc.Label).string = this.content;
     }
@@ -62,14 +60,14 @@ export default class ItemView extends ya.Dialog {
     protected initTouchEvent() {
         super.initTouchEvent();
 
-        ya.button.addClick(this.btnNormal, () => {
+        buttonHelper.addClick(this.btnNormal, () => {
             this.removeSelf();
             if (this.normalCallback) this.normalCallback();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnDouble, () => {
+        buttonHelper.addClick(this.btnDouble, () => {
             this.onClickDouble();
-        });
+        }, this);
     }
 
     onClickDouble() {

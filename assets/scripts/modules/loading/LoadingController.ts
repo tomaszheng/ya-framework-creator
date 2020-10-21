@@ -1,12 +1,8 @@
-/*
-加载界面控制器
-*/
-
-import {ya} from "../../framework/ya";
 import {LoadingView} from "./LoadingView";
+import {BaseController} from "../../framework/mvc/BaseController";
 
-class LoadingController extends ya.Controller {
-    protected _view: LoadingView;
+class LoadingController extends BaseController {
+    protected _view: LoadingView = null;
 
     public get viewClassname() {
         return 'LoadingView';

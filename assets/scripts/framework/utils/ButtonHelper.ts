@@ -1,4 +1,4 @@
-class YaButtonHelper {
+class ButtonHelper {
     public static addClick(node: cc.Node, endCallback: (event: cc.Event) => void, target: cc.Component) {
         node.on(cc.Node.EventType.TOUCH_END, (event: cc.Event) => {
             endCallback.call(target, event);
@@ -24,5 +24,5 @@ class YaButtonHelper {
     }
 }
 
-const yaButtonHelper = YaButtonHelper;
-export {yaButtonHelper};
+const buttonHelper = ButtonHelper;
+export {buttonHelper};

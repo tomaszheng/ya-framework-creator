@@ -1,11 +1,7 @@
 
-/*
-自己的数据
-*/
+import {BaseModel} from "../framework/mvc/BaseModel";
 
-import {ya} from "../framework/ya";
-
-class UserModel extends ya.Model {
+class UserModel extends BaseModel {
 
 }
 

@@ -2,18 +2,18 @@
 视图的基础类
 */
 
-import {YaBaseComponent} from "../base/YaBaseComponent";
-import {YaModel} from "./ya-model";
+import {BaseComponent} from "../base/BaseComponent";
+import {BaseModel} from "./BaseModel";
 
 const {ccclass} = cc._decorator;
 
 @ccclass
-class YaView extends YaBaseComponent {
+class BaseView extends BaseComponent {
     /**
      * override
      * 数据模型
      */
-    protected _model: YaModel;
+    protected _model: BaseModel;
 
     public init(data?: any) {
         super.init(data);
@@ -53,4 +53,4 @@ class YaView extends YaBaseComponent {
     }
 }
 
-export {YaView};
+export {BaseView};

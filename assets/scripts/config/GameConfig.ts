@@ -1,11 +1,7 @@
-/*
-游戏配置
-*/
+const GameConfig = {
+    SHORT_VERSION: 1,
+    VERSION: "1.0.0",
+    CHANNEL_NAME: "wx",
+};
 
-let C: any = {};
-
-C.SHORT_VERSION = 1;
-C.VERSION = "1.0.0";
-C.CHANNEL_NAME = "wx";
-
-export default C;
+export {GameConfig};

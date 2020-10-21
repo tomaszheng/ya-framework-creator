@@ -91,6 +91,7 @@
       true,
       "always"
     ],
-    "no-bitwise": false
+    "no-bitwise": false,
+    "no-trailing-whitespace": false
   }
 }

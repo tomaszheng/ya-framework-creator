@@ -1,12 +1,13 @@
-import {ya} from "../../../framework/ya";
 import {SpriteFrameConfig} from "../../../config/resource/SpriteFrameConfig";
+import {BaseComponent} from "../../../framework/base/BaseComponent";
+import {resourceManager} from "../../../framework/manager/ResourceManager";
+import {utils} from "../../../framework/utils/Utils";
 
 const {ccclass} = cc._decorator;
 
 @ccclass
-class Toast extends ya.BaseComponent {
-
-    lblContent: cc.Label = null;
+class Toast extends BaseComponent {
+    private _lblContent: cc.Label = null;
 
     protected initUI() {
         super.initUI();
@@ -17,20 +18,20 @@ class Toast extends ya.BaseComponent {
         const sprite = imgBg.addComponent(cc.Sprite);
         sprite.type = cc.Sprite.Type.SLICED;
         sprite.sizeMode = cc.Sprite.SizeMode.CUSTOM;
-        sprite.spriteFrame = ya.resourceManager.getSpriteFrame(SpriteFrameConfig.game_cube_square);
+        sprite.spriteFrame = resourceManager.getSpriteFrame(SpriteFrameConfig.game_cube_square);
         imgBg.color = cc.color(80, 80, 80);
         imgBg.setContentSize(cc.size(600, 50));
         this.node.addChild(imgBg);
 
         const node = new cc.Node();
-        this.lblContent = node.addComponent(cc.Label);
-        this.lblContent.fontSize = 25;
-        this.lblContent.lineHeight = 25;
+        this._lblContent = node.addComponent(cc.Label);
+        this._lblContent.fontSize = 25;
+        this._lblContent.lineHeight = 25;
         this.node.addChild(node);
     }
 
     reset(params: any) {
-        this.lblContent.string = params.txt;
+        this._lblContent.string = params.txt;
     }
 
     show(callback: () => void) {
@@ -43,7 +44,7 @@ class Toast extends ya.BaseComponent {
             .delay(1.8)
             .to(0.2, {opacity: 0})
             .call(() => {
-                ya.utils.doCallback(callback);
+                utils.doCallback(callback);
             });
     }
 }

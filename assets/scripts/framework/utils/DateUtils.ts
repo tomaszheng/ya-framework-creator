@@ -1,4 +1,4 @@
-class YaDateUtils {
+class DateUtils {
     public static isSameWeek(self: number, other?: number): boolean {
         other = other || new Date().getTime();
 
@@ -9,5 +9,5 @@ class YaDateUtils {
     }
 }
 
-const yaDateUtils = YaDateUtils;
-export {yaDateUtils};
+const dateUtils = DateUtils;
+export {dateUtils};

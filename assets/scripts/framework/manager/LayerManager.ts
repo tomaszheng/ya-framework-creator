@@ -1,6 +1,6 @@
 import {Singleton} from "../singleton/Singleton";
 
-class YaLayerManager extends Singleton<YaLayerManager> {
+class LayerManager extends Singleton<LayerManager> {
     public get view(): cc.Node {
         return this._view;
     }
@@ -38,11 +38,11 @@ class YaLayerManager extends Singleton<YaLayerManager> {
         this._top.parent = canvas;
         this._top.zIndex = 3;
 
-        YaLayerManager.addFullScreenWidget(this._view);
-        YaLayerManager.addFullScreenWidget(this._dialog);
-        YaLayerManager.addFullScreenWidget(this._top);
+        LayerManager.addFullScreenWidget(this._view);
+        LayerManager.addFullScreenWidget(this._dialog);
+        LayerManager.addFullScreenWidget(this._top);
     }
 }
 
-const yaLayerManager = YaLayerManager.instance(YaLayerManager);
-export {yaLayerManager};
+const layerManager = LayerManager.instance(LayerManager);
+export {layerManager};

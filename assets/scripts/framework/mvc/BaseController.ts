@@ -2,12 +2,12 @@
 控制器基类
 */
 
-import {yaLayerManager} from "../manager/ya-layer-manager";
-import {YaView} from "./ya-view";
-import {yaEventDispatcher} from "../event/YaEventDispatcher";
-import {yaResourceManager} from "../manager/ya-resource-manager";
-import {yaUIHelper} from "../utils/ya-ui-helper";
-import {YaModel} from "./ya-model";
+import {layerManager} from "../manager/LayerManager";
+import {BaseView} from "./BaseView";
+import {eventDispatcher} from "../event/EventDispatcher";
+import {resourceManager} from "../manager/ResourceManager";
+import {uiUtils} from "../utils/UIUtils";
+import {BaseModel} from "./BaseModel";
 
 interface IEventRecord {
     name: string;
@@ -15,7 +15,7 @@ interface IEventRecord {
     target?: cc.Node;
 }
 
-class YaController {
+class BaseController {
     public get view() {
         return this._view;
     }
@@ -33,12 +33,12 @@ class YaController {
     }
 
     public get root() {
-        return yaLayerManager.view;
+        return layerManager.view;
     }
 
     private readonly events: IEventRecord[];
-    protected _view: YaView;
-    protected _model: YaModel;
+    protected _view: BaseView;
+    protected _model: BaseModel;
 
     public constructor() {
         this.events = [];
@@ -69,7 +69,7 @@ class YaController {
 
     private createView(data: any): void {
         if (this.prefabPath) {
-            const promise = yaUIHelper.instantiatePath(this.prefabPath, data, this.root);
+            const promise = uiUtils.instantiatePath(this.prefabPath, data, this.root);
             promise.then((node) => {
                 this.doCreateView(node, data);
             });
@@ -81,7 +81,7 @@ class YaController {
     }
 
     private doCreateView(node: cc.Node, data: any) {
-        let view = node.getComponent(YaView);
+        let view = node.getComponent(BaseView);
         if (!view) {
             if (!this.viewClassname) {
                 cc.error(`Not found component 'YaBaseComponent', please check.`);
@@ -148,7 +148,7 @@ class YaController {
     public addGlobalListener(name: string, callback: (args) => void, target: any) {
         target = target || this;
 
-        yaEventDispatcher.add(name, callback, target);
+        eventDispatcher.add(name, callback, target);
     }
 
     /**
@@ -169,10 +169,10 @@ class YaController {
 
     public clearListeners() {
         this.events.every((event) => {
-            yaEventDispatcher.remove(event.name, event.callback, event.target);
+            eventDispatcher.remove(event.name, event.callback, event.target);
         });
         this.events.length = 0;
     }
 }
 
-export {YaController};
+export {BaseController};

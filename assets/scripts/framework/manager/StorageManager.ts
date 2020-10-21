@@ -1,13 +1,13 @@
 import {Singleton} from "../singleton/Singleton";
 
-class YaLocalStorage extends Singleton<YaLocalStorage> {
+class StorageManager extends Singleton<StorageManager> {
     private static _isEmpty(value: any) {
         return value === null || value === "" || value === undefined;
     }
 
     public setItem(key: string, value: number | boolean | object | string | null): void {
         let valueStr = "";
-        if (YaLocalStorage._isEmpty(value)) {
+        if (StorageManager._isEmpty(value)) {
             valueStr = "";
         } else if (typeof value === "number") {
             valueStr = value.toString();
@@ -26,8 +26,8 @@ class YaLocalStorage extends Singleton<YaLocalStorage> {
 
     public getInt(key: string, defaultValue?: number): number {
         let value = cc.sys.localStorage.getItem(key);
-        if (YaLocalStorage._isEmpty(value)) {
-            if (YaLocalStorage._isEmpty(defaultValue)) {
+        if (StorageManager._isEmpty(value)) {
+            if (StorageManager._isEmpty(defaultValue)) {
                 value = 0;
             } else {
                 value = defaultValue;
@@ -41,8 +41,8 @@ class YaLocalStorage extends Singleton<YaLocalStorage> {
 
     public getBool(key: string, defaultValue?: boolean): boolean {
         let value = cc.sys.localStorage.getItem(key);
-        if (YaLocalStorage._isEmpty(value)) {
-            if (YaLocalStorage._isEmpty(defaultValue)) {
+        if (StorageManager._isEmpty(value)) {
+            if (StorageManager._isEmpty(defaultValue)) {
                 value = false;
             } else {
                 value = defaultValue;
@@ -56,8 +56,8 @@ class YaLocalStorage extends Singleton<YaLocalStorage> {
 
     public getString(key: string, defaultValue?: string): string {
         let value = cc.sys.localStorage.getItem(key);
-        if (YaLocalStorage._isEmpty(value)) {
-            if (YaLocalStorage._isEmpty(defaultValue)) {
+        if (StorageManager._isEmpty(value)) {
+            if (StorageManager._isEmpty(defaultValue)) {
                 value = "";
             } else {
                 value = defaultValue;
@@ -69,7 +69,7 @@ class YaLocalStorage extends Singleton<YaLocalStorage> {
 
     public getObject(key: string, defaultValue?: any): any {
         let value = cc.sys.localStorage.getItem(key);
-        if (YaLocalStorage._isEmpty(value)) {
+        if (StorageManager._isEmpty(value)) {
             value = defaultValue;
         } else {
             try {
@@ -83,5 +83,5 @@ class YaLocalStorage extends Singleton<YaLocalStorage> {
     }
 }
 
-const yaLocalStorage = YaLocalStorage.instance(YaLocalStorage);
-export {yaLocalStorage};
+const storageManager = StorageManager.instance(StorageManager);
+export {storageManager};

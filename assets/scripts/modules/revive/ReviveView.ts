@@ -1,11 +1,13 @@
 import {GameConstant} from "../../config/GameConstant";
-import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
+import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {utils} from "../../framework/utils/Utils";
+import {soundManager} from "../../framework/manager/SoundManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class ReviveView extends ya.Dialog {
+class ReviveView extends BaseDialog {
     @property(cc.Label) lblTip: cc.Label = null;
     @property(cc.Label) lblReviveTxt: cc.Label = null;
 
@@ -30,7 +32,7 @@ class ReviveView extends ya.Dialog {
     protected initUI() {
         super.initUI();
 
-        ya.soundManager.playEffect("Sound/die");
+        soundManager.playEffect("Sound/die");
 
         const str = cc.js.formatStr(GameText.str_004, this.reviveNum, this.totalNum);
         this.lblTip.string = str;
@@ -47,7 +49,7 @@ class ReviveView extends ya.Dialog {
     }
 
     onClickClose () {
-        ya.utils.doCallback(this.failCb);
+        utils.doCallback(this.failCb);
 
         this.removeSelf();
     }
@@ -81,7 +83,7 @@ class ReviveView extends ya.Dialog {
     }
 
     reviveSuccess () {
-        ya.utils.doCallback(this.successCb);
+        utils.doCallback(this.successCb);
 
         this.removeSelf();
     }

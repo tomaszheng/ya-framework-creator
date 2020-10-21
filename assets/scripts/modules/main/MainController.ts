@@ -1,8 +1,9 @@
 import {EventConfig} from "../../config/EventConfig";
-import {ya} from "../../framework/ya";
 import {MainView} from "./MainView";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {eventDispatcher} from "../../framework/event/EventDispatcher";
 
-class MainController extends ya.Controller {
+class MainController extends BaseController {
     public get view(): MainView {
         return this._view as MainView;
     }
@@ -12,7 +13,7 @@ class MainController extends ya.Controller {
     }
 
     initGlobalListener() {
-        ya.eventDispatcher.add(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
+        eventDispatcher.add(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
     }
 
     onShowArchive(params: any) {

@@ -31,14 +31,14 @@ const EventConfig = {
     EVT_GAME_USE_DYE: uuid(),
     EVT_GAME_USE_BOMB: uuid(),
     EVT_GAME_SHOW_ITEM: uuid(),
-    EVT_GAME_ITEM_LACK: uuid(), //道具不足
+    EVT_GAME_ITEM_LACK: uuid(), // 道具不足
 
     MD_GAME_GOAL_CHANGE: uuid(),
     MD_GAME_LEVEL_CHANGE: uuid(),
     MD_GAME_SCORE_CHANGE: uuid(),
-    MD_ITEM_NUM_CHANGE: uuid(), //道具数量改变
-    EVT_USE_ITEM_DYE: uuid(), //使用了道具：换色
-    EVT_USE_ITEM_BOMB: uuid(), //使用了道具：炸弹
+    MD_ITEM_NUM_CHANGE: uuid(), // 道具数量改变
+    EVT_USE_ITEM_DYE: uuid(), // 使用了道具：换色
+    EVT_USE_ITEM_BOMB: uuid(), // 使用了道具：炸弹
 
     EVT_RUSSIA_GAME_OVER: uuid(),
     MD_RUSSIA_SCORE_CHANGE: uuid(),
@@ -48,6 +48,6 @@ const EventConfig = {
     EVT_UNION_GAME_OVER: uuid(),
     MD_UNION_SCORE_CHANGE: uuid(),
     MD_UNION_GOAL_CHANGE: uuid(),
-}
+};
 
-export { EventConfig }
+export { EventConfig };

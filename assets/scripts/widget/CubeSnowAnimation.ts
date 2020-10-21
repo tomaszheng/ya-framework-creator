@@ -5,14 +5,14 @@
 
 import ResourceConfig from "../config/resource/ResourceConfig";
 
-//每一帧移动的距离
-let FRAME_DISTANCE = 2;
+// 每一帧移动的距离
+const FRAME_DISTANCE = 2;
 
-//最多有多少个cube
-let MAX_CUBE_NUM = 50;
+// 最多有多少个cube
+const MAX_CUBE_NUM = 50;
 
-//创建的频率
-let CREATE_HZ = 30;
+// 创建的频率
+const CREATE_HZ = 30;
 
 const {ccclass, property} = cc._decorator;
 
@@ -24,7 +24,7 @@ export default class CubeSnowAnimation extends cc.Component {
 
     direction: cc.Vec2 = null;
     border: cc.Rect = null;
-    
+
     sprite_frame: cc.SpriteFrame = null;
 
     is_loadded: boolean = false;
@@ -48,7 +48,7 @@ export default class CubeSnowAnimation extends cc.Component {
             cc.color(71, 129, 232)
         ];
 
-        //向下
+        // 向下
         this.direction = cc.v2(0, -1);
 
         this.border = cc.rect(-200, -200, cc.winSize.width + 200, cc.winSize.height + 200);

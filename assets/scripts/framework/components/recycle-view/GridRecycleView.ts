@@ -4,13 +4,13 @@
  * 2，支持竖向；
  * 3，每个Grid大小必须固定；
  */
-import {YaRecycleView} from "./YaRecycleView";
+import {RecycleView} from "./RecycleView";
 
 const {ccclass, property, menu} = cc._decorator;
 
 @ccclass
 @menu('Recycle View/Grid')
-class YaGridRecycleView extends YaRecycleView {
+class GridRecycleView extends RecycleView {
     @property({type: cc.Integer, min: 1}) gridWidth = 1;
     @property({type: cc.Integer, min: 1}) gridHeight = 1;
 
@@ -180,4 +180,4 @@ class YaGridRecycleView extends YaRecycleView {
     }
 }
 
-export {YaGridRecycleView};
+export {GridRecycleView};

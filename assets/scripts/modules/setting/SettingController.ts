@@ -1,8 +1,10 @@
-import {ya} from "../../framework/ya";
 import {EventConfig} from "../../config/EventConfig";
-import ResourceConfig from "../../config/resource/ResourceConfig";
+import {BaseController} from "../../framework/mvc/BaseController";
+import {dialogManager} from "../../framework/manager/DialogManager";
+import {DialogShowTypes} from "../../framework/mvc/BaseDialog";
+import {resourceManager} from "../../framework/manager/ResourceManager";
 
-class SettingController extends ya.Controller {
+class SettingController extends BaseController {
     protected initGlobalListener() {
         super.initGlobalListener();
 
@@ -11,9 +13,9 @@ class SettingController extends ya.Controller {
 
     onShowPause (data: any) {
         const prefabPath = 'resources/prefab/dialog_pause';
-        ya.resourceManager.load(prefabPath, cc.Prefab).then(()=> {
-            ya.dialogManager.show(prefabPath, data, {
-                showType: ya.DialogShowTypes.SCALE,
+        resourceManager.load(prefabPath, cc.Prefab).then(()=> {
+            dialogManager.show(prefabPath, data, {
+                showType: DialogShowTypes.SCALE,
                 dataLoaded: true,
             });
         });

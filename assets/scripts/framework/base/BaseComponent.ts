@@ -1,10 +1,10 @@
-import {IRefRecord, yaResourceManager} from "../manager/ya-resource-manager";
-import {yaUIHelper} from "../utils/ya-ui-helper";
+import {IRefRecord, resourceManager} from "../manager/ResourceManager";
+import {uiUtils} from "../utils/UIUtils";
 
 const {ccclass} = cc._decorator;
 
 @ccclass
-class YaBaseComponent extends cc.Component {
+class BaseComponent extends cc.Component {
     private _refRecords: Map<string, IRefRecord[]>;
 
     protected get data() {
@@ -67,15 +67,15 @@ class YaBaseComponent extends cc.Component {
     protected async loadAsset(path: string, type: typeof cc.Asset, data?: any) {
         let promise;
         if (cc.js.isChildClassOf(type, cc.Prefab)) {
-            promise = yaUIHelper.instantiatePath(path, data);
+            promise = uiUtils.instantiatePath(path, data);
         } else {
-            promise = yaResourceManager.load(path, type);
+            promise = resourceManager.load(path, type);
         }
         promise.then(()=>{
             if (cc.isValid(this)) {
                 this.addRef(path, type);
             } else {
-                yaResourceManager.recordRef(path, type);
+                resourceManager.recordRef(path, type);
             }
         });
         return promise;
@@ -117,11 +117,11 @@ class YaBaseComponent extends cc.Component {
             });
             if (!found) {
                 records.push({path, type, refCount: 1});
-                yaResourceManager.addRef(path, type);
+                resourceManager.addRef(path, type);
             }
         } else {
             this._refRecords.set(path, [{path, type, refCount: 1}]);
-            yaResourceManager.addRef(path, type);
+            resourceManager.addRef(path, type);
         }
     }
 
@@ -131,7 +131,7 @@ class YaBaseComponent extends cc.Component {
             records.some((record) => {
                 if (path === record.path && type === record.type && record.refCount > 0) {
                     record.refCount--;
-                    if (record.refCount === 0) yaResourceManager.decRef(path, type);
+                    if (record.refCount === 0) resourceManager.decRef(path, type);
                     return true;
                 }
             });
@@ -142,7 +142,7 @@ class YaBaseComponent extends cc.Component {
         this._refRecords.forEach((records, path) => {
             records.every((record) => {
                 if (record.refCount > 0) {
-                    yaResourceManager.decRef(record.path, record.type);
+                    resourceManager.decRef(record.path, record.type);
                 }
             });
         });
@@ -154,4 +154,4 @@ class YaBaseComponent extends cc.Component {
     }
 }
 
-export {YaBaseComponent};
+export {BaseComponent};

@@ -1,10 +1,16 @@
 import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
+import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {storageManager} from "../../framework/manager/StorageManager";
+import {buttonHelper} from "../../framework/utils/ButtonHelper";
+import {soundManager, SoundManager} from "../../framework/manager/SoundManager";
+import {utils} from "../../framework/utils/Utils";
+import {viewManager} from "../../framework/manager/ViewManager";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-class PauseView extends ya.Dialog {
+class PauseView extends BaseDialog {
     @property(cc.Label) lblSound: cc.Label = null;
     @property(cc.Node) btnClose: cc.Node = null;
     @property(cc.Node) btnContinue: cc.Node = null;
@@ -27,38 +33,38 @@ class PauseView extends ya.Dialog {
     protected initUI() {
         super.initUI();
 
-        const enabled = ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
+        const enabled = storageManager.getBool(SoundManager.EFFECT_ENABLED, true);
         this.lblSound.string = enabled ? GameText.str_005 : GameText.str_006;
     }
 
     protected initTouchEvent() {
         super.initTouchEvent();
 
-        ya.button.addClick(this.btnClose, ()=>{
+        buttonHelper.addClick(this.btnClose, ()=>{
             this.onClickClose();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnContinue, ()=>{
+        buttonHelper.addClick(this.btnContinue, ()=>{
             this.onClickContinue();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnRestart, ()=>{
+        buttonHelper.addClick(this.btnRestart, ()=>{
             this.onClickRestart();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnMain, ()=>{
+        buttonHelper.addClick(this.btnMain, ()=>{
             this.onClickMain();
-        });
+        }, this);
 
-        ya.button.addClick(this.btnSound, ()=>{
+        buttonHelper.addClick(this.btnSound, ()=>{
             this.onClickSound();
-        });
+        }, this);
     }
 
     onClickClose () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.continueCb);
+        utils.doCallback(this.continueCb);
     }
 
     onClickSpace () {
@@ -68,27 +74,27 @@ class PauseView extends ya.Dialog {
     onClickContinue () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.continueCb);
+        utils.doCallback(this.continueCb);
     }
 
     onClickRestart () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.restartCb);
+        utils.doCallback(this.restartCb);
     }
 
     onClickMain () {
         this.removeSelf();
 
-        ya.utils.doCallback(this.mainCb);
+        utils.doCallback(this.mainCb);
 
-        ya.viewManager.show("main", null, true);
+        viewManager.show("main", null, true);
     }
 
     onClickSound () {
-        const enabled = !ya.localStorage.getBool(ya.StorageConfig.EFFECT_ENABLED, true);
+        const enabled = !storageManager.getBool(SoundManager.EFFECT_ENABLED, true);
         this.lblSound.string = enabled ? GameText.str_005 : GameText.str_006;
-        ya.soundManager.effect = enabled;
+        soundManager.effect = enabled;
     }
 }
 
