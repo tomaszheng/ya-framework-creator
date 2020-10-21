@@ -13,9 +13,9 @@ class ItemModel extends BaseModel {
     constructor () {
         super();
 
-        this.itemDyeNum = localStorage.getInt(StorageConfig.ITEM_DYE_NUM, 0);
-        this.itemMixNum = localStorage.getInt(StorageConfig.ITEM_MIX_NUM, 0);
-        this.itemBombNum = localStorage.getInt(StorageConfig.ITEM_BOMB_NUM, 0);
+        this.itemDyeNum = storageManager.getInt(StorageConfig.ITEM_DYE_NUM, 0);
+        this.itemMixNum = storageManager.getInt(StorageConfig.ITEM_MIX_NUM, 0);
+        this.itemBombNum = storageManager.getInt(StorageConfig.ITEM_BOMB_NUM, 0);
     }
 
     getItemNum (mode: number): number {
