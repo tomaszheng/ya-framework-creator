@@ -458,6 +458,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "发现游戏存档\n是否继续游戏？",
     "_N$string": "发现游戏存档\n是否继续游戏？",
@@ -539,7 +541,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -737,7 +739,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -830,6 +832,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "继续游戏",
     "_N$string": "继续游戏",
@@ -1042,7 +1046,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1135,6 +1139,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "重新开始",
     "_N$string": "重新开始",
@@ -1365,13 +1371,13 @@
       "__id__": 1
     },
     "_enabled": true,
-    "btn_close": {
+    "btnClose": {
       "__id__": 12
     },
-    "btn_continue": {
+    "btnContinue": {
       "__id__": 16
     },
-    "btn_restart": {
+    "btnRestart": {
       "__id__": 23
     },
     "_id": ""

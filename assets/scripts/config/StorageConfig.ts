@@ -27,7 +27,7 @@ const StorageConfig = {
     UNION_ARCHIVE: "s34",
     SHARE_UNION_ITEM_NUM: "s35",
     SHARE_UNION_REVIVE_NUM: "s36",
-}
+};
 
 export { StorageConfig };
 

@@ -240,6 +240,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "免费赠送",
     "_N$string": "免费赠送",
@@ -347,6 +349,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "表现不错，免费送你道具，继续加油哦！",
     "_N$string": "表现不错，免费送你道具，继续加油哦！",
@@ -503,7 +507,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -596,6 +600,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "____",
     "_N$string": "____",
@@ -639,6 +645,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "领取",
     "_N$string": "领取",
@@ -794,7 +802,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -887,6 +895,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "分享 3 倍",
     "_N$string": "分享 3 倍",
@@ -1127,16 +1137,16 @@
       "__id__": 1
     },
     "_enabled": true,
-    "nd_item": {
+    "ndItem": {
       "__id__": 9
     },
-    "lbl_content": {
+    "lblContent": {
       "__id__": 6
     },
-    "btn_normal": {
+    "btnNormal": {
       "__id__": 11
     },
-    "btn_double": {
+    "btnDouble": {
       "__id__": 18
     },
     "_id": ""

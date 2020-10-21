@@ -217,7 +217,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -415,7 +415,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -508,6 +508,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "继续游戏",
     "_N$string": "继续游戏",
@@ -720,7 +722,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -813,6 +815,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "重新开始",
     "_N$string": "重新开始",
@@ -1025,7 +1029,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1118,6 +1122,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "主页",
     "_N$string": "主页",
@@ -1330,7 +1336,7 @@
         1,
         1,
         1,
-        1
+        0
       ]
     },
     "_eulerAngles": {
@@ -1423,6 +1429,8 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
     "_useOriginalSize": false,
     "_string": "音效开",
     "_N$string": "音效开",
@@ -1697,22 +1705,22 @@
       "__id__": 1
     },
     "_enabled": true,
-    "lbl_sound": {
+    "lblSound": {
       "__id__": 30
     },
-    "btn_close": {
+    "btnClose": {
       "__id__": 3
     },
-    "btn_continue": {
+    "btnContinue": {
       "__id__": 7
     },
-    "btn_restart": {
+    "btnRestart": {
       "__id__": 14
     },
-    "btn_main": {
+    "btnMain": {
       "__id__": 21
     },
-    "btn_sound": {
+    "btnSound": {
       "__id__": 28
     },
     "_id": ""
