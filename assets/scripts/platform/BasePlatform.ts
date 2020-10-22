@@ -1,17 +1,5 @@
-/*
-平台接口的基础类
-*/
-
 import {EventConfig} from "../config/EventConfig";
 import {eventDispatcher} from "../framework/event/EventDispatcher";
-
-type ResultCallback = (code: number, res?: any) => void;
-
-interface NavigateToProgram {
-    path?: string;
-    extraData?: string;
-    envVersion?: string;
-}
 
 class BasePlatform {
     constructor() {
@@ -44,7 +32,7 @@ class BasePlatform {
         if (cb) cb(0);
     }
 
-    public authorize(scope, cb) {
+    public authorize(cb: ResultCallback, scope?: string) {
 
     }
 
@@ -84,7 +72,9 @@ class BasePlatform {
 
     }
 
-    public navigateToProgram(appId: string, data: NavigateToProgram, cb?: ResultCallback) {
+    public navigateToProgram(appId: string,
+                             data: { path?: string, extraData?: string, envVersion?: string },
+                             cb?: ResultCallback) {
 
     }
 
@@ -123,4 +113,4 @@ class BasePlatform {
     }
 }
 
-export {BasePlatform, ResultCallback};
+export {BasePlatform};

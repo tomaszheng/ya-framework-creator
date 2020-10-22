@@ -4,7 +4,7 @@
 
 import {GameConstant} from "../../config/GameConstant";
 import {GameText} from "../../config/GameText";
-import {BasePlatform, ResultCallback} from "../BasePlatform";
+import {BasePlatform} from "../BasePlatform";
 
 class WxPlatform extends BasePlatform {
     systemInfo: wx.systemInfo = null;
@@ -16,11 +16,9 @@ class WxPlatform extends BasePlatform {
     }
 
     private _isAuthorized = false;
-
-    loginCode = '';
-
-    timeOnHide = -1;
-    shareCallback: (code: number) => void = null;
+    private loginCode = '';
+    private timeOnHide = -1;
+    private shareCallback: ResultCallback = null;
 
     protected onShow() {
         this.checkShareResult();
@@ -322,7 +320,7 @@ class WxPlatform extends BasePlatform {
                 this.shareCallback(-1);
             }
             this.shareCallback = null;
-        }, 200);
+        }, 2000);
     }
 }
 

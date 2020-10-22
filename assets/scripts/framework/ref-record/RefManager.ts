@@ -2,11 +2,7 @@ import {Singleton} from "../singleton/Singleton";
 import {BaseRefRecord} from "./BaseRefRecord";
 
 class RefManager extends Singleton<RefManager> {
-    private _refRecords: Map<string, BaseRefRecord> = null;
-
-    public init() {
-        this._refRecords = new Map<string, BaseRefRecord>();
-    }
+    private _refRecords: Map<string, BaseRefRecord> = new Map<string, BaseRefRecord>();
 
     public getOrCreateRefRecord(name: string) {
         console.assert(!this._refRecords.has(name), "Ref record's name is duplicated!");

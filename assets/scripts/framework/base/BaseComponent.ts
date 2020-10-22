@@ -62,7 +62,7 @@ class BaseComponent extends cc.Component {
 
         let promise;
         if (cc.js.isChildClassOf(type, cc.Prefab)) {
-            promise = uiUtils.instantiatePath(fullPath, data);
+            promise = uiUtils.loadAndInstantiate(fullPath, data);
         } else {
             promise = resourceManager.load(fullPath, type);
         }

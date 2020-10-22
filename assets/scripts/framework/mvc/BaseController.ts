@@ -85,7 +85,7 @@ class BaseController {
 
     private createView(data: any): void {
         if (this.prefabPath) {
-            const promise = uiUtils.instantiatePath(this.prefabPath, data, this.root);
+            const promise = uiUtils.loadAndInstantiate(this.prefabPath, data, this.root);
             promise.then((node) => {
                 this.doCreateView(node, data);
             });

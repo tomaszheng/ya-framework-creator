@@ -7,12 +7,12 @@ class UIUtils {
     }
 
     /**
-     * 实例化Prefab（由prefabPath指定prefab），注意：必须在YaBaseComponent及子类中调用，否则资源会泄露
+     * 实例化Prefab（由prefabPath指定prefab），注意：必须在BaseComponent及子类中调用，否则资源会泄露
      * @param prefabPath prefab路径
      * @param data 实例化后传给component的初始化数据
      * @param parent 父节点
      */
-    public static async instantiatePath(prefabPath: string, data?: any, parent?: cc.Node) {
+    public static async loadAndInstantiate(prefabPath: string, data?: any, parent?: cc.Node) {
         return new Promise<cc.Node>((resolve, reject) => {
             resourceManager.load(prefabPath, cc.Prefab).then((prefab: cc.Prefab) => {
                 const node = this.instantiate(prefab, data, parent);
