@@ -1,4 +1,11 @@
 class Utils {
+    public static parseBundlePath(fullPath: string): { bundleName, path } {
+        const index = fullPath.indexOf('/');
+        const bundleName = fullPath.slice(0, index);
+        const path = fullPath.slice(index + 1, fullPath.length);
+        return {bundleName, path};
+    }
+
     public static doCallback(callback?: (...args) => void, args?: any) {
         if (callback) callback(args);
     }

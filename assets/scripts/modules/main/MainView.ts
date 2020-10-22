@@ -158,7 +158,7 @@ class MainView extends BaseView {
     }
 
     onClickMoreGame() {
-        eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
+        eventDispatcher.emit(EventConfig.SHOW_TOAST, {txt: GameText.str_008});
     }
 
     onClickRank() {

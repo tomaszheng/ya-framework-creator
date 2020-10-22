@@ -1,7 +1,7 @@
 import {EventConfig} from "../../config/EventConfig";
 import {BaseController} from "../../framework/mvc/BaseController";
 import {dialogManager} from "../../framework/manager/DialogManager";
-import {DialogShowTypes} from "../../framework/mvc/BaseDialog";
+import {DialogShowTypes} from "../../framework/mvc/dialog/BaseDialog";
 
 class ItemController extends BaseController {
     initGlobalListener () {

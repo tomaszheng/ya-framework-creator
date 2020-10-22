@@ -1,7 +1,3 @@
-/*
-视图的基础类
-*/
-
 import {BaseComponent} from "../base/BaseComponent";
 import {BaseModel} from "./BaseModel";
 
@@ -9,11 +5,7 @@ const {ccclass} = cc._decorator;
 
 @ccclass
 class BaseView extends BaseComponent {
-    /**
-     * override
-     * 数据模型
-     */
-    protected _model: BaseModel;
+    protected _model: BaseModel = null;
 
     public init(data?: any) {
         super.init(data);
@@ -36,7 +28,7 @@ class BaseView extends BaseComponent {
         super.initModelEvent();
 
         if (this._model) {
-            this._model.on(this._model.EVENT_SERVER_LOADED, this.handlerServerLoaded, this);
+            this._model.on(this._model.EVENT_DATA_LOADED, this.handlerDataLoaded, this);
         }
     }
 
@@ -48,7 +40,7 @@ class BaseView extends BaseComponent {
 
     }
 
-    protected handlerServerLoaded() {
+    protected handlerDataLoaded() {
         this.updateUI();
     }
 }

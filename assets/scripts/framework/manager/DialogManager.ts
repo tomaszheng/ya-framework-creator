@@ -1,10 +1,5 @@
-/*
-视图管理器
-统一处理视图、弹窗的生命周期：显示、关闭
-*/
-
 import {Singleton} from "../singleton/Singleton";
-import {BaseDialog, DialogCharacter, DialogShowTypes} from "../mvc/BaseDialog";
+import {BaseDialog, DialogCharacter, DialogShowTypes} from "../mvc/dialog/BaseDialog";
 import {layerManager} from "./LayerManager";
 import {lodash} from "../libs/lib";
 

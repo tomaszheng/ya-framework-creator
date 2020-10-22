@@ -1,6 +1,6 @@
 import {ya} from "../../framework/ya";
 import {GameText} from "../../config/GameText";
-import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {BaseDialog} from "../../framework/mvc/dialog/BaseDialog";
 import {storageManager} from "../../framework/manager/StorageManager";
 import {buttonHelper} from "../../framework/utils/ButtonHelper";
 import {soundManager, SoundManager} from "../../framework/manager/SoundManager";

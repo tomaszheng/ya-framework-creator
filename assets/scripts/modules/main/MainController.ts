@@ -13,7 +13,7 @@ class MainController extends BaseController {
     }
 
     initGlobalListener() {
-        eventDispatcher.add(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
+        eventDispatcher.on(EventConfig.EVT_SHOW_ARCHIVE, this.onShowArchive, this);
     }
 
     onShowArchive(params: any) {

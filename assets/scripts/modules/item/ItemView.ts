@@ -1,7 +1,7 @@
 import Item from "../../widget/Item";
 import {GameConstant} from "../../config/GameConstant";
 import {GameText} from "../../config/GameText";
-import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {BaseDialog} from "../../framework/mvc/dialog/BaseDialog";
 import {buttonHelper} from "../../framework/utils/ButtonHelper";
 
 const {ccclass, property} = cc._decorator;

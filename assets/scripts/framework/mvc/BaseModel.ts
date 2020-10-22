@@ -1,9 +1,5 @@
-/*
-缓存基类
-*/
-
 class BaseModel extends cc.EventTarget {
-    public EVENT_SERVER_LOADED = 'eventServerLoaded';
+    public EVENT_DATA_LOADED = 'event-data-loaded';
 }
 
 export {BaseModel};

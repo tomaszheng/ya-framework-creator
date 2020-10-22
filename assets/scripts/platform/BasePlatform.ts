@@ -20,13 +20,13 @@ class BasePlatform {
 
     protected onHide() {
         cc.game.on(cc.game.EVENT_HIDE, ()=>{
-            eventDispatcher.dispatch(EventConfig.ON_HIDE);
+            eventDispatcher.emit(EventConfig.ON_HIDE);
         }, this);
     }
 
     protected onShow() {
         cc.game.on(cc.game.EVENT_SHOW, (params:any) => {
-            eventDispatcher.dispatch(EventConfig.ON_SHOW, params);
+            eventDispatcher.emit(EventConfig.ON_SHOW, params);
         }, this);
     }
 

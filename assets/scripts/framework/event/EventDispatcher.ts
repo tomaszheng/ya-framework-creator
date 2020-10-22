@@ -6,22 +6,14 @@
 import {Singleton} from "../singleton/Singleton";
 
 class EventDispatcher extends Singleton<EventDispatcher> {
-    private _dispatcher: cc.EventTarget = null;
+    private readonly _dispatcher: cc.EventTarget = new cc.EventTarget();
 
-    public init() {
-        this._dispatcher = new cc.EventTarget();
-    }
-
-    public add(name: string, callback: (args) => void, target?: any) {
+    public on(name: string, callback: (args) => void, target?: any) {
         target = target || this;
         this._dispatcher.on(name, callback, target);
     }
 
-    public dispatch(name: string, args?: any) {
-        this._dispatcher.emit(name, args);
-    }
-
-    public remove(name: string, callback?: (args) => void, target?: any) {
+    public off(name: string, callback?: (args) => void, target?: any) {
         if (!callback) {
             this._dispatcher.off(name);
         } else if (!target) {
@@ -31,7 +23,11 @@ class EventDispatcher extends Singleton<EventDispatcher> {
         }
     }
 
-    public removeTarget(target: any) {
+    public emit(name: string, args?: any) {
+        this._dispatcher.emit(name, args);
+    }
+
+    public targetOff(target: any) {
         target = target || this;
         this._dispatcher.targetOff(target);
     }

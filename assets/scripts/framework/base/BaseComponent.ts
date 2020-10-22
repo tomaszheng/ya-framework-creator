@@ -1,12 +1,12 @@
-import {IRefRecord, resourceManager} from "../manager/ResourceManager";
+import {resourceManager} from "../manager/ResourceManager";
 import {uiUtils} from "../utils/UIUtils";
+import {BaseRefRecord} from "../ref-record/BaseRefRecord";
+import {refManager} from "../ref-record/RefManager";
 
 const {ccclass} = cc._decorator;
 
 @ccclass
 class BaseComponent extends cc.Component {
-    private _refRecords: Map<string, IRefRecord[]>;
-
     protected get data() {
         return this._data;
     }
@@ -15,7 +15,7 @@ class BaseComponent extends cc.Component {
         return this._instantiatedPrefabPath;
     }
 
-    public set instantiatedPrefabPath(prefabPath) {
+    public set instantiatedPrefabPath(prefabPath: string) {
         this._instantiatedPrefabPath = prefabPath;
     }
 
@@ -30,15 +30,8 @@ class BaseComponent extends cc.Component {
     private _data: any = null;
     private _initialized = false;
     private _instantiatedPrefabPath = '';
+    private _refRecord: BaseRefRecord = null;
 
-    /**
-     * 初始化组件
-     * 1, 初始化数据
-     * 2, 初始化UI
-     * 3, 初始化Touch事件：点击、拖拽
-     * 4, 初始化数据事件
-     * @param data
-     */
     public init(data?: any) {
         this.initData(data);
         this.initUI();
@@ -49,7 +42,7 @@ class BaseComponent extends cc.Component {
 
     protected initData(data?: any) {
         this._data = data;
-        this._refRecords = new Map<string, IRefRecord[]>();
+        this._refRecord = refManager.getOrCreateRefRecord(cc.js.getClassName(this));
     }
 
     protected initUI() {
@@ -64,25 +57,21 @@ class BaseComponent extends cc.Component {
 
     }
 
-    protected async loadAsset(path: string, type: typeof cc.Asset, data?: any) {
+    protected async loadAsset(fullPath: string, type: typeof cc.Asset, data?: any) {
+        this._refRecord.recordRef(fullPath, type);
+
         let promise;
         if (cc.js.isChildClassOf(type, cc.Prefab)) {
-            promise = uiUtils.instantiatePath(path, data);
+            promise = uiUtils.instantiatePath(fullPath, data);
         } else {
-            promise = resourceManager.load(path, type);
+            promise = resourceManager.load(fullPath, type);
         }
         promise.then(()=>{
             if (cc.isValid(this)) {
-                this.addRef(path, type);
-            } else {
-                resourceManager.recordRef(path, type);
+                this.addRef(fullPath, type);
             }
         });
         return promise;
-    }
-
-    public updateData(data?: any) {
-        this._data = data;
     }
 
     public updateUI() {
@@ -105,48 +94,15 @@ class BaseComponent extends cc.Component {
     }
 
     public addRef(path: string, type: typeof cc.Asset) {
-        if (this._refRecords.has(path)) {
-            const records = this._refRecords.get(path);
-            let found = false;
-            records.some((record) => {
-               if (path === record.path && type === record.type) {
-                   found = true;
-                   record.refCount++;
-                   return true;
-               }
-            });
-            if (!found) {
-                records.push({path, type, refCount: 1});
-                resourceManager.addRef(path, type);
-            }
-        } else {
-            this._refRecords.set(path, [{path, type, refCount: 1}]);
-            resourceManager.addRef(path, type);
-        }
+        this._refRecord.addRef(path, type);
     }
 
     public decRef(path: string, type: typeof cc.Asset) {
-        if (this._refRecords.has(path)) {
-            const records = this._refRecords.get(path);
-            records.some((record) => {
-                if (path === record.path && type === record.type && record.refCount > 0) {
-                    record.refCount--;
-                    if (record.refCount === 0) resourceManager.decRef(path, type);
-                    return true;
-                }
-            });
-        }
+        this._refRecord.decRef(path, type);
     }
 
     public decAllRef() {
-        this._refRecords.forEach((records, path) => {
-            records.every((record) => {
-                if (record.refCount > 0) {
-                    resourceManager.decRef(record.path, record.type);
-                }
-            });
-        });
-        this._refRecords = new Map<string, IRefRecord[]>();
+        this._refRecord.decAllRef();
     }
 
     protected onDestroy() {

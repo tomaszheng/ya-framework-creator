@@ -26,9 +26,9 @@ class CommonController extends BaseController {
         cc.game.on(cc.game.EVENT_SHOW, this.onShow, this);
         cc.game.on(cc.game.EVENT_HIDE, this.onHide, this);
 
-        eventDispatcher.add(EventConfig.SHOW_TOAST,       this.onShowToast,     this);  // 显示toast
-        eventDispatcher.add(EventConfig.SHOW_WAITING,     this.onShowWaiting,   this);  // 显示等待界面
-        eventDispatcher.add(EventConfig.REMOVE_WAITING,   this.onRemoveWaiting, this);  // 移除等待界面
+        eventDispatcher.on(EventConfig.SHOW_TOAST,       this.onShowToast,     this);  // 显示toast
+        eventDispatcher.on(EventConfig.SHOW_WAITING,     this.onShowWaiting,   this);  // 显示等待界面
+        eventDispatcher.on(EventConfig.REMOVE_WAITING,   this.onRemoveWaiting, this);  // 移除等待界面
     }
 
     onShow (params: any) {

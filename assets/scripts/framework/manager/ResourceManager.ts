@@ -8,15 +8,12 @@ Web平台：
 */
 
 import {Singleton} from "../singleton/Singleton";
-
-interface IRefRecord {
-    path: string;
-    type: typeof cc.Asset;
-    refCount: number;
-}
+import {BaseRefRecord} from "../ref-record/BaseRefRecord";
+import {utils} from "../utils/Utils";
+import {refManager} from "../ref-record/RefManager";
 
 class ResourceManager extends Singleton<ResourceManager> {
-    private _refRecords: Map<string, Map<string, IRefRecord>>;
+    private _refRecord: BaseRefRecord = null;
 
     public static loadBundle(nameOrUrl: string, onComplete: (bundle: cc.AssetManager.Bundle) => void) {
         if (cc.assetManager.getBundle(nameOrUrl)) {
@@ -28,28 +25,21 @@ class ResourceManager extends Singleton<ResourceManager> {
         }
     }
 
-    public static parsePath(path: string): { bundleName, resPath } {
-        const index = path.indexOf('/');
-        const bundleName = path.slice(0, index);
-        const resPath = path.slice(index + 1, path.length);
-        return {bundleName, resPath};
-    }
-
     public init() {
-        this._refRecords = new Map<string, Map<string, IRefRecord>>();
+        this._refRecord = refManager.getOrCreateRefRecord(cc.js.getClassName(this));
     }
 
-    public isLoaded(path: string, type: typeof cc.Asset): boolean {
-        const {bundleName, resPath} = ResourceManager.parsePath(path);
+    public isLoaded(fullPath: string, type: typeof cc.Asset): boolean {
+        const {bundleName, path} = utils.parseBundlePath(fullPath);
         const bundle = cc.assetManager.getBundle(bundleName);
-        return bundle && !!bundle.get(resPath, type);
+        return bundle && !!bundle.get(path, type);
     }
 
-    public async load(path: string, type: typeof cc.Asset) {
+    public async load(fullPath: string, type: typeof cc.Asset) {
         return new Promise<cc.Asset>((resolve, reject) => {
-            const {bundleName, resPath} = ResourceManager.parsePath(path);
+            const {bundleName, path} = utils.parseBundlePath(fullPath);
             ResourceManager.loadBundle(bundleName, (bundle => {
-                bundle.load(resPath, type, (err: Error, asset: cc.Asset) => {
+                bundle.load(path, type, (err: Error, asset: cc.Asset) => {
                     if (!err) {
                         resolve(asset);
                     } else {
@@ -75,114 +65,44 @@ class ResourceManager extends Singleton<ResourceManager> {
 
     /**
      * 使用此方法前，请确保这些资源已经通过 bundle:load方法加载过
-     * @param path 资源全路径
+     * @param fullPath 资源全路径
      * @param type 资源类型
      */
-    public getAsset(path: string, type: typeof cc.Asset): cc.Asset {
-        const {bundleName, resPath} = ResourceManager.parsePath(path);
+    public getAsset(fullPath: string, type: typeof cc.Asset): cc.Asset {
+        const {bundleName, path} = utils.parseBundlePath(fullPath);
         const bundle = cc.assetManager.getBundle(bundleName);
-        return bundle && bundle.get(resPath, type);
+        return bundle && bundle.get(path, type);
     }
 
-    public addRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = ResourceManager.parsePath(path);
-
-        if (!this._refRecords.has(bundleName)) {
-            this._refRecords.set(bundleName, new Map<string, IRefRecord>());
-        }
-
-        const record = this._refRecords.get(bundleName);
-        if (record.has(resPath)) {
-            const recordItem = record.get(resPath);
-            recordItem.refCount++;
-        } else {
-            record.set(resPath, {
-                path,
-                type,
-                refCount: 1,
-            });
-        }
+    public addRef(fullPath: string, type: typeof cc.Asset) {
+        this._refRecord.addRef(fullPath, type);
     }
 
-    public recordRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = ResourceManager.parsePath(path);
-
-        if (!this._refRecords.has(bundleName)) {
-            this._refRecords.set(bundleName, new Map<string, IRefRecord>());
-        }
-
-        const record = this._refRecords.get(bundleName);
-        if (!record.has(resPath)) {
-            record.set(resPath, {
-                path,
-                type,
-                refCount: 0,
-            });
-        }
+    public decRef(fullPath: string, type: typeof cc.Asset) {
+        this._refRecord.addRef(fullPath, type);
     }
 
-    public decRef(path: string, type: typeof cc.Asset) {
-        const {bundleName, resPath} = ResourceManager.parsePath(path);
-
-        if (!this._refRecords.has(bundleName)) return;
-
-        const record = this._refRecords.get(bundleName);
-        if (record.has(resPath)) {
-            const recordItem = record.get(resPath);
-            if (recordItem.refCount > 0) recordItem.refCount--;
-        }
-    }
-
-    public dump() {
-        console.log('start dump ref record ...');
-        this._refRecords.forEach((record, bundleName) => {
-            record.forEach((recordItem) => {
-                const {path, refCount} = recordItem;
-                console.log(`bundleName=${bundleName} path=${path} refCount=${refCount}`);
-            });
+    public removeUnusedAssets() {
+        const bundleNames = refManager.getAllBundleNames();
+        bundleNames.every((bundleName: string) => {
+           this.removeUnusedAssetsInBundle(bundleName);
         });
-        console.log('dump ref record finish.');
     }
 
-    /**
-     * 非公共包之间禁止相互引用，否则资源将无法释放
-     * @param bundleName
-     */
-    public removeBundle(bundleName: string) {
+    public removeUnusedAssetsInBundle(bundleName: string) {
         const bundle = cc.assetManager.getBundle(bundleName);
-        if (!bundle || !this._refRecords.has(bundleName)) return;
-
-        const deleteList: string[] = [];
-        const record = this._refRecords.get(bundleName);
-        record.forEach((recordItem, resPath) => {
-            const {path, type, refCount} = recordItem;
-            if (refCount === 0 && bundle.get(path, type).refCount === 0) {
-                bundle.release(path);
-                deleteList.push(resPath);
-            }
-        });
-
-        deleteList.every((resPath) => {
-           record.delete(resPath);
-        });
-
-        if (record.size === 0) this._refRecords.delete(bundleName);
+        bundle.releaseUnusedAssets();
     }
 
-    /**
-     * 释放所有未使用的资源，注意：会把公共包的资源一并释放
-     */
-    public removeUnusedAsset() {
-        const bundleNames: string[] = [];
-        this._refRecords.forEach((record, bundleName) => {
-            bundleNames.push(bundleName);
-        });
-
-        bundleNames.every((bundleName) => {
-           this.removeBundle(bundleName);
-        });
+    public removeAsset(fullPath: string, type: typeof cc.Asset) {
+        const {bundleName, path} = utils.parseBundlePath(fullPath);
+        const bundle = cc.assetManager.getBundle(bundleName);
+        const asset = bundle.get(path, type);
+        if (asset && asset.refCount <= 0) {
+            bundle.release(path, type);
+        }
     }
 }
 
 const resourceManager = ResourceManager.instance(ResourceManager);
-export {resourceManager, IRefRecord};
+export {resourceManager};

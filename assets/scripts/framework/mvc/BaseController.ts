@@ -5,14 +5,13 @@
 import {layerManager} from "../manager/LayerManager";
 import {BaseView} from "./BaseView";
 import {eventDispatcher} from "../event/EventDispatcher";
-import {resourceManager} from "../manager/ResourceManager";
 import {uiUtils} from "../utils/UIUtils";
 import {BaseModel} from "./BaseModel";
 
 interface IEventRecord {
     name: string;
     callback: (args) => void;
-    target?: cc.Node;
+    target?: BaseController;
 }
 
 class BaseController {
@@ -36,15 +35,12 @@ class BaseController {
         return layerManager.view;
     }
 
-    private readonly events: IEventRecord[];
-    protected _view: BaseView;
-    protected _model: BaseModel;
+    private readonly _events: IEventRecord[] = [];
+    protected _view: BaseView = null;
+    protected _model: BaseModel = null;
 
     public constructor() {
-        this.events = [];
-
         this.initData();
-
         this.initGlobalListener();
     }
 
@@ -52,19 +48,39 @@ class BaseController {
         // TODO init model
     }
 
-    /**
-     * 初始化全局事件监听
-     */
     protected initGlobalListener() {
         // 这里使用addGlobalListener添加事件
+    }
+
+    /**
+     * 增加一个跟Controller相关的全局事件监听
+     * @param name 事件名
+     * @param callback 回调函数
+     * @param target 目标
+     */
+    public addGlobalListener(name: string, callback: (args) => void, target?: BaseController) {
+        target = target || this;
+        eventDispatcher.on(name, callback, target);
     }
 
     /**
      * 控制器事件，随着主view销毁而销毁
      */
     protected initLifeListener() {
-        // 这里使用addModuleEvent添加事件
-        // 销毁事件时使用clearModuleEvent
+        // 这里使用addLifeListener添加事件
+        // 销毁事件时使用clearListeners
+    }
+
+    /**
+     * 增加一个只跟Controller对应的View生命周期相关的事件监听
+     * @param name 事件名
+     * @param callback 监听
+     * @param target 目标
+     */
+    public addLifeListener(name: string, callback: (args) => void, target?: BaseController) {
+        target = target || this;
+        this.addGlobalListener(name, callback, target);
+        this._events.push({name, callback, target});
     }
 
     private createView(data: any): void {
@@ -94,11 +110,7 @@ class BaseController {
         this._view = view;
     }
 
-    /**
-     * 显示或创建当前视图
-     * @param data 参数
-     */
-    public show(data: any): void {
+    public show(data?: any): void {
         if (!this._view) {
             this.initLifeListener();
             this.createView(data);
@@ -109,69 +121,35 @@ class BaseController {
         }
     }
 
-    /**
-     * 移除当前视图
-     */
     public remove(): void {
         this.clearListeners();
+        this.removeView();
+    }
 
+    public clearListeners() {
+        this._events.every((event: IEventRecord) => {
+            eventDispatcher.off(event.name, event.callback, event.target);
+        });
+        this._events.length = 0;
+    }
+
+    private removeView() {
         if (this._view) {
             this._view.node.destroy();
             this._view = null;
         }
     }
 
-    /**
-     * 隐藏当前视图
-     */
     public hide() {
         if (this._view && this._view.node.active) {
             this._view.node.active = false;
         }
     }
 
-    /**
-     * 显示当前视图
-     */
     public display() {
         if (this._view && !this._view.node.active) {
             this._view.node.active = true;
         }
-    }
-
-    /**
-     * 增加一个只跟Controller相关的全局事件监听
-     * @param name 事件名
-     * @param callback 监听
-     * @param target 目标
-     */
-    public addGlobalListener(name: string, callback: (args) => void, target: any) {
-        target = target || this;
-
-        eventDispatcher.add(name, callback, target);
-    }
-
-    /**
-     * 增加一个跟Controller对应的View生命周期相关的事件监听
-     * @param name 事件名
-     * @param callback 监听
-     * @param target 目标
-     */
-    public addLifeListener(name: string, callback: (args) => void, target: any) {
-        this.addGlobalListener(name, callback, target);
-
-        this.events.push({
-            name,
-            callback,
-            target: target || this.view,
-        });
-    }
-
-    public clearListeners() {
-        this.events.every((event) => {
-            eventDispatcher.remove(event.name, event.callback, event.target);
-        });
-        this.events.length = 0;
     }
 }
 

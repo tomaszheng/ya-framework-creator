@@ -1,6 +1,6 @@
 import {GameConstant} from "../../config/GameConstant";
 import {GameText} from "../../config/GameText";
-import {BaseDialog} from "../../framework/mvc/BaseDialog";
+import {BaseDialog} from "../../framework/mvc/dialog/BaseDialog";
 import {utils} from "../../framework/utils/Utils";
 import {soundManager} from "../../framework/manager/SoundManager";
 

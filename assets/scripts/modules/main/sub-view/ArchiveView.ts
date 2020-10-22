@@ -1,4 +1,4 @@
-import {BaseDialog} from "../../../framework/mvc/BaseDialog";
+import {BaseDialog} from "../../../framework/mvc/dialog/BaseDialog";
 import {buttonHelper} from "../../../framework/utils/ButtonHelper";
 import {utils} from "../../../framework/utils/Utils";
 

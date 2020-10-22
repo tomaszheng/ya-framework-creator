@@ -50,7 +50,7 @@ class WxAd extends BaseAd {
                     this.loadRewardedVideoAd(adName);
                 }, 1000);
                 if (res.errCode) {
-                    eventDispatcher.dispatch(EventConfig.SHOW_TOAST, {
+                    eventDispatcher.emit(EventConfig.SHOW_TOAST, {
                         txt: cc.js.formatStr(GameText.ad_err_tips, res.errCode.toString())
                     });
                 }

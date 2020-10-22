@@ -6147,7 +6147,7 @@ declare namespace cc {
 		!#zh
 		减少资源的引用并尝试进行自动释放。
 		*/
-		decRef(): cc.Asset;
+		decRef(autoRelease?: boolean): cc.Asset;
 	}
 	/** Predefined constants */
 	export class macro {
@@ -20851,6 +20851,8 @@ declare namespace cc.AssetManager {
 		```
 		*/
 		releaseAll(): void;
+
+        releaseUnusedAssets(): void;
 	}
 	/** !#en
 	Cache manager is a module which controls all caches downloaded from server in non-web platform, it is a singleton

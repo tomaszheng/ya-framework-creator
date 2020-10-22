@@ -12,6 +12,14 @@ class ControllerManager extends Singleton<ControllerManager> {
         viewManager.register("main",     new MainController());
         viewManager.register("rank",     new RankController());
     }
+
+    private initViewControllers() {
+
+    }
+
+    private initDialogControllers() {
+
+    }
 }
 
 const controllerManager = ControllerManager.instance(ControllerManager);
